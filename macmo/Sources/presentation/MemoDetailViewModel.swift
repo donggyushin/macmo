@@ -10,37 +10,88 @@ import Combine
 import Factory
 
 final class MemoDetailViewModel: ObservableObject {
-    
+
     @Injected(\.memoDAO) private var memoDAO
-    
+
     let store = memoStore
-    
+
     @Published var memo: Memo?
-    
-    private var isNew = false
-    
+    @Published var isNewMemo = false
+    @Published var isEditing = false
+
+    // Editable properties
+    @Published var title: String = ""
+    @Published var contents: String = ""
+    @Published var isDone: Bool = false
+    @Published var dueDate: Date = Date()
+    @Published var hasDueDate: Bool = false
+
+    var canSave: Bool {
+        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
     init(id: String?) {
         Task { @MainActor in
             if let id {
                 memo = try? memoDAO.findById(id)
             }
-            
+
             if memo == nil {
                 memo = .init(title: "")
-                isNew = true
+                isNewMemo = true
+                isEditing = true
             }
+
+            loadMemoData()
         }
     }
-    
+
     @MainActor
-    func add() throws {
-        guard let memo else { return }
-        try store.add(memo)
+    private func loadMemoData() {
+        guard let memo = memo else { return }
+
+        title = memo.title
+        contents = memo.contents ?? ""
+        isDone = memo.done
+
+        if let due = memo.due {
+            dueDate = due
+            hasDueDate = true
+        } else {
+            hasDueDate = false
+        }
     }
-    
+
     @MainActor
-    func update() throws {
-        guard let memo else { return }
-        try store.update(memo)
+    func startEditing() {
+        isEditing = true
+    }
+
+    @MainActor
+    func save() {
+        guard canSave else { return }
+
+        let updatedMemo = Memo(
+            id: memo?.id ?? UUID().uuidString,
+            title: title,
+            contents: contents.isEmpty ? nil : contents,
+            due: hasDueDate ? dueDate : nil,
+            done: isDone,
+            createdAt: memo?.createdAt ?? Date(),
+            updatedAt: Date()
+        )
+
+        do {
+            if isNewMemo {
+                try store.add(updatedMemo)
+            } else {
+                try store.update(updatedMemo)
+            }
+
+            memo = updatedMemo
+            isEditing = false
+        } catch {
+            print("Failed to save memo: \(error)")
+        }
     }
 }
