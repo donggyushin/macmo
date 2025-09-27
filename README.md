@@ -119,6 +119,11 @@ tuist generate
 xcodebuild -workspace macmo.xcworkspace -scheme macmo -configuration Release -derivedDataPath ./build
 ```
 
+### zip command
+```bash
+zip -r archive_name.zip folder_name/
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
