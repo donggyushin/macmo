@@ -9,8 +9,6 @@ import SwiftUI
 
 struct MemoListView: View {
     @ObservedObject private var store = memoStore
-    @State private var sortBy: MemoSort = .createdAt
-    @State private var ascending: Bool = false
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
@@ -39,20 +37,20 @@ struct MemoListView: View {
 
     private var sortingPicker: some View {
         HStack {
-            Picker("Sort by", selection: $sortBy) {
+            Picker("Sort by", selection: $store.sortBy) {
                 Text("Created").tag(MemoSort.createdAt)
                 Text("Updated").tag(MemoSort.updatedAt)
                 Text("Due").tag(MemoSort.due)
             }
             .pickerStyle(SegmentedPickerStyle())
 
-            Button(action: { ascending.toggle() }) {
-                Image(systemName: ascending ? "arrow.up" : "arrow.down")
+            Button(action: { store.ascending.toggle() }) {
+                Image(systemName: store.ascending ? "arrow.up" : "arrow.down")
             }
         }
         .padding(.horizontal)
-        .onChange(of: sortBy) { refreshMemos() }
-        .onChange(of: ascending) { refreshMemos() }
+        .onChange(of: store.sortBy) { refreshMemos() }
+        .onChange(of: store.ascending) { refreshMemos() }
     }
 
     private var memoList: some View {
@@ -84,7 +82,7 @@ struct MemoListView: View {
 
     private func loadMemos() {
         do {
-            try store.refreshMemos(sortBy, ascending: ascending)
+            try store.refreshMemos(store.sortBy, ascending: store.ascending)
         } catch {
             print("Failed to load memos: \(error)")
         }
@@ -92,7 +90,7 @@ struct MemoListView: View {
 
     private func refreshMemos() {
         do {
-            try store.refreshMemos(sortBy, ascending: ascending)
+            try store.refreshMemos(store.sortBy, ascending: store.ascending)
         } catch {
             print("Failed to refresh memos: \(error)")
         }
@@ -100,7 +98,7 @@ struct MemoListView: View {
 
     private func loadMoreMemos() {
         do {
-            try store.fetchMemos(sortBy, ascending: ascending)
+            try store.fetchMemos(store.sortBy, ascending: store.ascending)
         } catch {
             print("Failed to load more memos: \(error)")
         }

@@ -15,6 +15,8 @@ final class MemoStore: ObservableObject {
     
     @Published var memos: [Memo] = []
     @Published var selectedMemoId: String?
+    @Published var sortBy: MemoSort = .createdAt
+    @Published var ascending: Bool = false
     
     fileprivate init() { }
     
