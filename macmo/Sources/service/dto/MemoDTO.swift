@@ -10,15 +10,15 @@ import SwiftData
 
 @Model
 class MemoDTO {
-    @Attribute(.unique) var id: String
-    var title: String
+    var id: String = ""
+    var title: String = ""
     var contents: String?
     var due: Date?
-    var done: Bool
-    var createdAt: Date
-    var updatedAt: Date
+    var done: Bool = false
+    var createdAt: Date = Date()
+    var updatedAt: Date = Date()
 
-    init(id: String, title: String, contents: String? = nil, due: Date? = nil, done: Bool = false, createdAt: Date, updatedAt: Date) {
+    init(id: String = "", title: String = "", contents: String? = nil, due: Date? = nil, done: Bool = false, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
         self.title = title
         self.contents = contents
