@@ -7,7 +7,9 @@ let project = Project(
     ],
     settings: .settings(
         base: [
-            "MACOSX_DEPLOYMENT_TARGET": "15.0"
+            "MACOSX_DEPLOYMENT_TARGET": "15.0",
+            "DEVELOPMENT_TEAM": "R4CXKKCUD9",
+            "CODE_SIGN_STYLE": "Automatic"
         ]
     ),
     targets: [
@@ -21,6 +23,7 @@ let project = Project(
                 "macmo/Sources",
                 "macmo/Resources",
             ],
+            entitlements: "macmo/macmo.entitlements",
             dependencies: [
                 .package(product: "Factory")
             ]
