@@ -27,16 +27,16 @@ A clean, simple memo application for macOS with iCloud sync.
 ### Quick Install (Recommended)
 
 ```bash
-curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo-v1.0.0.zip
-unzip macmo-v1.0.0.zip
+curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo-v1.1.0.zip
+unzip macmo-v1.1.0.zip
 mv macmo.app /Applications/
-rm macmo-v1.0.0.zip
+rm macmo-v1.1.0.zip
 echo "✅ macmo installed successfully!"
 ```
 
 ### Manual Install
 
-1. Download the latest `macmo-v1.0.0.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
+1. Download the latest `macmo.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
 2. Unzip the file
 3. Drag `macmo.app` to your Applications folder
 4. Right-click the app and select "Open" (first time only)
