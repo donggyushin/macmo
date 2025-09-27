@@ -9,6 +9,9 @@ import Foundation
 
 class MockMemoDAO: MemoDAOProtocol {
     private var memos: [String: Memo] = [:]
+    
+    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
+    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
     init(initialMemos: [Memo] = []) {
         for memo in initialMemos {
@@ -101,5 +104,22 @@ extension MockMemoDAO {
             )
         ]
         return MockMemoDAO(initialMemos: sampleMemos)
+    }
+    
+    func get() -> MemoSort {
+        return memoSortCache
+    }
+    
+    
+    func set(_ sort: MemoSort) {
+        memoSortCache = sort
+    }
+    
+    func getAscending() -> Bool {
+        ascendingCache
+    }
+    
+    func setAscending(_ ascending: Bool) {
+        ascendingCache = ascending
     }
 }

@@ -10,6 +10,9 @@ import SwiftData
 
 class MemoDAO: MemoDAOProtocol {
     private let modelContext: ModelContext
+    
+    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
+    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -105,5 +108,22 @@ class MemoDAO: MemoDAOProtocol {
             modelContext.delete(dto)
             try modelContext.save()
         }
+    }
+
+    func get() -> MemoSort {
+        return memoSortCache
+    }
+    
+    
+    func set(_ sort: MemoSort) {
+        memoSortCache = sort
+    }
+    
+    func getAscending() -> Bool {
+        ascendingCache
+    }
+    
+    func setAscending(_ ascending: Bool) {
+        ascendingCache = ascending
     }
 }
