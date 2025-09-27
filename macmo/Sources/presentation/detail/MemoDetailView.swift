@@ -78,7 +78,6 @@ struct MemoDetailView: View {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 model.delete()
-                dismissWindow(id: "memo-detail")
             }
         } message: {
             Text("Are you sure you want to delete this memo? This action cannot be undone.")
