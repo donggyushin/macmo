@@ -21,8 +21,14 @@ final class MemoStore: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     fileprivate init() {
-        sortBy = memoDAO.get()
-        ascending = memoDAO.getAscending()
+        
+        let sortBy: MemoSort = memoDAO.get()
+        let ascending = memoDAO.getAscending()
+        
+        Task { @MainActor in
+            self.sortBy = sortBy
+            self.ascending = ascending
+        }
         
         bind()
     }
