@@ -13,6 +13,7 @@ struct MemoDetailView: View {
     @Environment(\.dismissWindow) private var dismissWindow
     @FocusState private var focusedField: FocusField?
     @State private var previousContents: String = ""
+    @State private var showingDeleteAlert = false
 
     enum FocusField {
         case title
@@ -39,7 +40,7 @@ struct MemoDetailView: View {
         }
         .navigationTitle(model.isNewMemo ? "New Memo" : "Memo")
         .toolbar {
-            
+
             if model.isEditing {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -47,7 +48,7 @@ struct MemoDetailView: View {
                     }
                 }
             }
-            
+
             ToolbarItem(placement: .primaryAction) {
                 if model.isEditing {
                     Button("Save") {
@@ -63,6 +64,24 @@ struct MemoDetailView: View {
                     }
                 }
             }
+
+            if !model.isNewMemo && !model.isEditing {
+                ToolbarItem(placement: .destructiveAction) {
+                    Button("Delete") {
+                        showingDeleteAlert = true
+                    }
+                    .foregroundColor(.red)
+                }
+            }
+        }
+        .alert("Delete Memo", isPresented: $showingDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                model.delete()
+                dismissWindow(id: "memo-detail")
+            }
+        } message: {
+            Text("Are you sure you want to delete this memo? This action cannot be undone.")
         }
     }
 
