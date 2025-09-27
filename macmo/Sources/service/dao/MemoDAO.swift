@@ -110,6 +110,43 @@ class MemoDAO: MemoDAOProtocol {
         }
     }
 
+    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+
+        let searchQuery = query.lowercased()
+        var predicate = #Predicate<MemoDTO> { memo in
+            memo.title.lowercased().contains(searchQuery) ||
+            (memo.contents?.lowercased().contains(searchQuery) ?? false)
+        }
+
+        // Add cursor pagination if provided
+        if let cursorId = cursorId {
+            let cursorPredicate = #Predicate<MemoDTO> { $0.id == cursorId }
+            let cursorDescriptor = FetchDescriptor<MemoDTO>(predicate: cursorPredicate)
+            let cursorDtos = try modelContext.fetch(cursorDescriptor)
+
+            if let cursorDto = cursorDtos.first {
+                let cursorDate = cursorDto.updatedAt
+                predicate = #Predicate<MemoDTO> { memo in
+                    (memo.title.lowercased().contains(searchQuery) ||
+                     (memo.contents?.lowercased().contains(searchQuery) ?? false)) &&
+                    memo.updatedAt < cursorDate
+                }
+            }
+        }
+
+        var descriptor = FetchDescriptor<MemoDTO>(
+            predicate: predicate,
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = limit
+
+        let dtos = try modelContext.fetch(descriptor)
+        return dtos.map { $0.toDomain() }
+    }
+
     func get() -> MemoSort {
         return memoSortCache
     }
