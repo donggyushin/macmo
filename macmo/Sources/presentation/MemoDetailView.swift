@@ -81,7 +81,9 @@ struct MemoDetailView: View {
 
             if model.isEditing {
                 TextEditor(text: $model.contents)
+                    .padding(8)
                     .frame(minHeight: 120)
+                    .scrollContentBackground(.hidden)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
