@@ -141,8 +141,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [ ] Search and filtering
 - [ ] Tags and categories
 - [x] Rich text formatting
-- [ ] Attachments support
-- [ ] Sharing capabilities
+- [ ] Release iOS mobile application sharing data through iCloud
 
 ## Security & Privacy
 
