@@ -20,10 +20,10 @@ A clean, simple memo application for macOS with iCloud sync.
 
 ## Screenshots
 
-<img width="1680" height="1050" alt="Screenshot 2025-09-27 at 11 20 50 PM" src="https://github.com/user-attachments/assets/ad267228-aa8b-49ab-92c0-85ee7bb019ac" />
-
+<img width="1680" height="1050" alt="Screenshot 2025-09-28 at 1 30 45 AM" src="https://github.com/user-attachments/assets/7ddadae8-f920-4496-8952-74527e800c3a" />
 
 ## Installation
+
 
 ### Quick Install (Recommended)
 
