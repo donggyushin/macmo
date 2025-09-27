@@ -38,8 +38,10 @@ final class MemoDetailViewModel: ObservableObject {
 
         if memo == nil {
             memo = .init(title: "")
-            isNewMemo = true
-            isEditing = true
+            Task { @MainActor in
+                isNewMemo = true
+                isEditing = true
+            }
         }
 
         loadMemoData()
