@@ -9,6 +9,9 @@ import Foundation
 
 class MockMemoDAO: MemoDAOProtocol {
     private var memos: [String: Memo] = [:]
+    
+    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
+    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
     init(initialMemos: [Memo] = []) {
         for memo in initialMemos {
@@ -77,6 +80,35 @@ class MockMemoDAO: MemoDAOProtocol {
     func delete(_ id: String) throws {
         memos.removeValue(forKey: id)
     }
+
+    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+
+        let searchQuery = query.lowercased()
+        var filteredMemos = Array(memos.values).filter { memo in
+            memo.title.lowercased().contains(searchQuery) ||
+            (memo.contents?.lowercased().contains(searchQuery) ?? false)
+        }
+
+        // Sort by updatedAt in reverse order (newest first)
+        filteredMemos.sort { $0.updatedAt > $1.updatedAt }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
+            }
+        }
+
+        // Apply limit
+        return Array(filteredMemos.prefix(limit))
+    }
 }
 
 extension MockMemoDAO {
@@ -101,5 +133,22 @@ extension MockMemoDAO {
             )
         ]
         return MockMemoDAO(initialMemos: sampleMemos)
+    }
+    
+    func get() -> MemoSort {
+        return memoSortCache
+    }
+    
+    
+    func set(_ sort: MemoSort) {
+        memoSortCache = sort
+    }
+    
+    func getAscending() -> Bool {
+        ascendingCache
+    }
+    
+    func setAscending(_ ascending: Bool) {
+        ascendingCache = ascending
     }
 }

@@ -12,5 +12,11 @@ struct MacmoApp: App {
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 500, height: 600)
+
+        WindowGroup("Search Memos", id: "search-memo") {
+            SearchMemoView(model: SearchMemoViewModel())
+        }
+        .windowResizability(.contentSize)
+        .defaultSize(width: 600, height: 700)
     }
 }

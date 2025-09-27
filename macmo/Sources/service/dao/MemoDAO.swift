@@ -10,6 +10,9 @@ import SwiftData
 
 class MemoDAO: MemoDAOProtocol {
     private let modelContext: ModelContext
+    
+    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
+    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -105,5 +108,58 @@ class MemoDAO: MemoDAOProtocol {
             modelContext.delete(dto)
             try modelContext.save()
         }
+    }
+
+    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+
+        // SwiftData predicates don't support case-insensitive search well,
+        // so we fetch all and filter in memory for better user experience
+        let descriptor = FetchDescriptor<MemoDTO>(
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        let allDtos = try modelContext.fetch(descriptor)
+
+        // Convert to domain objects and filter case-insensitively
+        let searchQuery = query.lowercased()
+        var filteredMemos = allDtos.compactMap { dto -> Memo? in
+            let memo = dto.toDomain()
+            let titleMatch = memo.title.lowercased().contains(searchQuery)
+            let contentMatch = memo.contents?.lowercased().contains(searchQuery) ?? false
+            return (titleMatch || contentMatch) ? memo : nil
+        }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
+            }
+        }
+
+        // Apply limit
+        return Array(filteredMemos.prefix(limit))
+    }
+
+    func get() -> MemoSort {
+        return memoSortCache
+    }
+    
+    
+    func set(_ sort: MemoSort) {
+        memoSortCache = sort
+    }
+    
+    func getAscending() -> Bool {
+        ascendingCache
+    }
+    
+    func setAscending(_ ascending: Bool) {
+        ascendingCache = ascending
     }
 }

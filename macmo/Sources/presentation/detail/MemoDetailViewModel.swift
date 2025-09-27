@@ -67,6 +67,12 @@ final class MemoDetailViewModel: ObservableObject {
             hasDueDate = false
         }
     }
+    
+    @MainActor
+    func cancel() {
+        isEditing = false
+        loadMemoData()
+    }
 
     @MainActor
     func startEditing() {

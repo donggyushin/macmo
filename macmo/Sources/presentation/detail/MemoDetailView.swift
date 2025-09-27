@@ -43,7 +43,7 @@ struct MemoDetailView: View {
             if model.isEditing {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        model.isEditing = false
+                        model.cancel()
                     }
                 }
             }
@@ -230,12 +230,25 @@ struct MemoDetailView: View {
             if lines.count >= 2 {
                 let previousLine = lines[lines.count - 2]
 
-                // If previous line is just "- " (empty list item), don't continue the list
-                if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
-                    // Remove the empty "- " and add extra newline
+                // Check for task list items (- [ ] or - [x])
+                if previousLine.hasPrefix("- [") && previousLine.contains("]") {
+                    let trimmed = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmed == "- [ ]" || trimmed == "- [x]" {
+                        // Empty task item, stop the list
+                        let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
+                        model.contents = linesWithoutEmpty.joined(separator: "\n")
+                    } else {
+                        // Continue with new unchecked task
+                        model.contents = newValue + "- [ ] "
+                    }
+                }
+                // Check for regular list items
+                else if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
+                    // Empty list item, stop the list
                     let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
                     model.contents = linesWithoutEmpty.joined(separator: "\n")
                 } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    // Continue with regular list item
                     model.contents = newValue + "- "
                 }
             }

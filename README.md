@@ -28,10 +28,10 @@ A clean, simple memo application for macOS with iCloud sync.
 ### Quick Install (Recommended)
 
 ```bash
-curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo-v1.1.1.zip
-unzip macmo-v1.1.1.zip
+curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo-v1.2.0.zip
+unzip macmo-v1.2.0.zip
 mv macmo.app /Applications/
-rm macmo-v1.1.1.zip
+rm macmo-v1.2.0.zip
 echo "✅ macmo installed successfully!"
 ```
 
