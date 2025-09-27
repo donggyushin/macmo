@@ -2,6 +2,9 @@ import ProjectDescription
 
 let project = Project(
     name: "macmo",
+    packages: [
+        .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2"))
+    ],
     targets: [
         .target(
             name: "macmo",
@@ -13,7 +16,9 @@ let project = Project(
                 "macmo/Sources",
                 "macmo/Resources",
             ],
-            dependencies: []
+            dependencies: [
+                .package(product: "Factory")
+            ]
         ),
         .target(
             name: "macmoTests",
