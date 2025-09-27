@@ -99,6 +99,9 @@ struct MemoDetailView: View {
                     .frame(minHeight: 120)
                     .scrollContentBackground(.hidden)
                     .focused($focusedField, equals: .contents)
+                    .onReceive(model.$contents) { newValue in
+                        handleMarkdownListContinuation(newValue)
+                    }
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -211,6 +214,18 @@ struct MemoDetailView: View {
                 }
             }
             .font(.caption)
+        }
+    }
+
+    private func handleMarkdownListContinuation(_ newValue: String) {
+        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
+            let lines = newValue.components(separatedBy: "\n")
+            if lines.count >= 2 {
+                let previousLine = lines[lines.count - 2]
+                if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    model.contents = newValue + "- "
+                }
+            }
         }
     }
 }
