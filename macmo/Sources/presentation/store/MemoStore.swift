@@ -18,7 +18,28 @@ final class MemoStore: ObservableObject {
     @Published var sortBy: MemoSort = .createdAt
     @Published var ascending: Bool = false
     
-    fileprivate init() { }
+    private var cancellables = Set<AnyCancellable>()
+    
+    fileprivate init() {
+        sortBy = memoDAO.get()
+        ascending = memoDAO.getAscending()
+        
+        bind()
+    }
+    
+    private func bind() {
+        $sortBy
+            .sink { sort in
+                self.memoDAO.set(sort)
+            }
+            .store(in: &cancellables)
+        
+        $ascending
+            .sink { ascending in
+                self.memoDAO.setAscending(ascending)
+            }
+            .store(in: &cancellables)
+    }
     
     @Injected(\.memoDAO) private var memoDAO
     
