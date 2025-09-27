@@ -8,7 +8,7 @@ let project = Project(
     settings: .settings(
         base: [
             "MACOSX_DEPLOYMENT_TARGET": "15.0",
-            "DEVELOPMENT_TEAM": "R4CXKKCUD9",
+            "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic"
         ]
     ),
