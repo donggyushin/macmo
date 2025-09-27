@@ -31,22 +31,26 @@ final class MemoDetailViewModel: ObservableObject {
     }
 
     init(id: String?) {
-        Task { @MainActor in
-            if let id {
-                memo = try? memoDAO.findById(id)
-            }
-
-            if memo == nil {
-                memo = .init(title: "")
-                isNewMemo = true
-                isEditing = true
-            }
-
-            loadMemoData()
+        // Perform synchronous database fetch - SwiftData is fast for local operations
+        if let id {
+            memo = try? memoDAO.findById(id)
         }
+
+        if memo == nil {
+            memo = .init(title: "")
+            isNewMemo = true
+            isEditing = true
+        }
+
+        loadMemoData()
+    }
+    
+    // Optimized initializer for existing memos to skip database lookup
+    init(memo: Memo) {
+        self.memo = memo
+        loadMemoData()
     }
 
-    @MainActor
     private func loadMemoData() {
         guard let memo = memo else { return }
 
@@ -97,8 +101,24 @@ final class MemoDetailViewModel: ObservableObject {
     
     @MainActor
     func toggleComplete() {
-        memo?.done.toggle()
-        guard let memo else { return }
-        try? store.update(memo)
+        guard let currentMemo = memo else { return }
+        
+        let updatedMemo = Memo(
+            id: currentMemo.id,
+            title: currentMemo.title,
+            contents: currentMemo.contents,
+            due: currentMemo.due,
+            done: !currentMemo.done,
+            createdAt: currentMemo.createdAt,
+            updatedAt: Date()
+        )
+        
+        do {
+            try store.update(updatedMemo)
+            memo = updatedMemo
+            isDone = updatedMemo.done // Keep UI in sync
+        } catch {
+            print("Failed to toggle memo completion: \(error)")
+        }
     }
 }
