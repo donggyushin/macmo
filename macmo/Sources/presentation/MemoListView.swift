@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MarkdownUI
 
 struct MemoListView: View {
     @ObservedObject private var store = memoStore

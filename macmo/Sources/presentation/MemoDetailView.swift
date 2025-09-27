@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import MarkdownUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @Environment(\.dismissWindow) private var dismissWindow
     @FocusState private var focusedField: FocusField?
+    @State private var previousContents: String = ""
 
     enum FocusField {
         case title
@@ -99,6 +101,9 @@ struct MemoDetailView: View {
                     .frame(minHeight: 120)
                     .scrollContentBackground(.hidden)
                     .focused($focusedField, equals: .contents)
+                    .onReceive(model.$contents) { newValue in
+                        handleMarkdownListContinuation(newValue)
+                    }
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(Color.gray.opacity(0.3), lineWidth: 1)
@@ -109,8 +114,7 @@ struct MemoDetailView: View {
                         .foregroundColor(.secondary)
                         .italic()
                 } else {
-                    Text(model.contents)
-                        .font(.body)
+                    Markdown(model.contents)
                 }
             }
         }
@@ -213,8 +217,50 @@ struct MemoDetailView: View {
             .font(.caption)
         }
     }
+
+    private func handleMarkdownListContinuation(_ newValue: String) {
+        // Only trigger if text length increased (not decreased/deleted)
+        guard newValue.count > previousContents.count else {
+            previousContents = newValue
+            return
+        }
+
+        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
+            let lines = newValue.components(separatedBy: "\n")
+            if lines.count >= 2 {
+                let previousLine = lines[lines.count - 2]
+
+                // If previous line is just "- " (empty list item), don't continue the list
+                if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
+                    // Remove the empty "- " and add extra newline
+                    let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
+                    model.contents = linesWithoutEmpty.joined(separator: "\n")
+                } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    model.contents = newValue + "- "
+                }
+            }
+        }
+
+        previousContents = newValue
+    }
 }
 
+
+import Factory
+private struct MemoDetailViewPreview: View {
+    
+    @State var memo: Memo?
+    
+    var body: some View {
+        ZStack {
+            MemoDetailView(model: .init(id: memo?.id))
+        }
+        .task {
+            let dao = Container.shared.memoDAO()
+            memo = try? dao.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
+        }
+    }
+}
 #Preview {
-    MemoDetailView(model: .init(id: nil))
+    MemoDetailViewPreview()
 }
