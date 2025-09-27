@@ -117,49 +117,6 @@ struct MemoListView: View {
     }
 }
 
-struct MemoRowView: View {
-    let memo: Memo
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(memo.title)
-                    .font(.headline)
-                    .strikethrough(memo.done)
-
-                Spacer()
-
-                if memo.done {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                }
-            }
-
-            if let contents = memo.contents, !contents.isEmpty {
-                Text(contents)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-
-            HStack {
-                if let due = memo.due {
-                    Text("Due: \(due, style: .date)")
-                        .font(.caption2)
-                        .foregroundColor(due < Date() ? .red : .blue)
-                }
-
-                Spacer()
-
-                Text("Created: \(memo.createdAt, style: .date)")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding(.vertical, 2)
-    }
-}
-
 #Preview {
     MemoListView()
 }

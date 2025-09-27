@@ -115,36 +115,35 @@ class MemoDAO: MemoDAOProtocol {
             return []
         }
 
+        // SwiftData predicates don't support case-insensitive search well,
+        // so we fetch all and filter in memory for better user experience
+        let descriptor = FetchDescriptor<MemoDTO>(
+            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        )
+        let allDtos = try modelContext.fetch(descriptor)
+
+        // Convert to domain objects and filter case-insensitively
         let searchQuery = query.lowercased()
-        var predicate = #Predicate<MemoDTO> { memo in
-            memo.title.lowercased().contains(searchQuery) ||
-            (memo.contents?.lowercased().contains(searchQuery) ?? false)
+        var filteredMemos = allDtos.compactMap { dto -> Memo? in
+            let memo = dto.toDomain()
+            let titleMatch = memo.title.lowercased().contains(searchQuery)
+            let contentMatch = memo.contents?.lowercased().contains(searchQuery) ?? false
+            return (titleMatch || contentMatch) ? memo : nil
         }
 
-        // Add cursor pagination if provided
-        if let cursorId = cursorId {
-            let cursorPredicate = #Predicate<MemoDTO> { $0.id == cursorId }
-            let cursorDescriptor = FetchDescriptor<MemoDTO>(predicate: cursorPredicate)
-            let cursorDtos = try modelContext.fetch(cursorDescriptor)
-
-            if let cursorDto = cursorDtos.first {
-                let cursorDate = cursorDto.updatedAt
-                predicate = #Predicate<MemoDTO> { memo in
-                    (memo.title.lowercased().contains(searchQuery) ||
-                     (memo.contents?.lowercased().contains(searchQuery) ?? false)) &&
-                    memo.updatedAt < cursorDate
-                }
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
             }
         }
 
-        var descriptor = FetchDescriptor<MemoDTO>(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
-        )
-        descriptor.fetchLimit = limit
-
-        let dtos = try modelContext.fetch(descriptor)
-        return dtos.map { $0.toDomain() }
+        // Apply limit
+        return Array(filteredMemos.prefix(limit))
     }
 
     func get() -> MemoSort {
