@@ -20,6 +20,14 @@ struct MemoListView: View {
             }
             .navigationTitle("Memos")
             .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    Button(action: {
+                        openWindow(id: "search-memo")
+                    }) {
+                        Image(systemName: "magnifyingglass")
+                    }
+                }
+
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
                         openWindow(id: "memo-detail")
