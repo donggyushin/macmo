@@ -146,12 +146,16 @@ struct MemoDetailView: View {
             if model.isEditing {
                 Toggle("Completed", isOn: $model.isDone)
             } else {
-                HStack {
-                    Image(systemName: model.isDone ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(model.isDone ? .green : .gray)
+                Button {
+                    model.toggleComplete()
+                } label: {
+                    HStack {
+                        Image(systemName: model.isDone ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(model.isDone ? .green : .gray)
 
-                    Text(model.isDone ? "Completed" : "Not completed")
-                        .foregroundColor(model.isDone ? .green : .primary)
+                        Text(model.isDone ? "Completed" : "Not completed")
+                            .foregroundColor(model.isDone ? .green : .primary)
+                    }
                 }
             }
         }

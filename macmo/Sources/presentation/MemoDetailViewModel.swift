@@ -94,4 +94,11 @@ final class MemoDetailViewModel: ObservableObject {
             print("Failed to save memo: \(error)")
         }
     }
+    
+    @MainActor
+    func toggleComplete() {
+        memo?.done.toggle()
+        guard let memo else { return }
+        try? store.update(memo)
+    }
 }
