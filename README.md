@@ -9,18 +9,19 @@ A clean, simple memo application for macOS with iCloud sync.
 
 ## Features
 
-✅ **Create, edit, and organize memos** - Simple and intuitive memo management
-✅ **iCloud sync** - Access your memos across all Apple devices
-✅ **Smart sorting** - Sort by creation date, update date, or due date
-✅ **Due date management** - Set due dates with overdue indicators
-✅ **Task completion** - Mark memos as completed with visual feedback
-✅ **Native macOS interface** - Clean design that follows macOS guidelines
-✅ **Multi-window support** - Open new memos in separate windows
-✅ **Context menus** - Right-click for quick actions
+✅ **Create, edit, and organize memos** - Simple and intuitive memo management<br />
+✅ **iCloud sync** - Access your memos across all Apple devices<br />
+✅ **Smart sorting** - Sort by creation date, update date, or due date<br />
+✅ **Due date management** - Set due dates with overdue indicators<br />
+✅ **Task completion** - Mark memos as completed with visual feedback<br />
+✅ **Native macOS interface** - Clean design that follows macOS guidelines<br />
+✅ **Multi-window support** - Open new memos in separate windows<br />
+✅ **Context menus** - Right-click for quick actions<br />
 
 ## Screenshots
 
-*Coming soon - screenshots of the app in action*
+<img width="1680" height="1050" alt="Screenshot 2025-09-27 at 11 20 50 PM" src="https://github.com/user-attachments/assets/ad267228-aa8b-49ab-92c0-85ee7bb019ac" />
+
 
 ## Installation
 
@@ -139,7 +140,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [ ] Export memos to Markdown/PDF
 - [ ] Search and filtering
 - [ ] Tags and categories
-- [ ] Rich text formatting
+- [x] Rich text formatting
 - [ ] Attachments support
 - [ ] Sharing capabilities
 
