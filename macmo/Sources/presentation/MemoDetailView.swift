@@ -11,6 +11,7 @@ struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @Environment(\.dismissWindow) private var dismissWindow
     @FocusState private var focusedField: FocusField?
+    @State private var previousContents: String = ""
 
     enum FocusField {
         case title
@@ -218,6 +219,12 @@ struct MemoDetailView: View {
     }
 
     private func handleMarkdownListContinuation(_ newValue: String) {
+        // Only trigger if text length increased (not decreased/deleted)
+        guard newValue.count > previousContents.count else {
+            previousContents = newValue
+            return
+        }
+
         if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
             let lines = newValue.components(separatedBy: "\n")
             if lines.count >= 2 {
@@ -227,6 +234,8 @@ struct MemoDetailView: View {
                 }
             }
         }
+
+        previousContents = newValue
     }
 }
 
