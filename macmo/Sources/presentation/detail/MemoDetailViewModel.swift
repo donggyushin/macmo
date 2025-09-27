@@ -110,7 +110,7 @@ final class MemoDetailViewModel: ObservableObject {
     @MainActor
     func toggleComplete() {
         guard let currentMemo = memo else { return }
-        
+
         let updatedMemo = Memo(
             id: currentMemo.id,
             title: currentMemo.title,
@@ -120,13 +120,24 @@ final class MemoDetailViewModel: ObservableObject {
             createdAt: currentMemo.createdAt,
             updatedAt: Date()
         )
-        
+
         do {
             try store.update(updatedMemo)
             memo = updatedMemo
             isDone = updatedMemo.done // Keep UI in sync
         } catch {
             print("Failed to toggle memo completion: \(error)")
+        }
+    }
+
+    @MainActor
+    func delete() {
+        guard let currentMemo = memo else { return }
+
+        do {
+            try store.delete(currentMemo.id)
+        } catch {
+            print("Failed to delete memo: \(error)")
         }
     }
 }

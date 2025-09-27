@@ -146,7 +146,23 @@ class MemoDAO: MemoDAOProtocol {
             let memo = dto.toDomain()
             let titleMatch = memo.title.lowercased().contains(searchQuery)
             let contentMatch = memo.contents?.lowercased().contains(searchQuery) ?? false
-            return (titleMatch || contentMatch) ? memo : nil
+
+            // Special "urgent" feature: include memos with approaching due dates
+            var urgentMatch = false
+            if searchQuery == "urgent", let dueDate = memo.due, !memo.done {
+                let now = Date()
+                let timeInterval = dueDate.timeIntervalSince(now)
+                // Consider urgent if due within 3 days (259200 seconds) and not completed
+                urgentMatch = timeInterval > 0 && timeInterval <= 259200
+            }
+
+            // Special "completed" feature: include all completed memos
+            var completedMatch = false
+            if searchQuery == "completed" && memo.done {
+                completedMatch = true
+            }
+
+            return (titleMatch || contentMatch || urgentMatch || completedMatch) ? memo : nil
         }
 
         // Apply cursor pagination

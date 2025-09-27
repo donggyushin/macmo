@@ -11,7 +11,7 @@ let project = Project(
             "MACOSX_DEPLOYMENT_TARGET": "15.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.3.1",
+            "MARKETING_VERSION": "1.4.0",
             "CURRENT_PROJECT_VERSION": "1",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
         ],
