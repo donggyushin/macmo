@@ -10,6 +10,7 @@ import SwiftUI
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @Environment(\.dismissWindow) private var dismissWindow
+    @FocusState var focusTitle
 
     init(model: MemoDetailViewModel) {
         _model = .init(initialValue: model)
@@ -64,10 +65,12 @@ struct MemoDetailView: View {
                 .font(.headline)
 
             if model.isEditing {
-                
                 TextField("Enter memo title", text: $model.title)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                
+                    .focused($focusTitle)
+                    .onAppear {
+                        focusTitle = true
+                    }
                 
             } else {
                 Text(model.title)
