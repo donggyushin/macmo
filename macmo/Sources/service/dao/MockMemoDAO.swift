@@ -20,8 +20,40 @@ class MockMemoDAO: MemoDAOProtocol {
         memos[memo.id] = memo
     }
 
-    func findAll() throws -> [Memo] {
-        return Array(memos.values).sorted { $0.createdAt > $1.createdAt }
+    func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {
+        var allMemos = Array(memos.values)
+
+        // Apply sorting
+        switch sortBy {
+        case .createdAt:
+            allMemos.sort { ascending ? $0.createdAt < $1.createdAt : $0.createdAt > $1.createdAt }
+        case .updatedAt:
+            allMemos.sort { ascending ? $0.updatedAt < $1.updatedAt : $0.updatedAt > $1.updatedAt }
+        case .due:
+            allMemos.sort { memo1, memo2 in
+                switch (memo1.due, memo2.due) {
+                case (nil, nil): return false
+                case (nil, _): return !ascending
+                case (_, nil): return ascending
+                case let (date1?, date2?):
+                    return ascending ? date1 < date2 : date1 > date2
+                }
+            }
+        }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < allMemos.count {
+                allMemos = Array(allMemos[nextIndex...])
+            } else {
+                allMemos = []
+            }
+        }
+
+        // Apply limit
+        return Array(allMemos.prefix(limit))
     }
 
     func findById(_ id: String) throws -> Memo? {

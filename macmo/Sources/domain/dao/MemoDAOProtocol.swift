@@ -8,7 +8,7 @@
 
 public protocol MemoDAOProtocol {
     func save(_ memo: Memo) throws
-    func findAll() throws -> [Memo]
+    func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo]
     func findById(_ id: String) throws -> Memo?
     func update(_ memo: Memo) throws
     func delete(_ id: String) throws

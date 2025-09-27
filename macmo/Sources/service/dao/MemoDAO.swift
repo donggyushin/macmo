@@ -21,10 +21,54 @@ class MemoDAO: MemoDAOProtocol {
         try modelContext.save()
     }
 
-    func findAll() throws -> [Memo] {
+    func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {
+        let sortOrder: SortOrder = ascending ? .forward : .reverse
+        let sortDescriptor: SortDescriptor<MemoDTO>
+
+        switch sortBy {
+        case .createdAt:
+            sortDescriptor = SortDescriptor(\.createdAt, order: sortOrder)
+        case .updatedAt:
+            sortDescriptor = SortDescriptor(\.updatedAt, order: sortOrder)
+        case .due:
+            sortDescriptor = SortDescriptor(\.due, order: sortOrder)
+        }
+
+        var predicate: Predicate<MemoDTO>?
+
+        if let cursorId = cursorId {
+            let cursorPredicate = #Predicate<MemoDTO> { $0.id == cursorId }
+            let cursorDescriptor = FetchDescriptor<MemoDTO>(predicate: cursorPredicate)
+            let cursorDtos = try modelContext.fetch(cursorDescriptor)
+
+            if let cursorDto = cursorDtos.first {
+                switch sortBy {
+                case .createdAt:
+                    let cursorDate = cursorDto.createdAt
+                    predicate = ascending ?
+                        #Predicate<MemoDTO> { $0.createdAt > cursorDate } :
+                        #Predicate<MemoDTO> { $0.createdAt < cursorDate }
+                case .updatedAt:
+                    let cursorDate = cursorDto.updatedAt
+                    predicate = ascending ?
+                        #Predicate<MemoDTO> { $0.updatedAt > cursorDate } :
+                        #Predicate<MemoDTO> { $0.updatedAt < cursorDate }
+                case .due:
+                    if let cursorDue = cursorDto.due {
+                        predicate = ascending ?
+                            #Predicate<MemoDTO> { $0.due != nil && $0.due! > cursorDue } :
+                            #Predicate<MemoDTO> { $0.due != nil && $0.due! < cursorDue }
+                    }
+                }
+            }
+        }
+
         let descriptor = FetchDescriptor<MemoDTO>(
-            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+            predicate: predicate,
+            sortBy: [sortDescriptor],
+            fetchLimit: limit
         )
+
         let dtos = try modelContext.fetch(descriptor)
         return dtos.map { $0.toDomain() }
     }
