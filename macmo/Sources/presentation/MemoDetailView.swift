@@ -43,7 +43,7 @@ struct MemoDetailView: View {
             if model.isEditing {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        model.isEditing = false
+                        model.cancel()
                     }
                 }
             }
