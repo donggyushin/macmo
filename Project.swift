@@ -5,6 +5,11 @@ let project = Project(
     packages: [
         .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2"))
     ],
+    settings: .settings(
+        base: [
+            "MACOSX_DEPLOYMENT_TARGET": "15.0"
+        ]
+    ),
     targets: [
         .target(
             name: "macmo",
