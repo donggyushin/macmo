@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MemoDetailView: View {
-    @Environment(\.dismiss) private var dismiss
     @ObservedObject var model: MemoDetailViewModel
 
     init(model: MemoDetailViewModel) {
@@ -31,19 +30,21 @@ struct MemoDetailView: View {
         }
         .navigationTitle(model.isNewMemo ? "New Memo" : "Memo")
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
+            
+            if model.isEditing {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        model.isEditing = false
+                    }
                 }
             }
+            
+            
 
             ToolbarItem(placement: .primaryAction) {
                 if model.isEditing {
                     Button("Save") {
                         model.save()
-                        if model.isNewMemo {
-                            dismiss()
-                        }
                     }
                     .disabled(!model.canSave)
                 } else {

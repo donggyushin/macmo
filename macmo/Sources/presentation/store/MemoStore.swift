@@ -37,6 +37,7 @@ final class MemoStore: ObservableObject {
     func add(_ memo: Memo) throws {
         try memoDAO.save(memo)
         self.memos.insert(memo, at: 0)
+        selectedMemoId = memo.id
     }
     
     @MainActor
