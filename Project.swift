@@ -10,7 +10,20 @@ let project = Project(
         base: [
             "MACOSX_DEPLOYMENT_TARGET": "15.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
-            "CODE_SIGN_STYLE": "Automatic"
+            "CODE_SIGN_STYLE": "Automatic",
+            "MARKETING_VERSION": "1.3.0",
+            "CURRENT_PROJECT_VERSION": "1",
+            "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
+        ],
+        configurations: [
+            .debug(name: .debug, settings: [
+                "PRODUCT_NAME": "macmo-debug",
+                "INFOPLIST_KEY_CFBundleDisplayName": "macmo-debug"
+            ]),
+            .release(name: .release, settings: [
+                "PRODUCT_NAME": "macmo",
+                "INFOPLIST_KEY_CFBundleDisplayName": "macmo"
+            ])
         ]
     ),
     targets: [
