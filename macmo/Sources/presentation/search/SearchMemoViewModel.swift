@@ -15,6 +15,8 @@ final class SearchMemoViewModel: ObservableObject {
     
     @Published var memos: [Memo] = []
     @Published var query = ""
+    @Published var selectedMemoId: String?
+    
     private var previousSearchQuery = ""
     
     private var cancellables = Set<AnyCancellable>()
