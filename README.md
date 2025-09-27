@@ -14,6 +14,7 @@ A clean, simple memo application for macOS with iCloud sync.
 ✅ **Smart sorting** - Sort by creation date, update date, or due date<br />
 ✅ **Due date management** - Set due dates with overdue indicators<br />
 ✅ **Task completion** - Mark memos as completed with visual feedback<br />
+✅ **Smart search** - Search with special filters: "urgent" for due-soon memos, "completed" for done tasks<br />
 ✅ **Native macOS interface** - Clean design that follows macOS guidelines<br />
 ✅ **Multi-window support** - Open new memos in separate windows<br />
 ✅ **Context menus** - Right-click for quick actions<br />
@@ -54,6 +55,10 @@ echo "✅ macmo installed successfully!"
 - **Edit memo**: Click on any memo to view/edit in the detail pane
 - **Delete memo**: Right-click on a memo and select "Delete"
 - **Sort memos**: Use the sorting picker to organize by date
+- **Search memos**: Use the search bar with special keywords:
+  - Type "urgent" to find memos due within 3 days (excluding completed ones)
+  - Type "completed" to find all finished memos
+  - Regular text search works for title and content
 
 ### iCloud Sync
 - Sign into iCloud on your devices with the same Apple ID
