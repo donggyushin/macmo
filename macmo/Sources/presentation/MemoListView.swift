@@ -11,7 +11,6 @@ struct MemoListView: View {
     @ObservedObject private var store = memoStore
     @State private var sortBy: MemoSort = .createdAt
     @State private var ascending: Bool = false
-    @State private var selectedMemoId: String?
 
     var body: some View {
         NavigationSplitView {
@@ -23,7 +22,7 @@ struct MemoListView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
-                        selectedMemoId = nil
+                        
                     }
                 }
             }
@@ -31,7 +30,7 @@ struct MemoListView: View {
                 loadMemos()
             }
         } detail: {
-            if let selectedMemoId = selectedMemoId {
+            if let selectedMemoId = store.selectedMemoId {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
             }
         }
@@ -56,7 +55,7 @@ struct MemoListView: View {
     }
 
     private var memoList: some View {
-        List(selection: $selectedMemoId) {
+        List(selection: $store.selectedMemoId) {
             ForEach(store.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
                     .tag(memo.id)

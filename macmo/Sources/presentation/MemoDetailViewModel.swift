@@ -70,7 +70,7 @@ final class MemoDetailViewModel: ObservableObject {
     @MainActor
     func save() {
         guard canSave else { return }
-        print(memo?.id)
+        
         let updatedMemo = Memo(
             id: memo?.id ?? UUID().uuidString,
             title: title,

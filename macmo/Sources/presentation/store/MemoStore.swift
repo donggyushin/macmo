@@ -14,6 +14,7 @@ let memoStore = MemoStore()
 final class MemoStore: ObservableObject {
     
     @Published var memos: [Memo] = []
+    @Published var selectedMemoId: String?
     
     fileprivate init() { }
     
@@ -29,6 +30,7 @@ final class MemoStore: ObservableObject {
     func refreshMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
         let memos = try memoDAO.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
         self.memos = memos
+        self.selectedMemoId = memos.first?.id
     }
     
     @MainActor
