@@ -11,9 +11,10 @@ struct MemoListView: View {
     @ObservedObject private var store = memoStore
     @State private var sortBy: MemoSort = .createdAt
     @State private var ascending: Bool = false
+    @State private var selectedMemoId: String?
 
     var body: some View {
-        NavigationView {
+        NavigationSplitView {
             VStack {
                 sortingPicker
                 memoList
@@ -22,12 +23,16 @@ struct MemoListView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
-                        // TODO: Add new memo action
+                        selectedMemoId = nil
                     }
                 }
             }
             .onAppear {
                 loadMemos()
+            }
+        } detail: {
+            if let selectedMemoId = selectedMemoId {
+                MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
             }
         }
     }
@@ -51,9 +56,10 @@ struct MemoListView: View {
     }
 
     private var memoList: some View {
-        List {
+        List(selection: $selectedMemoId) {
             ForEach(store.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
+                    .tag(memo.id)
                     .onAppear {
                         if memo.id == store.memos.last?.id {
                             loadMoreMemos()

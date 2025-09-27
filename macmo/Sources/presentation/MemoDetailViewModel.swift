@@ -23,7 +23,7 @@ final class MemoDetailViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var contents: String = ""
     @Published var isDone: Bool = false
-    @Published var dueDate: Date = Date()
+    @Published var dueDate: Date = Date() + 100
     @Published var hasDueDate: Bool = false
 
     var canSave: Bool {
@@ -70,7 +70,7 @@ final class MemoDetailViewModel: ObservableObject {
     @MainActor
     func save() {
         guard canSave else { return }
-
+        print(memo?.id)
         let updatedMemo = Memo(
             id: memo?.id ?? UUID().uuidString,
             title: title,

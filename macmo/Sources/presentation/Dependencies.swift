@@ -36,5 +36,6 @@ extension Container {
         .onPreview {
             MockMemoDAO.withSampleData()
         }
+        .singleton
     }
 }

@@ -40,7 +40,7 @@ final class MemoStore: ObservableObject {
     @MainActor
     func update(_ memo: Memo) throws {
         try memoDAO.update(memo)
-        if let index = self.memos.firstIndex(of: memo) {
+        if let index = self.memos.firstIndex(where: { $0.id == memo.id }) {
             self.memos[index] = memo
         }
     }
