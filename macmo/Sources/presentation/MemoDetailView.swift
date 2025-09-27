@@ -229,7 +229,13 @@ struct MemoDetailView: View {
             let lines = newValue.components(separatedBy: "\n")
             if lines.count >= 2 {
                 let previousLine = lines[lines.count - 2]
-                if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+
+                // If previous line is just "- " (empty list item), don't continue the list
+                if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
+                    // Remove the empty "- " and add extra newline
+                    let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
+                    model.contents = linesWithoutEmpty.joined(separator: "\n")
+                } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     model.contents = newValue + "- "
                 }
             }
