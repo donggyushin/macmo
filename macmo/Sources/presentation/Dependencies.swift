@@ -13,7 +13,12 @@ extension Container {
     var modelContainer: Factory<ModelContainer> {
         self {
             do {
-                let container = try ModelContainer(for: MemoDTO.self)
+                let container = try ModelContainer(
+                    for: MemoDTO.self,
+                    configurations: ModelConfiguration(
+                        cloudKitContainerIdentifier: "iCloud.dev.tuist.macmo"
+                    )
+                )
                 return container
             } catch {
                 fatalError("Failed to create ModelContainer: \(error)")
