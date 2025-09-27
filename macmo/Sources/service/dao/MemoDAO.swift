@@ -57,11 +57,9 @@ class MemoDAO: MemoDAOProtocol {
                         #Predicate<MemoDTO> { $0.updatedAt > cursorDate } :
                         #Predicate<MemoDTO> { $0.updatedAt < cursorDate }
                 case .due:
-                    if let cursorDue = cursorDto.due {
-                        predicate = ascending ?
-                            #Predicate<MemoDTO> { $0.due != nil && $0.due! > cursorDue } :
-                            #Predicate<MemoDTO> { $0.due != nil && $0.due! < cursorDue }
-                    }
+                    // For due date sorting with cursor, we'll handle filtering in memory
+                    // since SwiftData predicates don't handle optional date comparisons well
+                    predicate = nil
                 }
             }
         }
@@ -70,10 +68,30 @@ class MemoDAO: MemoDAOProtocol {
             predicate: predicate,
             sortBy: [sortDescriptor]
         )
-        descriptor.fetchLimit = limit
+
+        // For due date sorting with cursor, we need to fetch all and filter in memory
+        if sortBy == .due && cursorId != nil {
+            // Don't set fetchLimit, we'll apply it after filtering
+        } else {
+            descriptor.fetchLimit = limit
+        }
 
         let dtos = try modelContext.fetch(descriptor)
-        return dtos.map { $0.toDomain() }
+        var results = dtos.map { $0.toDomain() }
+
+        // Handle cursor filtering for due date sorting in memory
+        if sortBy == .due, let cursorId = cursorId, let cursorIndex = results.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < results.count {
+                results = Array(results[nextIndex...])
+            } else {
+                results = []
+            }
+            // Apply limit after cursor filtering
+            results = Array(results.prefix(limit))
+        }
+
+        return results
     }
 
     func findById(_ id: String) throws -> Memo? {
