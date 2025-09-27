@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MarkdownUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
@@ -113,8 +114,7 @@ struct MemoDetailView: View {
                         .foregroundColor(.secondary)
                         .italic()
                 } else {
-                    Text(model.contents)
-                        .font(.body)
+                    Markdown(model.contents)
                 }
             }
         }

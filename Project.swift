@@ -3,7 +3,8 @@ import ProjectDescription
 let project = Project(
     name: "macmo",
     packages: [
-        .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2"))
+        .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2")),
+        .remote(url: "https://github.com/gonzalezreal/swift-markdown-ui", requirement: .upToNextMajor(from: "2.4.0"))
     ],
     settings: .settings(
         base: [
@@ -25,7 +26,8 @@ let project = Project(
             ],
             entitlements: "macmo/macmo.entitlements",
             dependencies: [
-                .package(product: "Factory")
+                .package(product: "Factory"),
+                .package(product: "MarkdownUI")
             ]
         ),
         .target(

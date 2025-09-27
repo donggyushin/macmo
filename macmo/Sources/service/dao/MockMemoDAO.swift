@@ -84,7 +84,7 @@ extension MockMemoDAO {
         let sampleMemos = [
             Memo(
                 title: "Buy groceries",
-                contents: "# title\n## Title2\n### Title3\n\n- Hello\n- World",
+                contents: "# title\n## Title2\n### Title3\n\n- Hello\n- World \n\n\n [Github](https://www.google.com)",
                 due: Calendar.current.date(byAdding: .day, value: 1, to: Date())
             ),
             Memo(
