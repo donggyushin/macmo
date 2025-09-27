@@ -63,11 +63,11 @@ class MemoDAO: MemoDAOProtocol {
             }
         }
 
-        let descriptor = FetchDescriptor<MemoDTO>(
+        var descriptor = FetchDescriptor<MemoDTO>(
             predicate: predicate,
-            sortBy: [sortDescriptor],
-            fetchLimit: limit
+            sortBy: [sortDescriptor]
         )
+        descriptor.fetchLimit = limit
 
         let dtos = try modelContext.fetch(descriptor)
         return dtos.map { $0.toDomain() }
