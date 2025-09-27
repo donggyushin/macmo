@@ -245,6 +245,22 @@ struct MemoDetailView: View {
     }
 }
 
+
+import Factory
+private struct MemoDetailViewPreview: View {
+    
+    @State var memo: Memo?
+    
+    var body: some View {
+        ZStack {
+            MemoDetailView(model: .init(id: memo?.id))
+        }
+        .task {
+            let dao = Container.shared.memoDAO()
+            memo = try? dao.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
+        }
+    }
+}
 #Preview {
-    MemoDetailView(model: .init(id: nil))
+    MemoDetailViewPreview()
 }
