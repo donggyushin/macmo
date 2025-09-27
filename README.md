@@ -63,7 +63,6 @@ echo "✅ macmo installed successfully!"
 ### Keyboard Shortcuts
 - **⌘N** - New memo (opens in separate window)
 - **Return** - Move from title to contents when editing
-- **Delete** - Delete selected memo
 
 ## Architecture
 
