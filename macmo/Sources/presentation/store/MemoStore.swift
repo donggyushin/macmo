@@ -47,4 +47,13 @@ final class MemoStore: ObservableObject {
             self.memos[index] = memo
         }
     }
+    
+    @MainActor
+    func delete(_ id: String) throws {
+        try memoDAO.delete(id)
+        if let index = self.memos.firstIndex(where: { $0.id == id }) {
+            self.memos.remove(at: index)
+            self.selectedMemoId = self.memos.first?.id
+        }
+    }
 }

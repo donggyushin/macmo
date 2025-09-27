@@ -11,6 +11,7 @@ struct MemoListView: View {
     @ObservedObject private var store = memoStore
     @State private var sortBy: MemoSort = .createdAt
     @State private var ascending: Bool = false
+    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         NavigationSplitView {
@@ -22,7 +23,7 @@ struct MemoListView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
-                        
+                        openWindow(id: "memo-detail")
                     }
                 }
             }
@@ -59,12 +60,22 @@ struct MemoListView: View {
             ForEach(store.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
                     .tag(memo.id)
+                    .contextMenu {
+                        Button("Delete", role: .destructive) {
+                            do {
+                                try store.delete(memo.id)
+                            } catch {
+                                print("Failed to delete memo: \(error)")
+                            }
+                        }
+                    }
                     .onAppear {
                         if memo.id == store.memos.last?.id {
                             loadMoreMemos()
                         }
                     }
             }
+            .onDelete(perform: deleteMemos)
         }
         .refreshable {
             refreshMemos()
@@ -92,6 +103,17 @@ struct MemoListView: View {
             try store.fetchMemos(sortBy, ascending: ascending)
         } catch {
             print("Failed to load more memos: \(error)")
+        }
+    }
+
+    private func deleteMemos(offsets: IndexSet) {
+        for index in offsets {
+            let memo = store.memos[index]
+            do {
+                try store.delete(memo.id)
+            } catch {
+                print("Failed to delete memo: \(error)")
+            }
         }
     }
 }

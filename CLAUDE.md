@@ -1,6 +1,10 @@
-# Claude Development Context
+# CLAUDE.md
 
-This file contains essential information for Claude to understand the macmo project structure, development patterns, and workflow.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+This is a **macOS SwiftUI memo application** built with Tuist and SwiftData, following Domain-Driven Design principles.
 
 ## Essential Development Commands
 
@@ -136,8 +140,49 @@ The codebase implements a clean Repository pattern:
 - 🔄 Complete UI implementation (currently shows "Hello, World!")
 - 🔄 Real test coverage (currently has placeholder test)
 
-### Target Platform
-- **macOS 15.0+**: Minimum deployment target specified in Tuist configuration
-- **Bundle ID**: `dev.tuist.macmo`
+## macOS-Specific Features
 
-This architecture provides a solid foundation for a maintainable, testable memo application with clear separation of concerns and modern Swift development practices.
+### Navigation Structure
+- **NavigationSplitView**: Main app uses split view with sidebar (memo list) and detail pane
+- **Window Management**: New memo creation opens in separate windows using `openWindow(id: "memo-detail")`
+- **Window Dismissal**: New memo windows auto-close after saving using `dismissWindow(id: "memo-detail")`
+
+### User Interactions
+- **Context Menus**: Right-click on memo rows for delete/actions (`.contextMenu`)
+- **List Selection**: Single memo selection updates detail view automatically
+- **Keyboard Shortcuts**: Standard macOS delete key behavior with `.onDelete`
+- **Toolbar Actions**: Platform-appropriate toolbar button placement
+
+### UI Patterns
+- **No NavigationView**: Uses NavigationSplitView instead (NavigationView is iOS-focused)
+- **No .navigationBarTitleDisplayMode**: This modifier is iOS-only, removed for macOS
+- **TextEditor Styling**: Custom padding and transparent background for better macOS appearance
+- **Window Sizing**: Default window sizes specified in WindowGroup (.defaultSize)
+
+### Architecture Implementation Status
+
+#### ✅ Fully Implemented
+- Complete MVVM pattern with ViewModels
+- Factory dependency injection with production/mock DAO switching
+- Cursor-based pagination with sorting (by createdAt, updatedAt, due date)
+- SwiftData persistence with proper domain-DTO separation
+- Full memo CRUD operations (Create, Read, Update, Delete)
+- Split view navigation with memo list and detail views
+- New memo window management
+- Context menu delete functionality
+- Real-time UI updates via @Published properties
+
+#### 🎯 Current Features
+- **MemoStore**: Centralized state management with selection tracking
+- **MemoDetailViewModel**: Form-based editing with validation
+- **Pagination**: Infinite scroll with 100-item batches
+- **Sorting**: Three sort modes (created, updated, due) with ascending/descending
+- **Mock Data**: Sample memos for development/previews
+- **Error Handling**: Comprehensive try-catch with console logging
+
+### Target Platform
+- **macOS 15.0+**: Minimum deployment target
+- **Bundle ID**: `dev.tuist.macmo`
+- **Architecture**: Native macOS SwiftUI application with multi-window support
+
+This is a production-ready macOS memo application with modern Swift patterns and native macOS user experience.

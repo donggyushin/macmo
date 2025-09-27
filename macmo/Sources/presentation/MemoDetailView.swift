@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
+    @Environment(\.dismissWindow) private var dismissWindow
 
     init(model: MemoDetailViewModel) {
         _model = .init(initialValue: model)
@@ -39,12 +40,13 @@ struct MemoDetailView: View {
                 }
             }
             
-            
-
             ToolbarItem(placement: .primaryAction) {
                 if model.isEditing {
                     Button("Save") {
                         model.save()
+                        if model.isNewMemo {
+                            dismissWindow(id: "memo-detail")
+                        }
                     }
                     .disabled(!model.canSave)
                 } else {
