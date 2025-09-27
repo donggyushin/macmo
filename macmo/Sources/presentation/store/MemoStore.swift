@@ -28,6 +28,20 @@ final class MemoStore: ObservableObject {
     @MainActor
     func refreshMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
         let memos = try memoDAO.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
-        self.memos = []
+        self.memos = memos
+    }
+    
+    @MainActor
+    func add(_ memo: Memo) throws {
+        try memoDAO.save(memo)
+        self.memos.insert(memo, at: 0)
+    }
+    
+    @MainActor
+    func update(_ memo: Memo) throws {
+        try memoDAO.update(memo)
+        if let index = self.memos.firstIndex(of: memo) {
+            self.memos[index] = memo
+        }
     }
 }

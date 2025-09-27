@@ -9,10 +9,10 @@ import Foundation
 
 public struct Memo: Equatable {
     public let id: String
-    public let title: String
-    public let contents: String?
-    public let due: Date?
-    public let done: Bool
+    public var title: String
+    public var contents: String?
+    public var due: Date?
+    public var done: Bool
     public let createdAt: Date
     public let updatedAt: Date
 
