@@ -15,6 +15,12 @@ public struct Memo: Equatable {
     public var done: Bool
     public let createdAt: Date
     public let updatedAt: Date
+    
+    public var isUrgent: Bool {
+        // Consider urgent if due within 3 days (259200 seconds) and not completed
+        guard let due = due, !done else { return false }
+        return due.timeIntervalSinceNow <= 259200
+    }
 
     public init(
         id: String = UUID().uuidString,
