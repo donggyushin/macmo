@@ -153,7 +153,8 @@ class MemoDAO: MemoDAOProtocol {
                 let now = Date()
                 let timeInterval = dueDate.timeIntervalSince(now)
                 // Consider urgent if due within 3 days (259200 seconds) and not completed
-                urgentMatch = timeInterval > 0 && timeInterval <= 259200
+//                urgentMatch = timeInterval > 0 && timeInterval <= 259200
+                urgentMatch = timeInterval <= 259200
             }
 
             // Special "completed" feature: include all completed memos

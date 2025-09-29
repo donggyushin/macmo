@@ -12,6 +12,7 @@ struct SearchMemoView: View {
 
     @StateObject var model: SearchMemoViewModel
     @Environment(\.openWindow) private var openWindow
+    @FocusState var focusSearchField
 
     var body: some View {
         NavigationSplitView {
@@ -43,6 +44,10 @@ struct SearchMemoView: View {
 
             TextField("Search memos...", text: $model.query)
                 .textFieldStyle(PlainTextFieldStyle())
+                .focused($focusSearchField)
+                .onAppear {
+                    focusSearchField = true
+                }
         }
         .padding(8)
         .background(Color(.controlBackgroundColor))
