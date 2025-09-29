@@ -48,7 +48,7 @@ struct SearchMemoView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
 
-            TextField("Search memos...", text: $model.query)
+            TextField("Search urgent or completed", text: $model.query)
                 .textFieldStyle(PlainTextFieldStyle())
                 .focused($focusSearchField)
                 .onAppear {
