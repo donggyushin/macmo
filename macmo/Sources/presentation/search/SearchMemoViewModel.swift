@@ -37,9 +37,10 @@ final class SearchMemoViewModel: ObservableObject {
     }
     
     @MainActor
-    func toggleComplete(_ id: String) {
+    func update(_ id: String) {
+        guard let updatedMemo = try? memoDAO.findById(id) else { return }
         guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
-        self.memos[index].done.toggle()
+        self.memos[index] = updatedMemo
     }
     
     @MainActor

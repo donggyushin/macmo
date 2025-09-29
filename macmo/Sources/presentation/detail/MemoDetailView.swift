@@ -20,10 +20,10 @@ struct MemoDetailView: View {
         case contents
     }
     
-    var completeAction: (() -> ())?
-    func onCompleteAction(_ action: (() -> ())?) -> Self {
+    var changeAction: (() -> ())?
+    func onChangeAction(_ action: (() -> ())?) -> Self {
         var copy = self
-        copy.completeAction = action
+        copy.changeAction = action
         return copy
     }
     
@@ -63,6 +63,7 @@ struct MemoDetailView: View {
                         if model.isNewMemo {
                             dismissWindow(id: "memo-detail")
                         }
+                        changeAction?()
                     }
                     .disabled(!model.canSave)
                 } else {
@@ -189,7 +190,7 @@ struct MemoDetailView: View {
             } else {
                 Button {
                     model.toggleComplete()
-                    completeAction?()
+                    changeAction?()
                 } label: {
                     HStack {
                         Image(systemName: model.isDone ? "checkmark.circle.fill" : "circle")
