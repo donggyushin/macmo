@@ -47,7 +47,13 @@ struct MemoRowView: View {
                 if let due = memo.due {
                     Text("Due: \(due, style: .date)")
                         .font(.caption2)
-                        .foregroundColor(due < Date() ? .red : .blue)
+                        .foregroundColor({
+                            if memo.done {
+                                return .green
+                            } else {
+                                return due < Date() ? .red : .blue
+                            }
+                        }())
                 }
 
                 Spacer()
