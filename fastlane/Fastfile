@@ -23,7 +23,8 @@ platform :mac do
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
-      output_directory: "./build"
+      output_directory: "./build",
+      export_method: "developer-id"
     )
   end
 end
