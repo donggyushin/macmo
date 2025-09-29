@@ -24,7 +24,8 @@ platform :mac do
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "developer-id"
+      # export_method: "developer-id",
+      export_method: "development"
     )
   end
 end

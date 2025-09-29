@@ -2,7 +2,8 @@ git_url("https://github.com/donggyushin/macmo-match")
 
 storage_mode("git")
 
-type("developer_id") # For GitHub releases and direct distribution
+# type("developer_id") # For GitHub releases and direct distribution
+type("development")
 platform("macos")
 app_identifier("dev.tuist.macmo")
 
