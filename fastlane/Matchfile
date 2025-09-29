@@ -2,7 +2,7 @@ git_url("https://github.com/donggyushin/macmo-match")
 
 storage_mode("git")
 
-type("c60be45c-20c8-4bad-b6b2-7aee665f0f11") # The default type, can be: appstore, adhoc, enterprise or development
+type("developer_id") # The default type, can be: appstore, adhoc, enterprise or development
 platform("macos")
 app_identifier("dev.tuist.macmo")
 
