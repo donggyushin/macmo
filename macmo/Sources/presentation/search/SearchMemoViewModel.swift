@@ -37,6 +37,13 @@ final class SearchMemoViewModel: ObservableObject {
     }
     
     @MainActor
+    func delete(_ id: String) {
+        selectedMemoId = nil
+        guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
+        self.memos.remove(at: index)
+    }
+    
+    @MainActor
     func update(_ id: String) {
         guard let updatedMemo = try? memoDAO.findById(id) else { return }
         guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }

@@ -27,6 +27,13 @@ struct MemoDetailView: View {
         return copy
     }
     
+    var deleteAction: (() -> ())?
+    func onDeleteAction(_ action: (() -> ())?) -> Self {
+        var copy = self
+        copy.deleteAction = action
+        return copy
+    }
+    
     init(model: MemoDetailViewModel) {
         _model = .init(initialValue: model)
     }
@@ -86,6 +93,7 @@ struct MemoDetailView: View {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
                 model.delete()
+                deleteAction?()
             }
         } message: {
             Text("Are you sure you want to delete this memo? This action cannot be undone.")
