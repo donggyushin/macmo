@@ -1,0 +1,30 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:mac)
+
+platform :mac do
+  desc "Build and sign for distribution"
+  lane :release do
+    match(type: "developer_id")
+    build_mac_app(
+      workspace: "macmo.xcworkspace", 
+      scheme: "macmo",
+      configuration: "Release",
+      export_method: "developer-id",
+      output_directory: "./build"
+    )
+  end
+end
