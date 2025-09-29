@@ -18,9 +18,9 @@ default_platform(:mac)
 platform :mac do
   desc "Build and sign for distribution"
   lane :release do
-    match(type: "developer_id")
+    # match(type: "developer_id")
     build_mac_app(
-      workspace: "macmo.xcworkspace", 
+      workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       export_method: "developer-id",
