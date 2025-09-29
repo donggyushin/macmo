@@ -25,6 +25,8 @@ A clean, simple memo application for macOS with iCloud sync.
 
 ## Installation
 
+### Now, can't run macmo app in other device. This issue related with distribution certificates. I'll fix this as soon as possible.
+
 
 ### Quick Install (Recommended)
 
