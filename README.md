@@ -143,8 +143,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Roadmap
 
-- [ ] Export memos to Markdown/PDF
-- [ ] Search and filtering
+- [x] Markdown
+- [x] Search and filtering
 - [ ] Tags and categories
 - [x] Rich text formatting
 - [ ] Release iOS mobile application sharing data through iCloud
