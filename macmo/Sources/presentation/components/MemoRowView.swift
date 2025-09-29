@@ -19,6 +19,17 @@ struct MemoRowView: View {
 
                 Spacer()
 
+                if memo.isUrgent {
+                    Text("URGENT")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.red)
+                        .cornerRadius(4)
+                }
+
                 if memo.done {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
