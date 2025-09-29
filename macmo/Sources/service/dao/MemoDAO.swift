@@ -161,8 +161,14 @@ class MemoDAO: MemoDAOProtocol {
             if searchQuery == "completed" && memo.done {
                 completedMatch = true
             }
+            
+            // Special "uncompleted" feature: include all uncompleted memos
+            var uncompletedMatch = false
+            if searchQuery == "uncompleted" && memo.done == false {
+                uncompletedMatch = true
+            }
 
-            return (titleMatch || contentMatch || urgentMatch || completedMatch) ? memo : nil
+            return (titleMatch || contentMatch || urgentMatch || completedMatch || uncompletedMatch) ? memo : nil
         }
 
         // Apply cursor pagination
