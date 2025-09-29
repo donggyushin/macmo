@@ -19,7 +19,14 @@ struct MemoDetailView: View {
         case title
         case contents
     }
-
+    
+    var completeAction: (() -> ())?
+    func onCompleteAction(_ action: (() -> ())?) -> Self {
+        var copy = self
+        copy.completeAction = action
+        return copy
+    }
+    
     init(model: MemoDetailViewModel) {
         _model = .init(initialValue: model)
     }
@@ -182,6 +189,7 @@ struct MemoDetailView: View {
             } else {
                 Button {
                     model.toggleComplete()
+                    completeAction?()
                 } label: {
                     HStack {
                         Image(systemName: model.isDone ? "checkmark.circle.fill" : "circle")

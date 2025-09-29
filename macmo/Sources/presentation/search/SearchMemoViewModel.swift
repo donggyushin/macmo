@@ -37,6 +37,12 @@ final class SearchMemoViewModel: ObservableObject {
     }
     
     @MainActor
+    func toggleComplete(_ id: String) {
+        guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
+        self.memos[index].done.toggle()
+    }
+    
+    @MainActor
     private func search(_ query: String) throws {
         let result = try memoDAO.search(query: query, cursorId: nil, limit: 100)
         self.memos = result

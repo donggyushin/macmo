@@ -24,6 +24,9 @@ struct SearchMemoView: View {
         } detail: {
             if let selectedMemoId = model.selectedMemoId {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
+                    .onCompleteAction {
+                        model.toggleComplete(selectedMemoId)
+                    }
             } else {
                 VStack {
                     Image(systemName: "magnifyingglass")
