@@ -1,0 +1,61 @@
+//
+//  MemoRepository.swift
+//  macmo
+//
+//  Created by 신동규 on 9/30/25.
+//
+
+import Foundation
+
+final class MemoRepository: MemoRepositoryProtocol {
+    
+    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
+    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
+    
+    let memoDAO: MemoDAOProtocol
+    
+    init(memoDAO: MemoDAOProtocol) {
+        self.memoDAO = memoDAO
+    }
+    
+    func save(_ memo: Memo) throws {
+        try memoDAO.save(memo)
+    }
+    
+    func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {
+        try memoDAO.findAll(cursorId: cursorId, limit: limit, sortBy: sortBy, ascending: ascending)
+    }
+    
+    func findById(_ id: String) throws -> Memo? {
+        try memoDAO.findById(id)
+    }
+    
+    func update(_ memo: Memo) throws {
+        return try memoDAO.update(memo)
+    }
+    
+    func delete(_ id: String) throws {
+        try memoDAO.delete(id)
+    }
+    
+    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
+        try memoDAO.search(query: query, cursorId: cursorId, limit: limit)
+    }
+    
+    func get() -> MemoSort {
+        return memoSortCache
+    }
+    
+    
+    func set(_ sort: MemoSort) {
+        memoSortCache = sort
+    }
+    
+    func getAscending() -> Bool {
+        ascendingCache
+    }
+    
+    func setAscending(_ ascending: Bool) {
+        ascendingCache = ascending
+    }
+}

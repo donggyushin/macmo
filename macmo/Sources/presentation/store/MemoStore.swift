@@ -22,8 +22,8 @@ final class MemoStore: ObservableObject {
     
     fileprivate init() {
         
-        let sortBy: MemoSort = memoDAO.get()
-        let ascending = memoDAO.getAscending()
+        let sortBy: MemoSort = memoRepository.get()
+        let ascending = memoRepository.getAscending()
         
         Task { @MainActor in
             self.sortBy = sortBy
@@ -36,29 +36,29 @@ final class MemoStore: ObservableObject {
     private func bind() {
         $sortBy
             .sink { sort in
-                self.memoDAO.set(sort)
+                self.memoRepository.set(sort)
             }
             .store(in: &cancellables)
         
         $ascending
             .sink { ascending in
-                self.memoDAO.setAscending(ascending)
+                self.memoRepository.setAscending(ascending)
             }
             .store(in: &cancellables)
     }
     
-    @Injected(\.memoDAO) private var memoDAO
+    @Injected(\.memoRepository) private var memoRepository
     @Injected(\.memoUseCase) private var memoUseCase
     
     @MainActor
     func fetchMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
-        let memos = try memoDAO.findAll(cursorId: memos.last?.id, limit: 100, sortBy: sort, ascending: ascending)
+        let memos = try memoRepository.findAll(cursorId: memos.last?.id, limit: 100, sortBy: sort, ascending: ascending)
         self.memos.append(contentsOf: memos)
     }
     
     @MainActor
     func refreshMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
-        let memos = try memoDAO.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
+        let memos = try memoRepository.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
         self.memos = memos
         self.selectedMemoId = memos.first?.id
     }

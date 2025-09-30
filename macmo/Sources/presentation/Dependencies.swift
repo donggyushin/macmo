@@ -47,6 +47,13 @@ extension Container {
         .singleton
     }
     
+    var memoRepository: Factory<MemoRepositoryProtocol> {
+        self {
+            MemoRepository(memoDAO: self.memoDAO())
+        }
+        .singleton
+    }
+    
     var calendarService: Factory<CalendarServiceProtocol> {
         self {
             CalendarService()

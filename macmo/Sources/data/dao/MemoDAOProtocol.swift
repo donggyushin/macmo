@@ -2,9 +2,10 @@
 //  MemoDAOProtocol.swift
 //  macmo
 //
-//  Created by 신동규 on 9/27/25.
+//  Created by 신동규 on 9/30/25.
 //
 
+import Foundation
 
 public protocol MemoDAOProtocol {
     func save(_ memo: Memo) throws
@@ -13,9 +14,4 @@ public protocol MemoDAOProtocol {
     func update(_ memo: Memo) throws
     func delete(_ id: String) throws
     func search(query: String, cursorId: String?, limit: Int) throws -> [Memo]
-
-    func get() -> MemoSort
-    func set(_ sort: MemoSort)
-    func getAscending() -> Bool
-    func setAscending(_ ascending: Bool)
 }
