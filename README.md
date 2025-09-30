@@ -78,19 +78,45 @@ echo "✅ macmo installed successfully!"
 
 ## Architecture
 
-This project follows clean architecture principles:
+This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles with clear separation of concerns:
 
-- **Domain Layer** - Pure business logic with `Memo` entities
-- **Service Layer** - Data persistence with SwiftData + CloudKit
-- **Presentation Layer** - SwiftUI views with MVVM pattern
+### Three-Layer Architecture
+
+#### 1. Domain Layer (`/domain/`)
+Pure business logic with no framework dependencies:
+- **Entities**: Core business objects (`Memo`, `MemoSort`)
+- **Repository Protocols**: Data access interfaces (`MemoRepositoryProtocol`)
+- **Service Protocols**: External service interfaces (`CalendarServiceProtocol`)
+- **Use Cases**: Business logic orchestration (`MemoUseCase`)
+
+#### 2. Data Layer (`/data/`)
+Infrastructure implementations and persistence:
+- **DAO**: Low-level data access (`MemoDAO`, `MockMemoDAO`)
+- **Repository**: Caching + DAO delegation (`MemoRepository`)
+- **DTO**: SwiftData models with domain mapping (`MemoDTO`)
+- **Schema**: Versioned schemas with migrations (`MemoSchemaV1`, `V2`)
+- **Services**: External integrations (`CalendarService`)
+
+#### 3. Presentation Layer (`/presentation/`)
+UI and user interaction:
+- **MVVM Pattern**: ViewModels handle business logic for views
+- **State Management**: Centralized state with `MemoStore`
+- **SwiftUI Views**: Organized by feature (list, detail, search, components)
+
+### Key Design Patterns
+
+- **Repository + DAO Pattern**: Repository adds caching on top of DAO persistence
+- **Use Case Pattern**: Orchestrates multiple services (DAO + Calendar)
+- **Protocol-Oriented Design**: Every implementation has a domain protocol
+- **Dependency Injection**: Factory framework with automatic preview mocks
 
 ### Key Technologies
 - **SwiftUI** - Modern UI framework
-- **SwiftData** - Apple's latest persistence framework with schema migration
-- **CloudKit** - iCloud integration for sync
+- **SwiftData** - Persistence with schema migration + CloudKit sync
 - **EventKit** - Calendar integration for due date reminders
-- **Tuist** - Project generation and dependency management
 - **Factory** - Dependency injection framework
+- **Tuist** - Project generation and dependency management
+- **Fastlane** - Automated build and release pipeline
 
 ## Development
 
@@ -115,15 +141,23 @@ open macmo.xcworkspace
 ### Project Structure
 ```
 macmo/Sources/
-├── domain/          # Core business logic
-│   ├── model/       # Domain entities (Memo)
-│   └── dao/         # Data access protocols
-├── service/         # Infrastructure layer
-│   ├── dao/         # DAO implementations
-│   └── dto/         # SwiftData models
-└── presentation/    # UI layer
-    ├── store/       # State management
-    └── *.swift      # SwiftUI views
+├── domain/              # Core business logic (no framework dependencies)
+│   ├── entity/          # Domain entities (Memo, MemoSort)
+│   ├── repository/      # Repository protocol interfaces
+│   ├── service/         # Service protocol interfaces
+│   └── usecase/         # Business logic orchestration
+├── data/                # Infrastructure & data layer
+│   ├── dao/             # Data Access Object implementations
+│   ├── repository/      # Repository implementations
+│   ├── dto/             # SwiftData models
+│   ├── schema/          # Schema versions & migrations
+│   └── service/         # Service implementations (Calendar, etc.)
+└── presentation/        # UI layer (SwiftUI + MVVM)
+    ├── list/            # Memo list views
+    ├── detail/          # Memo detail views
+    ├── search/          # Search functionality
+    ├── components/      # Reusable UI components
+    └── store/           # State management (MemoStore)
 ```
 
 ### Building for Release

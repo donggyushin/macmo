@@ -50,95 +50,204 @@ This is a **Tuist-managed macOS SwiftUI application** following **Domain-Driven 
 
 ```
 macmo/Sources/
-├── domain/          # Core business logic (entities, protocols)
-│   ├── model/       # Domain entities (pure business objects)
-│   └── dao/         # Data access protocols/interfaces
-├── service/         # Infrastructure & application services
-│   ├── dao/         # Concrete DAO implementations
-│   └── dto/         # Data Transfer Objects for persistence
-└── presentation/    # UI layer (SwiftUI views)
+├── domain/          # Core business logic (entities, protocols, interfaces)
+│   ├── entity/      # Domain entities (Memo, MemoSort)
+│   ├── repository/  # Repository protocol interfaces
+│   ├── service/     # Service protocol interfaces (CalendarService)
+│   └── usecase/     # Application use cases (business logic orchestration)
+├── data/            # Infrastructure & data layer
+│   ├── dao/         # Data Access Object (DAO) implementations & protocols
+│   ├── dto/         # Data Transfer Objects for persistence (SwiftData models)
+│   ├── repository/  # Repository implementations
+│   ├── schema/      # SwiftData schema versions & migrations
+│   └── service/     # Service implementations (CalendarService, etc.)
+└── presentation/    # UI layer (SwiftUI views & ViewModels)
+    ├── list/        # Memo list views
+    ├── detail/      # Memo detail views
+    ├── search/      # Search views
+    ├── components/  # Reusable UI components
+    └── store/       # State management (MemoStore)
 ```
 
 ### Key Architectural Patterns
 
 #### 1. Domain-Driven Design Layer Separation
 - **Domain Layer** (`/domain/`): Contains pure business logic with no external dependencies
-  - `Memo.swift`: Core domain entity with business rules
-  - `MemoDAOProtocol.swift`: Repository pattern interface
-- **Service Layer** (`/service/`): Infrastructure implementations and application services
-  - `MemoDAO.swift`: SwiftData-based persistence implementation
-  - `MockMemoDAO.swift`: In-memory implementation for testing/development
-  - `MemoDTO.swift`: SwiftData model with domain mapping
-- **Presentation Layer** (`/presentation/`): SwiftUI views and UI logic
+  - **Entities** (`/entity/`): Core domain models
+    - `Memo.swift`: Core domain entity with business rules
+    - `MemoSort.swift`: Sorting strategy enumeration
+  - **Repository Protocols** (`/repository/`): Data access interfaces
+    - `MemoRepositoryProtocol.swift`: Repository interface defining CRUD + sorting operations
+  - **Service Protocols** (`/service/`): External service interfaces
+    - `CalendarServiceProtocol.swift`: Calendar integration interface
+  - **Use Cases** (`/usecase/`): Business logic orchestration
+    - `MemoUseCase.swift`: Coordinates memo operations with calendar sync
 
-#### 2. Repository Pattern Implementation
-The codebase implements a clean Repository pattern:
-- **Protocol**: `MemoDAOProtocol` defines the contract (CRUD operations)
-- **Production Implementation**: `MemoDAO` uses SwiftData for persistence
-- **Test Implementation**: `MockMemoDAO` provides in-memory storage with sample data
-- **Domain-DTO Mapping**: Explicit conversion between domain models and persistence DTOs
+- **Data Layer** (`/data/`): Infrastructure implementations and data persistence
+  - **DAO** (`/dao/`): Low-level data access
+    - `MemoDAOProtocol.swift`: DAO interface for persistence operations
+    - `MemoDAO.swift`: SwiftData-based DAO implementation
+    - `MockMemoDAO.swift`: In-memory DAO for testing/development
+  - **Repository** (`/repository/`): Repository pattern implementations
+    - `MemoRepository.swift`: Implements MemoRepositoryProtocol, delegates to DAO + caching
+  - **DTO** (`/dto/`): Data Transfer Objects
+    - `MemoDTO.swift`: SwiftData model with domain mapping methods
+  - **Schema** (`/schema/`): SwiftData schema management
+    - `MemoSchemaV1.swift`, `MemoSchemaV2.swift`: Schema versions
+    - `MemoMigrationPlan.swift`: Migration strategy
+  - **Services** (`/service/`): External service implementations
+    - `CalendarService.swift`: EventKit-based calendar integration
+    - `MockCalendarService.swift`: Mock calendar service for testing
 
-#### 3. Dependency Injection Ready
-- **Factory Framework**: Project includes Factory dependency injection framework (v2.5.3)
-- **Protocol-Based Design**: DAO implementations are easily swappable via protocols
-- **Note**: Factory is configured but not yet actively used in the current codebase
+- **Presentation Layer** (`/presentation/`): SwiftUI views, ViewModels, and state management
+  - `MemoStore.swift`: Centralized state management with selection tracking
+  - `MemoDetailViewModel.swift`: Detail view business logic
+  - `SearchMemoViewModel.swift`: Search functionality
+  - Various SwiftUI views organized by feature
+
+#### 2. Repository Pattern with DAO Abstraction
+The codebase implements a **multi-layered Repository pattern**:
+
+**Three-Layer Data Access Architecture:**
+1. **Repository Layer** (Domain interface → Data implementation)
+   - **Protocol**: `MemoRepositoryProtocol` (in `/domain/repository/`)
+   - **Implementation**: `MemoRepository` (in `/data/repository/`)
+   - **Responsibilities**: User preferences caching (sort order, ascending), delegates persistence to DAO
+
+2. **DAO Layer** (Low-level persistence abstraction)
+   - **Protocol**: `MemoDAOProtocol` (in `/data/dao/`)
+   - **Production**: `MemoDAO` - SwiftData persistence
+   - **Mock**: `MockMemoDAO` - In-memory storage with sample data
+   - **Responsibilities**: Direct database operations (CRUD, search, pagination)
+
+3. **Use Case Layer** (Business logic orchestration)
+   - **Implementation**: `MemoUseCase` (in `/domain/usecase/`)
+   - **Responsibilities**: Coordinates memo operations with calendar service integration
+   - **Pattern**: Uses both DAO (for persistence) and CalendarService (for calendar sync)
+
+**Key Design Decisions:**
+- **Repository wraps DAO**: Repository adds caching layer (UserDefaults for sort preferences) on top of DAO
+- **UseCase orchestrates**: Combines multiple services (DAO + CalendarService) for complex operations
+- **Domain-DTO Mapping**: Explicit `toDomain()` and `fromDomain()` methods
+- **Protocol-first**: Every implementation has a corresponding protocol in the domain layer
+
+#### 3. Dependency Injection with Factory
+- **Factory Framework**: Fully integrated Factory DI framework (v2.5.3)
+- **Configured in**: `presentation/Dependencies.swift`
+- **Injection Hierarchy**:
+  - `ModelContainer` → `ModelContext` (SwiftData setup)
+  - `MemoDAO` (production: `MemoDAO`, preview: `MockMemoDAO`)
+  - `MemoRepository` (wraps `MemoDAO`)
+  - `CalendarService` (production: `CalendarService`, preview: `MockCalendarService`)
+  - `MemoUseCase` (combines `MemoDAO` + `CalendarService`)
+- **Usage Pattern**: `@Injected(\.memoRepository)` in ViewModels and stores
 
 ### Key Dependencies
 
 #### Core Frameworks
 - **SwiftUI**: UI framework for macOS application
-- **SwiftData**: Apple's modern data persistence framework
+- **SwiftData**: Apple's modern data persistence framework with schema migration
+- **EventKit**: Calendar integration for due date reminders
 - **Foundation**: Core Swift framework
 
 #### External Dependencies
 - **Factory** (v2.5.3): Dependency injection framework by @hmlongco
-  - Configured in `Project.swift` but not yet implemented in code
-  - Ideal for injecting DAO implementations into ViewModels/Services
+  - Fully integrated in `presentation/Dependencies.swift`
+  - Used throughout the app for injecting repositories, DAOs, and services
 
 #### Development Tools
 - **Tuist** (v4.68.0): Project generation and build system management
 - **mise**: Tool version management (specified in `mise.toml`)
+- **Fastlane**: Automated build and release pipeline
 
 ## Important Conventions & Patterns
 
 ### File Organization Rules
-1. **Domain purity**: Domain layer files have no framework imports except Foundation
-2. **DTO-Domain separation**: Clear mapping between SwiftData DTOs and domain models
-3. **Protocol-first design**: All data access goes through protocol interfaces
-4. **Sample data patterns**: Mock implementations include realistic sample data via static factory methods
+1. **Domain purity**: Domain layer contains only protocols, entities, and use cases - no framework dependencies
+2. **Data layer isolation**: All infrastructure concerns (persistence, external services) live in `/data/`
+3. **DTO-Domain separation**: Clear mapping between SwiftData DTOs and domain models
+4. **Protocol-first design**: All data access and services go through protocol interfaces defined in domain
+5. **Sample data patterns**: Mock implementations include realistic sample data via static factory methods
+
+### Layered Architecture Patterns
+- **Domain Layer**: Pure business logic, no external dependencies
+  - Protocols define contracts
+  - Entities define business objects
+  - Use cases orchestrate business operations
+- **Data Layer**: Infrastructure implementations
+  - DAOs handle low-level persistence
+  - Repositories add caching/preferences on top of DAOs
+  - Services implement external integrations (Calendar, etc.)
+- **Presentation Layer**: UI and user interaction
+  - Views (SwiftUI)
+  - ViewModels (business logic for views)
+  - Stores (centralized state management)
 
 ### Persistence Patterns
 - **SwiftData Integration**: Uses `@Model` macro for DTOs with `@Attribute(.unique)` for IDs
+- **Schema Migration**: Versioned schemas (`MemoSchemaV1`, `MemoSchemaV2`) with migration plan
 - **Domain Mapping**: Explicit `toDomain()` and `fromDomain()` methods for DTO-Domain conversion
-- **Error Handling**: All DAO methods throw for proper error propagation
-- **Sorting**: Default sort by `createdAt` in reverse order (newest first)
+- **Error Handling**: All DAO and repository methods throw for proper error propagation
+- **Cursor Pagination**: Supports cursor-based pagination with configurable limit
+- **Sorting**: Three sort modes (createdAt, updatedAt, due) with ascending/descending order
 
-### Testing Patterns
-- **Mock Implementations**: Dedicated mock classes with sample data
+### Service Integration Patterns
+- **Calendar Service**: EventKit integration for syncing memos with due dates
+  - Auto-creates calendar events when memo has due date
+  - Updates events when memo changes
+  - Removes events when memo deleted or due date removed
+  - Stores `eventIdentifier` in memo for tracking
+- **Use Case Pattern**: `MemoUseCase` coordinates DAO + CalendarService operations
+- **Error Handling**: Graceful degradation if calendar access denied
+
+### Testing & Preview Patterns
+- **Mock Implementations**: Dedicated mock classes for DAOs and services
+- **Factory Preview Switching**: `.onPreview { MockImplementation }` for SwiftUI previews
 - **Static Factories**: `MockMemoDAO.withSampleData()` for consistent test data
-- **Protocol Testing**: Tests can target the protocol interface rather than specific implementations
+- **Protocol Testing**: Tests target protocol interfaces rather than concrete implementations
 
 ### Development Workflow
 1. Always run `tuist generate` after making configuration changes
-2. Use mock implementations during UI development before persistence is ready
-3. Domain models should remain framework-agnostic
-4. DTOs handle SwiftData-specific requirements and mapping
+2. Use mock implementations for SwiftUI previews (automatically via Factory)
+3. Domain layer should remain framework-agnostic (protocols and entities only)
+4. Infrastructure implementations go in `/data/` layer
+5. Use cases coordinate between multiple services
+6. Repositories add caching/preferences on top of DAOs
 
 ## Current Implementation Status
 
-### Implemented
-- ✅ Complete domain model (`Memo`)
-- ✅ Repository pattern with protocol and implementations
-- ✅ SwiftData persistence layer with DTO mapping
-- ✅ Mock implementation with sample data
-- ✅ Basic SwiftUI application structure
-- ✅ Tuist project configuration
+### ✅ Fully Implemented
+- **Domain Layer**:
+  - Complete domain entities (`Memo`, `MemoSort`, `CalendarServiceError`)
+  - Repository protocol (`MemoRepositoryProtocol`)
+  - Service protocols (`CalendarServiceProtocol`)
+  - Use cases (`MemoUseCase` with calendar integration)
 
-### Ready for Development
-- 🔄 Factory dependency injection integration
-- 🔄 SwiftUI ViewModels and business logic
-- 🔄 Complete UI implementation (currently shows "Hello, World!")
-- 🔄 Real test coverage (currently has placeholder test)
+- **Data Layer**:
+  - DAO layer with protocol and implementations (`MemoDAO`, `MockMemoDAO`)
+  - Repository implementation (`MemoRepository` with UserDefaults caching)
+  - SwiftData persistence with DTO mapping (`MemoDTO`)
+  - Schema migration (`MemoSchemaV1`, `MemoSchemaV2`, `MemoMigrationPlan`)
+  - Calendar service integration (`CalendarService`, `MockCalendarService`)
+
+- **Presentation Layer**:
+  - Complete MVVM pattern with ViewModels
+  - Centralized state management (`MemoStore`)
+  - Full UI implementation:
+    - Split view navigation with list and detail
+    - Search functionality with special filters
+    - Multi-window support for new memos
+    - Context menu operations
+    - Due date management with overdue indicators
+    - Task completion tracking
+
+- **Infrastructure**:
+  - Factory dependency injection fully configured
+  - SwiftData + CloudKit integration
+  - EventKit calendar integration
+  - Cursor-based pagination
+  - Three-way sorting (created/updated/due)
+  - Real-time UI updates
 
 ## macOS-Specific Features
 
@@ -159,26 +268,29 @@ The codebase implements a clean Repository pattern:
 - **TextEditor Styling**: Custom padding and transparent background for better macOS appearance
 - **Window Sizing**: Default window sizes specified in WindowGroup (.defaultSize)
 
-### Architecture Implementation Status
+### Architecture Summary
 
-#### ✅ Fully Implemented
-- Complete MVVM pattern with ViewModels
-- Factory dependency injection with production/mock DAO switching
-- Cursor-based pagination with sorting (by createdAt, updatedAt, due date)
-- SwiftData persistence with proper domain-DTO separation
-- Full memo CRUD operations (Create, Read, Update, Delete)
-- Split view navigation with memo list and detail views
-- New memo window management
-- Context menu delete functionality
-- Real-time UI updates via @Published properties
+#### Three-Layer Clean Architecture
+1. **Domain Layer** (`/domain/`): Business logic core
+   - Protocols for all external contracts
+   - Pure entities with no framework dependencies
+   - Use cases for orchestrating business operations
 
-#### 🎯 Current Features
-- **MemoStore**: Centralized state management with selection tracking
-- **MemoDetailViewModel**: Form-based editing with validation
-- **Pagination**: Infinite scroll with 100-item batches
-- **Sorting**: Three sort modes (created, updated, due) with ascending/descending
-- **Mock Data**: Sample memos for development/previews
-- **Error Handling**: Comprehensive try-catch with console logging
+2. **Data Layer** (`/data/`): Infrastructure implementations
+   - DAO pattern for persistence abstraction
+   - Repository pattern for caching + DAO delegation
+   - Service implementations for external integrations
+
+3. **Presentation Layer** (`/presentation/`): UI and interaction
+   - MVVM pattern with ViewModels
+   - Centralized state management (MemoStore)
+   - SwiftUI views organized by feature
+
+#### Key Design Patterns
+- **Repository + DAO**: Repository handles caching, DAO handles persistence
+- **Use Case Pattern**: Orchestrates multiple services (DAO + CalendarService)
+- **Protocol-Oriented**: Every implementation has a domain protocol
+- **Dependency Injection**: Factory framework with automatic mock switching for previews
 
 ### Target Platform
 - **macOS 15.0+**: Minimum deployment target
