@@ -9,17 +9,33 @@ import SwiftUI
 
 struct MemoRowView: View {
     let memo: Memo
+    let query: String?
+    
+    init(memo: Memo, query: String? = nil) {
+        self.memo = memo
+        self.query = query
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(memo.title)
-                    .font(.headline)
-                    .strikethrough(memo.done)
-
+                
+                if let query {
+                    Text(highlightedText(memo.title, query: query))
+                        .font(.headline)
+                        .strikethrough(memo.done)
+                } else {
+                    Text(memo.title)
+                        .font(.headline)
+                        .strikethrough(memo.done)
+                }
+                
                 Spacer()
-
-                if memo.isUrgent {
+                
+                if memo.done {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.green)
+                } else if memo.isUrgent {
                     Text("URGENT")
                         .font(.caption2)
                         .fontWeight(.bold)
@@ -29,18 +45,20 @@ struct MemoRowView: View {
                         .background(Color.red)
                         .cornerRadius(4)
                 }
-
-                if memo.done {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                }
             }
 
             if let contents = memo.contents, !contents.isEmpty {
-                Text(contents)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
+                if let query {
+                    Text(highlightedText(contents, query: query))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                } else {
+                    Text(contents)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
             }
 
             HStack {
@@ -64,5 +82,31 @@ struct MemoRowView: View {
             }
         }
         .padding(.vertical, 2)
+    }
+    
+    private func highlightedText(_ text: String, query: String) -> AttributedString {
+        guard !query.isEmpty else {
+            return AttributedString(text)
+        }
+
+        var attributed = AttributedString(text)
+        let lowercaseText = text.lowercased()
+        let lowercaseQuery = query.lowercased()
+
+        var searchRange = lowercaseText.startIndex
+        while searchRange < lowercaseText.endIndex,
+              let range = lowercaseText.range(of: lowercaseQuery, range: searchRange..<lowercaseText.endIndex) {
+
+            if let startIndex = AttributedString.Index(range.lowerBound, within: attributed),
+               let endIndex = AttributedString.Index(range.upperBound, within: attributed) {
+                let attributedRange = startIndex..<endIndex
+                attributed[attributedRange].backgroundColor = .yellow.opacity(0.3)
+                attributed[attributedRange].foregroundColor = .primary
+            }
+
+            searchRange = range.upperBound
+        }
+
+        return attributed
     }
 }
