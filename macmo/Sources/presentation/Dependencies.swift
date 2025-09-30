@@ -68,7 +68,7 @@ extension Container {
 extension Container {
     var memoUseCase: Factory<MemoUseCase> {
         self {
-            MemoUseCase(memoDAO: self.memoDAO(), calendarService: self.calendarService())
+            MemoUseCase(memoRepository: self.memoRepository(), calendarService: self.calendarService())
         }
         .singleton
     }

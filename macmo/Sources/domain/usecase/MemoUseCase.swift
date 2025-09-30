@@ -8,11 +8,11 @@
 import Foundation
 
 public final class MemoUseCase {
-    let memoDAO: MemoDAOProtocol
+    let memoRepository: MemoRepositoryProtocol
     let calendarService: CalendarServiceProtocol
     
-    public init(memoDAO: MemoDAOProtocol, calendarService: CalendarServiceProtocol) {
-        self.memoDAO = memoDAO
+    public init(memoRepository: MemoRepositoryProtocol, calendarService: CalendarServiceProtocol) {
+        self.memoRepository = memoRepository
         self.calendarService = calendarService
     }
     
@@ -24,11 +24,11 @@ public final class MemoUseCase {
                 memo.eventIdentifier = identifier
             }
         }
-        try memoDAO.save(memo)
+        try memoRepository.save(memo)
     }
     
     public func update(_ memo: Memo) async throws {
-        let oldMemo = try? memoDAO.findById(memo.id)
+        let oldMemo = try? memoRepository.findById(memo.id)
         var memo = memo
 
         // Remove old calendar event if it exists
@@ -44,13 +44,13 @@ public final class MemoUseCase {
             }
         }
 
-        try memoDAO.update(memo)
+        try memoRepository.update(memo)
     }
     
     public func delete(_ id: String) async throws {
-        if let memo = try? memoDAO.findById(id), let identifier = memo.eventIdentifier {
+        if let memo = try? memoRepository.findById(id), let identifier = memo.eventIdentifier {
             try? await calendarService.removeFromCalendar(eventIdentifier: identifier)
         }
-        try memoDAO.delete(id)
+        try memoRepository.delete(id)
     }
 }
