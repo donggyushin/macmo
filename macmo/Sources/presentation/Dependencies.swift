@@ -46,4 +46,23 @@ extension Container {
         }
         .singleton
     }
+    
+    var calendarService: Factory<CalendarServiceProtocol> {
+        self {
+            CalendarService()
+        }
+        .onPreview {
+            MockCalendarService()
+        }
+        .singleton
+    }
+}
+
+extension Container {
+    var memoUseCase: Factory<MemoUseCase> {
+        self {
+            MemoUseCase(memoDAO: self.memoDAO(), calendarService: self.calendarService())
+        }
+        .singleton
+    }
 }
