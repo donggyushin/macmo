@@ -11,6 +11,7 @@ A clean, simple memo application for macOS with iCloud sync.
 
 ✅ **Create, edit, and organize memos** - Simple and intuitive memo management<br />
 ✅ **iCloud sync** - Access your memos across all Apple devices<br />
+✅ **Calendar integration** - Automatically sync memos with due dates to macOS Calendar<br />
 ✅ **Smart sorting** - Sort by creation date, update date, or due date<br />
 ✅ **Due date management** - Set due dates with overdue indicators<br />
 ✅ **Task completion** - Mark memos as completed with visual feedback<br />
@@ -64,6 +65,13 @@ echo "✅ macmo installed successfully!"
 - Memos automatically sync across iPhone, iPad, and Mac
 - Works offline - syncs when internet is available
 
+### Calendar Integration
+- **Automatic sync**: Memos with due dates are automatically added to your macOS Calendar
+- **Permission required**: On first launch, grant calendar access when prompted
+- **Smart updates**: Calendar events update automatically when you edit memo titles, contents, or due dates
+- **Auto cleanup**: Deleting a memo or removing its due date also removes the calendar event
+- **Event details**: Calendar events include memo title and contents with 1-hour duration
+
 ### Keyboard Shortcuts
 - **⌘N** - New memo (opens in separate window)
 - **Return** - Move from title to contents when editing
@@ -78,8 +86,9 @@ This project follows clean architecture principles:
 
 ### Key Technologies
 - **SwiftUI** - Modern UI framework
-- **SwiftData** - Apple's latest persistence framework
+- **SwiftData** - Apple's latest persistence framework with schema migration
 - **CloudKit** - iCloud integration for sync
+- **EventKit** - Calendar integration for due date reminders
 - **Tuist** - Project generation and dependency management
 - **Factory** - Dependency injection framework
 
@@ -140,8 +149,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Roadmap
 
-- [x] Markdown
+- [x] Markdown support
 - [x] Search and filtering
+- [x] Calendar integration
 - [ ] Tags and categories
 - [x] Rich text formatting
 - [ ] Release iOS mobile application sharing data through iCloud
@@ -150,6 +160,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 - **Local storage** - All data stored locally on your device
 - **iCloud sync** - Data synced through your personal iCloud account
+- **Calendar privacy** - Calendar access only used for syncing your memos, no data sharing
 - **No tracking** - No analytics or user tracking
 - **Open source** - Full source code available for review
 
