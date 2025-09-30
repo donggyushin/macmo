@@ -90,7 +90,7 @@ struct SearchMemoView: View {
                 .listRowSeparator(.hidden)
             } else {
                 ForEach(model.memos, id: \.id) { memo in
-                    SearchMemoRowView(memo: memo, query: model.query)
+                    MemoRowView(memo: memo, query: model.query)
                         .tag(memo.id)
                         .onAppear {
                             if memo.id == model.memos.last?.id {
@@ -109,76 +109,6 @@ struct SearchMemoView: View {
         } catch {
             print("Failed to load more search results: \(error)")
         }
-    }
-}
-
-struct SearchMemoRowView: View {
-    let memo: Memo
-    let query: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(highlightedText(memo.title, query: query))
-                    .font(.headline)
-                    .strikethrough(memo.done)
-
-                Spacer()
-
-                if memo.done {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.green)
-                }
-            }
-
-            if let contents = memo.contents, !contents.isEmpty {
-                Text(highlightedText(contents, query: query))
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
-            }
-
-            HStack {
-                if let due = memo.due {
-                    Text("Due: \(due, style: .date)")
-                        .font(.caption2)
-                        .foregroundColor(due < Date() ? .red : .blue)
-                }
-
-                Spacer()
-
-                Text("Updated: \(memo.updatedAt, style: .date)")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-        }
-        .padding(.vertical, 2)
-    }
-
-    private func highlightedText(_ text: String, query: String) -> AttributedString {
-        guard !query.isEmpty else {
-            return AttributedString(text)
-        }
-
-        var attributed = AttributedString(text)
-        let lowercaseText = text.lowercased()
-        let lowercaseQuery = query.lowercased()
-
-        var searchRange = lowercaseText.startIndex
-        while searchRange < lowercaseText.endIndex,
-              let range = lowercaseText.range(of: lowercaseQuery, range: searchRange..<lowercaseText.endIndex) {
-
-            if let startIndex = AttributedString.Index(range.lowerBound, within: attributed),
-               let endIndex = AttributedString.Index(range.upperBound, within: attributed) {
-                let attributedRange = startIndex..<endIndex
-                attributed[attributedRange].backgroundColor = .yellow.opacity(0.3)
-                attributed[attributedRange].foregroundColor = .primary
-            }
-
-            searchRange = range.upperBound
-        }
-
-        return attributed
     }
 }
 
