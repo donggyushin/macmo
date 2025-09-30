@@ -11,7 +11,6 @@ import Factory
 
 struct MemoListView: View {
     @ObservedObject private var store = memoStore
-    @Environment(\.openWindow) private var openWindow
 
     var body: some View {
         NavigationSplitView {
@@ -23,7 +22,7 @@ struct MemoListView: View {
             .toolbar {
                 ToolbarItem(placement: .navigation) {
                     Button(action: {
-                        openWindow(id: "search-memo")
+                        coordinator.openSearch()
                     }) {
                         Image(systemName: "magnifyingglass")
                     }
@@ -31,7 +30,7 @@ struct MemoListView: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
-                        openWindow(id: "memo-detail")
+                        coordinator.openNewMemo()
                     }
                 }
             }

@@ -10,7 +10,6 @@ import MarkdownUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
-    @Environment(\.dismissWindow) private var dismissWindow
     @FocusState private var focusedField: FocusField?
     @State private var previousContents: String = ""
     @State private var showingDeleteAlert = false
@@ -69,7 +68,7 @@ struct MemoDetailView: View {
                         Task {
                             try await model.save()
                             if model.isNewMemo {
-                                dismissWindow(id: "memo-detail")
+                                coordinator.dismissNewMemo()
                             }
                             changeAction?()
                         }
