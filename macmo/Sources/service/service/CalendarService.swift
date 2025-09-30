@@ -8,13 +8,6 @@
 import Foundation
 import EventKit
 
-enum CalendarServiceError: Error {
-    case accessDenied
-    case eventCreationFailed
-    case eventNotFound
-    case noDueDate
-}
-
 final class CalendarService: CalendarServiceProtocol {
     private let eventStore = EKEventStore()
 
