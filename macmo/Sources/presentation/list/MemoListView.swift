@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MarkdownUI
+import Factory
 
 struct MemoListView: View {
     @ObservedObject private var store = memoStore
@@ -40,6 +41,11 @@ struct MemoListView: View {
         } detail: {
             if let selectedMemoId = store.selectedMemoId {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
+            }
+        }
+        .task {
+            if let result = try? await Container.shared.calendarService().requestAccess() {
+                print(result)
             }
         }
     }
