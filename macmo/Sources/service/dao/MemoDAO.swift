@@ -113,6 +113,7 @@ class MemoDAO: MemoDAOProtocol {
             dto.due = memo.due
             dto.done = memo.done
             dto.updatedAt = Date()
+            dto.eventIdentifier = memo.eventIdentifier
             try modelContext.save()
         }
     }
