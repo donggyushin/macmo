@@ -10,7 +10,9 @@ import EventKit
 
 final class CalendarService: CalendarServiceProtocol {
     private let eventStore = EKEventStore()
-
+    
+    @UserDefault(key: "isSyncCalendar", defaultValue: true) var isSyncCalendar
+    
     func requestAccess() async throws -> Bool {
         return try await eventStore.requestFullAccessToEvents()
     }
