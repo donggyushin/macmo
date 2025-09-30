@@ -123,11 +123,12 @@ The codebase implements a **multi-layered Repository pattern**:
 3. **Use Case Layer** (Business logic orchestration)
    - **Implementation**: `MemoUseCase` (in `/domain/usecase/`)
    - **Responsibilities**: Coordinates memo operations with calendar service integration
-   - **Pattern**: Uses both DAO (for persistence) and CalendarService (for calendar sync)
+   - **Pattern**: Uses Repository (for data access) and CalendarService (for calendar sync)
 
 **Key Design Decisions:**
 - **Repository wraps DAO**: Repository adds caching layer (UserDefaults for sort preferences) on top of DAO
-- **UseCase orchestrates**: Combines multiple services (DAO + CalendarService) for complex operations
+- **UseCase orchestrates**: Combines multiple services (Repository + CalendarService) for complex operations
+- **Proper layering**: UseCase depends on Repository (not DAO), maintaining clean architecture boundaries
 - **Domain-DTO Mapping**: Explicit `toDomain()` and `fromDomain()` methods
 - **Protocol-first**: Every implementation has a corresponding protocol in the domain layer
 
@@ -139,7 +140,7 @@ The codebase implements a **multi-layered Repository pattern**:
   - `MemoDAO` (production: `MemoDAO`, preview: `MockMemoDAO`)
   - `MemoRepository` (wraps `MemoDAO`)
   - `CalendarService` (production: `CalendarService`, preview: `MockCalendarService`)
-  - `MemoUseCase` (combines `MemoDAO` + `CalendarService`)
+  - `MemoUseCase` (combines `MemoRepository` + `CalendarService`)
 - **Usage Pattern**: `@Injected(\.memoRepository)` in ViewModels and stores
 
 ### Key Dependencies
@@ -197,7 +198,7 @@ The codebase implements a **multi-layered Repository pattern**:
   - Updates events when memo changes
   - Removes events when memo deleted or due date removed
   - Stores `eventIdentifier` in memo for tracking
-- **Use Case Pattern**: `MemoUseCase` coordinates DAO + CalendarService operations
+- **Use Case Pattern**: `MemoUseCase` coordinates Repository + CalendarService operations
 - **Error Handling**: Graceful degradation if calendar access denied
 
 ### Testing & Preview Patterns
@@ -288,7 +289,8 @@ The codebase implements a **multi-layered Repository pattern**:
 
 #### Key Design Patterns
 - **Repository + DAO**: Repository handles caching, DAO handles persistence
-- **Use Case Pattern**: Orchestrates multiple services (DAO + CalendarService)
+- **Use Case Pattern**: Orchestrates multiple services (Repository + CalendarService)
+- **Clean Architecture Boundaries**: UseCase → Repository → DAO (proper layer separation)
 - **Protocol-Oriented**: Every implementation has a domain protocol
 - **Dependency Injection**: Factory framework with automatic mock switching for previews
 

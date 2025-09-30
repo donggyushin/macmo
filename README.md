@@ -106,7 +106,8 @@ UI and user interaction:
 ### Key Design Patterns
 
 - **Repository + DAO Pattern**: Repository adds caching on top of DAO persistence
-- **Use Case Pattern**: Orchestrates multiple services (DAO + Calendar)
+- **Use Case Pattern**: Orchestrates multiple services (Repository + Calendar)
+- **Clean Architecture Boundaries**: UseCase → Repository → DAO (proper layer separation)
 - **Protocol-Oriented Design**: Every implementation has a domain protocol
 - **Dependency Injection**: Factory framework with automatic preview mocks
 
