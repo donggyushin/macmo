@@ -13,6 +13,7 @@ public struct Memo: Equatable {
     public var contents: String?
     public var due: Date?
     public var done: Bool
+    public var eventIdentifier: String?
     public let createdAt: Date
     public let updatedAt: Date
     
@@ -28,6 +29,7 @@ public struct Memo: Equatable {
         contents: String? = nil,
         due: Date? = nil,
         done: Bool = false,
+        eventIdentifier: String? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
@@ -36,6 +38,7 @@ public struct Memo: Equatable {
         self.contents = contents
         self.due = due
         self.done = done
+        self.eventIdentifier = eventIdentifier
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }

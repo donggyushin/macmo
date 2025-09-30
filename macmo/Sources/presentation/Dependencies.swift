@@ -18,6 +18,7 @@ extension Container {
                 )
                 let container = try ModelContainer(
                     for: MemoDTO.self,
+                    migrationPlan: MemoMigrationPlan.self,
                     configurations: configuration
                 )
 

@@ -15,15 +15,17 @@ class MemoDTO {
     var contents: String?
     var due: Date?
     var done: Bool = false
+    var eventIdentifier: String?
     var createdAt: Date = Date()
     var updatedAt: Date = Date()
 
-    init(id: String = "", title: String = "", contents: String? = nil, due: Date? = nil, done: Bool = false, createdAt: Date = Date(), updatedAt: Date = Date()) {
+    init(id: String = "", title: String = "", contents: String? = nil, due: Date? = nil, done: Bool = false, eventIdentifier: String? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
         self.title = title
         self.contents = contents
         self.due = due
         self.done = done
+        self.eventIdentifier = eventIdentifier
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
@@ -37,6 +39,7 @@ extension MemoDTO {
             contents: contents,
             due: due,
             done: done,
+            eventIdentifier: eventIdentifier,
             createdAt: createdAt,
             updatedAt: updatedAt
         )
@@ -49,6 +52,7 @@ extension MemoDTO {
             contents: memo.contents,
             due: memo.due,
             done: memo.done,
+            eventIdentifier: memo.eventIdentifier,
             createdAt: memo.createdAt,
             updatedAt: memo.updatedAt
         )
