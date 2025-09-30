@@ -22,8 +22,8 @@ final class MemoStore: ObservableObject {
     
     fileprivate init() {
         
-        let sortBy: MemoSort = memoDAO.get()
-        let ascending = memoDAO.getAscending()
+        let sortBy: MemoSort = memoRepository.get()
+        let ascending = memoRepository.getAscending()
         
         Task { @MainActor in
             self.sortBy = sortBy
@@ -36,50 +36,51 @@ final class MemoStore: ObservableObject {
     private func bind() {
         $sortBy
             .sink { sort in
-                self.memoDAO.set(sort)
+                self.memoRepository.set(sort)
             }
             .store(in: &cancellables)
         
         $ascending
             .sink { ascending in
-                self.memoDAO.setAscending(ascending)
+                self.memoRepository.setAscending(ascending)
             }
             .store(in: &cancellables)
     }
     
-    @Injected(\.memoDAO) private var memoDAO
+    @Injected(\.memoRepository) private var memoRepository
+    @Injected(\.memoUseCase) private var memoUseCase
     
     @MainActor
     func fetchMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
-        let memos = try memoDAO.findAll(cursorId: memos.last?.id, limit: 100, sortBy: sort, ascending: ascending)
+        let memos = try memoRepository.findAll(cursorId: memos.last?.id, limit: 100, sortBy: sort, ascending: ascending)
         self.memos.append(contentsOf: memos)
     }
     
     @MainActor
     func refreshMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
-        let memos = try memoDAO.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
+        let memos = try memoRepository.findAll(cursorId: nil, limit: 100, sortBy: sort, ascending: ascending)
         self.memos = memos
         self.selectedMemoId = memos.first?.id
     }
     
     @MainActor
-    func add(_ memo: Memo) throws {
-        try memoDAO.save(memo)
+    func add(_ memo: Memo) async throws {
+        try await memoUseCase.save(memo)
         self.memos.insert(memo, at: 0)
         selectedMemoId = memo.id
     }
     
     @MainActor
-    func update(_ memo: Memo) throws {
-        try memoDAO.update(memo)
+    func update(_ memo: Memo) async throws {
+        try await memoUseCase.update(memo)
         if let index = self.memos.firstIndex(where: { $0.id == memo.id }) {
             self.memos[index] = memo
         }
     }
     
     @MainActor
-    func delete(_ id: String) throws {
-        try memoDAO.delete(id)
+    func delete(_ id: String) async throws {
+        try await memoUseCase.delete(id)
         if let index = self.memos.firstIndex(where: { $0.id == id }) {
             self.memos.remove(at: index)
             self.selectedMemoId = self.memos.first?.id

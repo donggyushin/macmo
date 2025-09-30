@@ -80,7 +80,7 @@ final class MemoDetailViewModel: ObservableObject {
     }
 
     @MainActor
-    func save() {
+    func save() async throws {
         guard canSave else { return }
         
         let updatedMemo = Memo(
@@ -93,22 +93,18 @@ final class MemoDetailViewModel: ObservableObject {
             updatedAt: Date()
         )
 
-        do {
-            if isNewMemo {
-                try store.add(updatedMemo)
-            } else {
-                try store.update(updatedMemo)
-            }
-
-            memo = updatedMemo
-            isEditing = false
-        } catch {
-            print("Failed to save memo: \(error)")
+        if isNewMemo {
+            try await store.add(updatedMemo)
+        } else {
+            try await store.update(updatedMemo)
         }
+
+        memo = updatedMemo
+        isEditing = false
     }
     
     @MainActor
-    func toggleComplete() {
+    func toggleComplete() async throws {
         guard let currentMemo = memo else { return }
 
         let updatedMemo = Memo(
@@ -121,23 +117,14 @@ final class MemoDetailViewModel: ObservableObject {
             updatedAt: Date()
         )
 
-        do {
-            try store.update(updatedMemo)
-            memo = updatedMemo
-            isDone = updatedMemo.done // Keep UI in sync
-        } catch {
-            print("Failed to toggle memo completion: \(error)")
-        }
+        try await store.update(updatedMemo)
+        memo = updatedMemo
+        isDone = updatedMemo.done // Keep UI in sync
     }
 
     @MainActor
-    func delete() {
+    func delete() async throws {
         guard let currentMemo = memo else { return }
-
-        do {
-            try store.delete(currentMemo.id)
-        } catch {
-            print("Failed to delete memo: \(error)")
-        }
+        try await store.delete(currentMemo.id)
     }
 }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import MarkdownUI
+import Factory
 
 struct MemoListView: View {
     @ObservedObject private var store = memoStore
@@ -42,6 +43,11 @@ struct MemoListView: View {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
             }
         }
+        .task {
+            if let result = try? await Container.shared.calendarService().requestAccess() {
+                print(result)
+            }
+        }
     }
 
     private var sortingPicker: some View {
@@ -69,10 +75,8 @@ struct MemoListView: View {
                     .tag(memo.id)
                     .contextMenu {
                         Button("Delete", role: .destructive) {
-                            do {
-                                try store.delete(memo.id)
-                            } catch {
-                                print("Failed to delete memo: \(error)")
+                            Task {
+                                try await store.delete(memo.id)
                             }
                         }
                     }
@@ -116,10 +120,8 @@ struct MemoListView: View {
     private func deleteMemos(offsets: IndexSet) {
         for index in offsets {
             let memo = store.memos[index]
-            do {
-                try store.delete(memo.id)
-            } catch {
-                print("Failed to delete memo: \(error)")
+            Task {
+                try await store.delete(memo.id)
             }
         }
     }

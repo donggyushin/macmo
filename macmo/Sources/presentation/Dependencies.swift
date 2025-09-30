@@ -18,6 +18,7 @@ extension Container {
                 )
                 let container = try ModelContainer(
                     for: MemoDTO.self,
+                    migrationPlan: MemoMigrationPlan.self,
                     configurations: configuration
                 )
 
@@ -42,6 +43,32 @@ extension Container {
         }
         .onPreview {
             MockMemoDAO.withSampleData()
+        }
+        .singleton
+    }
+    
+    var memoRepository: Factory<MemoRepositoryProtocol> {
+        self {
+            MemoRepository(memoDAO: self.memoDAO())
+        }
+        .singleton
+    }
+    
+    var calendarService: Factory<CalendarServiceProtocol> {
+        self {
+            CalendarService()
+        }
+        .onPreview {
+            MockCalendarService()
+        }
+        .singleton
+    }
+}
+
+extension Container {
+    var memoUseCase: Factory<MemoUseCase> {
+        self {
+            MemoUseCase(memoDAO: self.memoDAO(), calendarService: self.calendarService())
         }
         .singleton
     }

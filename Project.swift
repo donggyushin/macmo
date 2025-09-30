@@ -11,7 +11,7 @@ let project = Project(
             "MACOSX_DEPLOYMENT_TARGET": "15.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.4.2",
+            "MARKETING_VERSION": "1.5.0",
             "CURRENT_PROJECT_VERSION": "1",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
         ],
@@ -32,7 +32,9 @@ let project = Project(
             destinations: .macOS,
             product: .app,
             bundleId: "dev.tuist.macmo",
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: [
+                "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar."
+            ]),
             buildableFolders: [
                 "macmo/Sources",
                 "macmo/Resources",
