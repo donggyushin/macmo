@@ -66,11 +66,13 @@ struct MemoDetailView: View {
             ToolbarItem(placement: .primaryAction) {
                 if model.isEditing {
                     Button("Save") {
-                        model.save()
-                        if model.isNewMemo {
-                            dismissWindow(id: "memo-detail")
+                        Task {
+                            try await model.save()
+                            if model.isNewMemo {
+                                dismissWindow(id: "memo-detail")
+                            }
+                            changeAction?()
                         }
-                        changeAction?()
                     }
                     .disabled(!model.canSave)
                 } else {
@@ -92,8 +94,10 @@ struct MemoDetailView: View {
         .alert("Delete Memo", isPresented: $showingDeleteAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Delete", role: .destructive) {
-                model.delete()
-                deleteAction?()
+                Task {
+                    try await model.delete()
+                    deleteAction?()
+                }
             }
         } message: {
             Text("Are you sure you want to delete this memo? This action cannot be undone.")
@@ -197,8 +201,10 @@ struct MemoDetailView: View {
                 Toggle("Completed", isOn: $model.isDone)
             } else {
                 Button {
-                    model.toggleComplete()
-                    changeAction?()
+                    Task {
+                        try await model.toggleComplete()
+                        changeAction?()
+                    }
                 } label: {
                     HStack {
                         Image(systemName: model.isDone ? "checkmark.circle.fill" : "circle")

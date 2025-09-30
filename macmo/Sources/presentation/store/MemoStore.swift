@@ -48,6 +48,7 @@ final class MemoStore: ObservableObject {
     }
     
     @Injected(\.memoDAO) private var memoDAO
+    @Injected(\.memoUseCase) private var memoUseCase
     
     @MainActor
     func fetchMemos(_ sort: MemoSort = .createdAt, ascending: Bool = false) throws {
@@ -63,23 +64,23 @@ final class MemoStore: ObservableObject {
     }
     
     @MainActor
-    func add(_ memo: Memo) throws {
-        try memoDAO.save(memo)
+    func add(_ memo: Memo) async throws {
+        try await memoUseCase.save(memo)
         self.memos.insert(memo, at: 0)
         selectedMemoId = memo.id
     }
     
     @MainActor
-    func update(_ memo: Memo) throws {
-        try memoDAO.update(memo)
+    func update(_ memo: Memo) async throws {
+        try await memoUseCase.update(memo)
         if let index = self.memos.firstIndex(where: { $0.id == memo.id }) {
             self.memos[index] = memo
         }
     }
     
     @MainActor
-    func delete(_ id: String) throws {
-        try memoDAO.delete(id)
+    func delete(_ id: String) async throws {
+        try await memoUseCase.delete(id)
         if let index = self.memos.firstIndex(where: { $0.id == id }) {
             self.memos.remove(at: index)
             self.selectedMemoId = self.memos.first?.id
