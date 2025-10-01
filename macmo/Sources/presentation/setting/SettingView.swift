@@ -34,6 +34,10 @@ struct SettingView: View {
                 }
 
                 Section {
+                    NavigationLink("Developer") {
+                        DeveloperView()
+                    }
+
                     NavigationLink("Open Source Licenses") {
                         LicenseView()
                     }
