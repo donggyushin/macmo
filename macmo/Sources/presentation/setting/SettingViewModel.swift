@@ -15,8 +15,11 @@ final class SettingViewModel: ObservableObject {
     
     @Injected(\.calendarService) private var calendarService
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init() {
         isCalendarSyncEnabled = calendarService.isCalendarSyncEnabled
+        bind()
     }
     
     @MainActor
@@ -29,5 +32,18 @@ final class SettingViewModel: ObservableObject {
         }
         
         isCalendarSyncEnabled = calendarService.isCalendarSyncEnabled
+    }
+    
+    private func bind() {
+        cancellables.removeAll()
+        
+        $isCalendarSyncEnabled
+            .removeDuplicates()
+            .sink { [weak self] isCalendarSyncEnabled in
+                if isCalendarSyncEnabled != self?.calendarService.isCalendarSyncEnabled {
+                    self?.calendarService.isCalendarSyncEnabled = isCalendarSyncEnabled
+                }
+            }
+            .store(in: &cancellables)
     }
 }
