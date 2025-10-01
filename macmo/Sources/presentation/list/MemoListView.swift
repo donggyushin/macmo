@@ -28,6 +28,14 @@ struct MemoListView: View {
                     }
                 }
 
+                ToolbarItem(placement: .navigation) {
+                    Button(action: {
+                        coordinator.openSetting()
+                    }) {
+                        Image(systemName: "gear")
+                    }
+                }
+
                 ToolbarItem(placement: .primaryAction) {
                     Button("Add") {
                         coordinator.openNewMemo()
