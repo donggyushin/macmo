@@ -30,4 +30,8 @@ public final class Coordinator {
     func dismissNewMemo() {
         dismissWindow(id: "memo-detail")
     }
+    
+    func openSetting() {
+        openWindow(id: "setting")
+    }
 }
