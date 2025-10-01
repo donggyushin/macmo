@@ -13,7 +13,7 @@ final class SettingViewModel: ObservableObject {
     
     @Published var isCalendarSyncEnabled = true
     
-    @Injected(\.calendarService) private var calendarService
+    @Injected(\.calendarService) var calendarService
     
     private var cancellables = Set<AnyCancellable>()
     
