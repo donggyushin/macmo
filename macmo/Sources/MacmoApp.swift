@@ -20,7 +20,9 @@ struct MacmoApp: App {
         .defaultSize(width: 600, height: 700)
         
         WindowGroup("Setting", id: "setting") {
-            SettingView(model: .init())
+            NavigationStack {
+                SettingView(model: .init())
+            }
         }
         .defaultSize(width: 600, height: 700)
     }

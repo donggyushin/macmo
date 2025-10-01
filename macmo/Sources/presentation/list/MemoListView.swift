@@ -52,9 +52,7 @@ struct MemoListView: View {
             }
         }
         .task {
-            if let result = try? await Container.shared.calendarService().requestAccess() {
-                print(result)
-            }
+            _ = try? await Container.shared.calendarService().requestAccess()
         }
     }
 
