@@ -18,5 +18,10 @@ struct MacmoApp: App {
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 600, height: 700)
+        
+        WindowGroup("Setting", id: "setting") {
+            SettingView(model: .init())
+        }
+        .defaultSize(width: 600, height: 700)
     }
 }

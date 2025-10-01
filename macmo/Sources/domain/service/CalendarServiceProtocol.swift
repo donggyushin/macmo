@@ -8,6 +8,8 @@
 import Foundation
 
 public protocol CalendarServiceProtocol {
+    var isCalendarSyncEnabled: Bool { get set }
+    
     /// Request calendar access permission
     func requestAccess() async throws -> Bool
 

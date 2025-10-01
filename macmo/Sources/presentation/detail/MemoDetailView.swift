@@ -10,10 +10,11 @@ import MarkdownUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
-    @Environment(\.dismissWindow) private var dismissWindow
     @FocusState private var focusedField: FocusField?
     @State private var previousContents: String = ""
     @State private var showingDeleteAlert = false
+    
+    @Environment(\.dismissWindow) var dismissWindow
 
     enum FocusField {
         case title

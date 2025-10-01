@@ -8,6 +8,9 @@
 import Foundation
 
 final class MockCalendarService: CalendarServiceProtocol {
+    
+    @UserDefault(key: "isCalendarSyncEnabled", defaultValue: true) var isCalendarSyncEnabled
+    
     func requestAccess() async throws -> Bool {
         true
     }

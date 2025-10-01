@@ -10,7 +10,9 @@ import EventKit
 
 final class CalendarService: CalendarServiceProtocol {
     private let eventStore = EKEventStore()
-
+    
+    @UserDefault(key: "isCalendarSyncEnabled", defaultValue: true) var isCalendarSyncEnabled
+    
     func requestAccess() async throws -> Bool {
         return try await eventStore.requestFullAccessToEvents()
     }
@@ -18,7 +20,7 @@ final class CalendarService: CalendarServiceProtocol {
     func saveToCalendar(memo: Memo) async throws -> String? {
         // Ensure we have calendar access
         let hasAccess = try await requestAccess()
-        guard hasAccess else {
+        guard hasAccess, isCalendarSyncEnabled else {
             throw CalendarServiceError.accessDenied
         }
 
@@ -47,7 +49,7 @@ final class CalendarService: CalendarServiceProtocol {
     func removeFromCalendar(eventIdentifier: String) async throws {
         // Ensure we have calendar access
         let hasAccess = try await requestAccess()
-        guard hasAccess else {
+        guard hasAccess, isCalendarSyncEnabled else {
             throw CalendarServiceError.accessDenied
         }
 
