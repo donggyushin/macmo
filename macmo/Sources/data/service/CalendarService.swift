@@ -20,7 +20,7 @@ final class CalendarService: CalendarServiceProtocol {
     func saveToCalendar(memo: Memo) async throws -> String? {
         // Ensure we have calendar access
         let hasAccess = try await requestAccess()
-        guard hasAccess else {
+        guard hasAccess, isCalendarSyncEnabled else {
             throw CalendarServiceError.accessDenied
         }
 
@@ -49,7 +49,7 @@ final class CalendarService: CalendarServiceProtocol {
     func removeFromCalendar(eventIdentifier: String) async throws {
         // Ensure we have calendar access
         let hasAccess = try await requestAccess()
-        guard hasAccess else {
+        guard hasAccess, isCalendarSyncEnabled else {
             throw CalendarServiceError.accessDenied
         }
 
