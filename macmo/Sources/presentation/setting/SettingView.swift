@@ -13,41 +13,51 @@ struct SettingView: View {
     @State var isCalendarAccessDeniedDialogOpen = false
 
     var body: some View {
-        Form {
-            Section {
-                Toggle("Sync with Calendar", isOn: $model.isCalendarSyncEnabled)
-                    .onChange(of: model.isCalendarSyncEnabled) { _, newValue in
-                        if newValue {
-                            Task { @MainActor in
-                                let requestAccess = try await model.calendarService.requestAccess()
-                                if requestAccess == false && newValue {
-                                    isCalendarAccessDeniedDialogOpen = true
+        NavigationStack {
+            Form {
+                Section {
+                    Toggle("Sync with Calendar", isOn: $model.isCalendarSyncEnabled)
+                        .onChange(of: model.isCalendarSyncEnabled) { _, newValue in
+                            if newValue {
+                                Task { @MainActor in
+                                    let requestAccess = try await model.calendarService.requestAccess()
+                                    if requestAccess == false && newValue {
+                                        isCalendarAccessDeniedDialogOpen = true
+                                    }
                                 }
                             }
                         }
+                } header: {
+                    Text("Calendar Integration")
+                } footer: {
+                    Text("Automatically create calendar events for memos with due dates")
+                }
+
+                Section {
+                    NavigationLink("Open Source Licenses") {
+                        LicenseView()
                     }
-            } header: {
-                Text("Calendar Integration")
-            } footer: {
-                Text("Automatically create calendar events for memos with due dates")
-            }
-        }
-        .formStyle(.grouped)
-        .navigationTitle("Settings")
-        .task {
-            try? await model.configIsCalendarSyncEnabled()
-        }
-        .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
-            Button("Open System Settings") {
-                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
-                    NSWorkspace.shared.open(url)
+                } header: {
+                    Text("About")
                 }
             }
-            Button("Cancel", role: .cancel) {
-                model.isCalendarSyncEnabled = false 
+            .formStyle(.grouped)
+            .navigationTitle("Settings")
+            .task {
+                try? await model.configIsCalendarSyncEnabled()
             }
-        } message: {
-            Text("This app needs permission to access your calendar. Please authorize calendar access in System Settings to use the sync feature.")
+            .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
+                Button("Open System Settings") {
+                    if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    model.isCalendarSyncEnabled = false
+                }
+            } message: {
+                Text("This app needs permission to access your calendar. Please authorize calendar access in System Settings to use the sync feature.")
+            }
         }
     }
 }
