@@ -60,6 +60,9 @@ struct MemoDetailView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         model.cancel()
+                        if model.isNewMemo {
+                            dismissWindow(id: "memo-detail")
+                        }
                     }
                 }
             }
