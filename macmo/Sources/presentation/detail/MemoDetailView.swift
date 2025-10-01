@@ -13,6 +13,8 @@ struct MemoDetailView: View {
     @FocusState private var focusedField: FocusField?
     @State private var previousContents: String = ""
     @State private var showingDeleteAlert = false
+    
+    @Environment(\.dismissWindow) var dismissWindow
 
     enum FocusField {
         case title
@@ -68,7 +70,7 @@ struct MemoDetailView: View {
                         Task {
                             try await model.save()
                             if model.isNewMemo {
-                                coordinator.dismissNewMemo()
+                                dismissWindow(id: "memo-detail")
                             }
                             changeAction?()
                         }
