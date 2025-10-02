@@ -9,6 +9,7 @@ import Foundation
 import Factory
 import SwiftData
 
+// MARK: - Register Data layer instances
 extension Container {
     var modelContainer: Factory<ModelContainer> {
         self {
@@ -64,10 +65,21 @@ extension Container {
     }
 }
 
+// MARK: - Register Domain layer instances
 extension Container {
     var memoUseCase: Factory<MemoUseCase> {
         self {
             MemoUseCase(memoRepository: self.memoRepository(), calendarService: self.calendarService())
+        }
+        .singleton
+    }
+}
+
+// MARK: - Register App instances
+extension Container {
+    var memoListViewModel: Factory<MemoListViewModel> {
+        self {
+            MemoListViewModel()
         }
         .singleton
     }

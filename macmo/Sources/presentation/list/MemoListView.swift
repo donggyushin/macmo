@@ -10,7 +10,7 @@ import MarkdownUI
 import Factory
 
 struct MemoListView: View {
-    @ObservedObject private var store = memoStore
+    @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
     @Environment(\.openWindow) var openWindow
 
     var body: some View {
@@ -47,7 +47,7 @@ struct MemoListView: View {
                 loadMemos()
             }
         } detail: {
-            if let selectedMemoId = store.selectedMemoId {
+            if let selectedMemoId = model.selectedMemoId {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
             }
         }
@@ -58,36 +58,36 @@ struct MemoListView: View {
 
     private var sortingPicker: some View {
         HStack {
-            Picker("Sort by", selection: $store.sortBy) {
+            Picker("Sort by", selection: $model.sortBy) {
                 Text("Created").tag(MemoSort.createdAt)
                 Text("Updated").tag(MemoSort.updatedAt)
                 Text("Due").tag(MemoSort.due)
             }
             .pickerStyle(SegmentedPickerStyle())
 
-            Button(action: { store.ascending.toggle() }) {
-                Image(systemName: store.ascending ? "arrow.up" : "arrow.down")
+            Button(action: { model.ascending.toggle() }) {
+                Image(systemName: model.ascending ? "arrow.up" : "arrow.down")
             }
         }
         .padding(.horizontal)
-        .onChange(of: store.sortBy) { refreshMemos() }
-        .onChange(of: store.ascending) { refreshMemos() }
+        .onChange(of: model.sortBy) { refreshMemos() }
+        .onChange(of: model.ascending) { refreshMemos() }
     }
 
     private var memoList: some View {
-        List(selection: $store.selectedMemoId) {
-            ForEach(store.memos, id: \.id) { memo in
+        List(selection: $model.selectedMemoId) {
+            ForEach(model.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
                     .tag(memo.id)
                     .contextMenu {
                         Button("Delete", role: .destructive) {
                             Task {
-                                try await store.delete(memo.id)
+                                try await model.delete(memo.id)
                             }
                         }
                     }
                     .onAppear {
-                        if memo.id == store.memos.last?.id {
+                        if memo.id == model.memos.last?.id {
                             loadMoreMemos()
                         }
                     }
@@ -101,7 +101,7 @@ struct MemoListView: View {
 
     private func loadMemos() {
         do {
-            try store.refreshMemos(store.sortBy, ascending: store.ascending)
+            try model.refreshMemos(model.sortBy, ascending: model.ascending)
         } catch {
             print("Failed to load memos: \(error)")
         }
@@ -109,7 +109,7 @@ struct MemoListView: View {
 
     private func refreshMemos() {
         do {
-            try store.refreshMemos(store.sortBy, ascending: store.ascending)
+            try model.refreshMemos(model.sortBy, ascending: model.ascending)
         } catch {
             print("Failed to refresh memos: \(error)")
         }
@@ -117,7 +117,7 @@ struct MemoListView: View {
 
     private func loadMoreMemos() {
         do {
-            try store.fetchMemos(store.sortBy, ascending: store.ascending)
+            try model.fetchMemos(model.sortBy, ascending: model.ascending)
         } catch {
             print("Failed to load more memos: \(error)")
         }
@@ -125,9 +125,9 @@ struct MemoListView: View {
 
     private func deleteMemos(offsets: IndexSet) {
         for index in offsets {
-            let memo = store.memos[index]
+            let memo = model.memos[index]
             Task {
-                try await store.delete(memo.id)
+                try await model.delete(memo.id)
             }
         }
     }

@@ -13,7 +13,7 @@ final class MemoDetailViewModel: ObservableObject {
 
     @Injected(\.memoDAO) private var memoDAO
 
-    let store = memoStore
+    let memoListViewModel: MemoListViewModel
 
     @Published var memo: Memo?
     @Published var isNewMemo = false
@@ -31,6 +31,7 @@ final class MemoDetailViewModel: ObservableObject {
     }
 
     init(id: String?) {
+        memoListViewModel = Container.shared.memoListViewModel()
         // Perform synchronous database fetch - SwiftData is fast for local operations
         if let id {
             memo = try? memoDAO.findById(id)
@@ -49,6 +50,7 @@ final class MemoDetailViewModel: ObservableObject {
     
     // Optimized initializer for existing memos to skip database lookup
     init(memo: Memo) {
+        memoListViewModel = .init()
         self.memo = memo
         loadMemoData()
     }
@@ -94,9 +96,9 @@ final class MemoDetailViewModel: ObservableObject {
         )
 
         if isNewMemo {
-            try await store.add(updatedMemo)
+            try await memoListViewModel.add(updatedMemo)
         } else {
-            try await store.update(updatedMemo)
+            try await memoListViewModel.update(updatedMemo)
         }
 
         memo = updatedMemo
@@ -117,7 +119,7 @@ final class MemoDetailViewModel: ObservableObject {
             updatedAt: Date()
         )
 
-        try await store.update(updatedMemo)
+        try await memoListViewModel.update(updatedMemo)
         memo = updatedMemo
         isDone = updatedMemo.done // Keep UI in sync
     }
@@ -125,6 +127,6 @@ final class MemoDetailViewModel: ObservableObject {
     @MainActor
     func delete() async throws {
         guard let currentMemo = memo else { return }
-        try await store.delete(currentMemo.id)
+        try await memoListViewModel.delete(currentMemo.id)
     }
 }

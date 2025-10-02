@@ -1,5 +1,5 @@
 //
-//  MemoStore.swift
+//  MemoListViewModel.swift
 //  macmo
 //
 //  Created by 신동규 on 9/27/25.
@@ -9,9 +9,7 @@ import Foundation
 import Factory
 import Combine
 
-let memoStore = MemoStore()
-
-final class MemoStore: ObservableObject {
+final class MemoListViewModel: ObservableObject {
     
     @Published var memos: [Memo] = []
     @Published var selectedMemoId: String?
@@ -20,16 +18,9 @@ final class MemoStore: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    fileprivate init() {
-        
-        let sortBy: MemoSort = memoRepository.get()
-        let ascending = memoRepository.getAscending()
-        
-        Task { @MainActor in
-            self.sortBy = sortBy
-            self.ascending = ascending
-        }
-        
+    init() {
+        sortBy = memoRepository.get()
+        ascending = memoRepository.getAscending()
         bind()
     }
     
