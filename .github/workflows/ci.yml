@@ -27,4 +27,4 @@ jobs:
 
       - name: Build and test
         run: |
-          mise exec -- tuist test
+          mise exec -- tuist test -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
