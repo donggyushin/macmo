@@ -23,7 +23,8 @@ A clean, simple memo application for macOS and iOS with iCloud sync.
 
 ## Screenshots
 
-<img width="1680" height="1050" alt="Screenshot 2025-09-29 at 11 55 08 PM" src="https://github.com/user-attachments/assets/55a859d7-fa0d-4c8b-b46b-bee670865627" />
+<img width="1680" height="1050" alt="Screenshot 2025-10-04 at 12 07 37 AM" src="https://github.com/user-attachments/assets/d1e6918f-2dbf-4040-91ed-563370444f8a" />
+
 
 ## Installation
 
