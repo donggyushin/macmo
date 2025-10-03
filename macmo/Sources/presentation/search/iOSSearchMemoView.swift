@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct iOSSearchMemoView: View {
-    @StateObject var model: SearchMemoViewModel
+    @ObservedObject var model: SearchMemoViewModel
     @FocusState var focusSearchField
     @EnvironmentObject private var navigationManager: NavigationManager
     
