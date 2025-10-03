@@ -96,6 +96,7 @@ struct iOSSearchMemoView: View {
             }
         }
         .listStyle(PlainListStyle())
+        .scrollDismissesKeyboard(.interactively)
     }
 
     private func loadMoreResults() {
