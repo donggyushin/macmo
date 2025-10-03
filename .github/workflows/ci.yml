@@ -25,9 +25,20 @@ jobs:
         run: |
           mise install
 
+      - name: Generate Xcode project
+        run: |
+          mise exec -- tuist generate
+
       - name: Build and test macOS
         run: |
-          mise exec -- tuist test macmoTests -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          xcodebuild test \
+            -workspace macmo.xcworkspace \
+            -scheme macmo \
+            -destination 'platform=macOS' \
+            -only-testing:macmoTests \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
 
   build-and-test-ios:
     runs-on: macos-15
@@ -51,4 +62,13 @@ jobs:
 
       - name: Build and test iOS
         run: |
-          mise exec -- tuist test macmoiOSTests -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          DEVICE=$(xcrun simctl list devices available iPhone | grep -E "iPhone.*\(" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+          echo "Using simulator ID: $DEVICE"
+          xcodebuild test \
+            -workspace macmo.xcworkspace \
+            -scheme macmo \
+            -destination "platform=iOS Simulator,id=$DEVICE" \
+            -only-testing:macmoiOSTests \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
