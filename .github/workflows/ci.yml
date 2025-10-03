@@ -55,8 +55,8 @@ jobs:
 
       - name: Build and test iOS
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep -m 1 "iPhone" | sed 's/.*(\(.*\)).*/\1/')
-          echo "Using simulator: $DEVICE"
+          DEVICE=$(xcrun simctl list devices available iPhone | grep -E "iPhone.*\(" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+          echo "Using simulator ID: $DEVICE"
           xcodebuild test \
             -workspace macmo.xcworkspace \
             -scheme macmo \
