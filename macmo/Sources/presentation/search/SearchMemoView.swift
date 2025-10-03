@@ -56,7 +56,7 @@ struct SearchMemoView: View {
                 }
         }
         .padding(8)
-        .background(Color(.controlBackgroundColor))
+        .background(Color(uiColor: .secondarySystemBackground))
         .cornerRadius(8)
         .padding(.horizontal)
     }

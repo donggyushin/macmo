@@ -51,9 +51,15 @@ struct SettingView: View {
         }
         .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
             Button("Open System Settings") {
+                #if os(macOS)
                 if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
                     NSWorkspace.shared.open(url)
                 }
+                #else
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+                #endif
             }
             Button("Cancel", role: .cancel) {
                 model.isCalendarSyncEnabled = false
