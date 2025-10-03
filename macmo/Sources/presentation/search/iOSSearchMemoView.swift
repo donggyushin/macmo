@@ -97,6 +97,7 @@ struct iOSSearchMemoView: View {
         }
         .listStyle(PlainListStyle())
         .scrollDismissesKeyboard(.interactively)
+        .scrollIndicators(.hidden)
     }
 
     private func loadMoreResults() {
