@@ -23,6 +23,7 @@ public struct ContentView: View {
                         iOSSearchMemoView(model: searchModelViewModel)
                     }
                 }
+                .scrollIndicators(.hidden)
         }
         #endif
     }
