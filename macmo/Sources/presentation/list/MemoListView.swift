@@ -54,7 +54,6 @@ struct MemoListView: View {
         }
     }
     
-    // note: Same with iOS
     private var sortingPicker: some View {
         HStack {
             Picker("Sort by", selection: $model.sortBy) {
@@ -130,7 +129,6 @@ struct MemoListView: View {
             }
         }
     }
-    // note: Same with iOS
 }
 
 #Preview {

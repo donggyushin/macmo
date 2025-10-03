@@ -67,7 +67,7 @@ struct iOSMemoListView: View {
     }
 
     private var memoList: some View {
-        List(selection: $model.selectedMemoId) {
+        List {
             ForEach(model.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
                     .tag(memo.id)

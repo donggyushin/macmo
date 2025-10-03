@@ -1,48 +1,25 @@
 //
-//  SearchMemoView.swift
+//  iOSSearchMemoView.swift
 //  macmo
 //
-//  Created by 신동규 on 9/28/25.
+//  Created by 신동규 on 10/3/25.
 //
 
-import Foundation
 import SwiftUI
 
-struct SearchMemoView: View {
-
-    @Environment(\.openWindow) private var openWindow
+struct iOSSearchMemoView: View {
     @StateObject var model: SearchMemoViewModel
     @FocusState var focusSearchField
-
+    @EnvironmentObject private navigationManager: NavigationManager
+    
     var body: some View {
-        NavigationSplitView {
-            VStack {
-                searchField
-                searchResults
-            }
-            .navigationTitle("Search Memos")
-        } detail: {
-            if let selectedMemoId = model.selectedMemoId {
-                MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
-                    .onChangeAction {
-                        model.update(selectedMemoId)
-                    }
-                    .onDeleteAction {
-                        model.delete(selectedMemoId)
-                    }
-            } else {
-                VStack {
-                    Image(systemName: "magnifyingglass")
-                        .font(.system(size: 50))
-                        .foregroundColor(.gray)
-                    Text("Search for memos")
-                        .font(.title2)
-                        .foregroundColor(.secondary)
-                }
-            }
+        VStack {
+            searchField
+            searchResults
         }
+        .navigationTitle("Search Memos")
     }
-
+    
     private var searchField: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -62,7 +39,7 @@ struct SearchMemoView: View {
     }
 
     private var searchResults: some View {
-        List(selection: $model.selectedMemoId) {
+        List {
             if model.query.isEmpty {
                 VStack {
                     Image(systemName: "magnifyingglass.circle")
@@ -97,6 +74,9 @@ struct SearchMemoView: View {
                                 loadMoreResults()
                             }
                         }
+                        .onTapGesture {
+                            navigationManager.push(.detail(memo.id))
+                        }
                 }
             }
         }
@@ -110,8 +90,4 @@ struct SearchMemoView: View {
             print("Failed to load more search results: \(error)")
         }
     }
-}
-
-#Preview {
-    SearchMemoView(model: SearchMemoViewModel())
 }
