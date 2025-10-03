@@ -10,7 +10,7 @@ import SwiftUI
 struct iOSSearchMemoView: View {
     @StateObject var model: SearchMemoViewModel
     @FocusState var focusSearchField
-    @EnvironmentObject private navigationManager: NavigationManager
+    @EnvironmentObject private var navigationManager: NavigationManager
     
     var body: some View {
         VStack {
