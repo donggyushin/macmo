@@ -50,9 +50,20 @@ let project = Project(
         ),
         .target(
             name: "macmoTests",
-            destinations: [.mac, .iPhone, .iPad],
+            destinations: .macOS,
             product: .unitTests,
             bundleId: "dev.tuist.macmoTests",
+            infoPlist: .default,
+            buildableFolders: [
+                "macmo/Tests"
+            ],
+            dependencies: [.target(name: "macmo")]
+        ),
+        .target(
+            name: "macmoiOSTests",
+            destinations: [.iPhone, .iPad],
+            product: .unitTests,
+            bundleId: "dev.tuist.macmoiOSTests",
             infoPlist: .default,
             buildableFolders: [
                 "macmo/Tests"

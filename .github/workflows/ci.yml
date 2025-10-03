@@ -49,18 +49,6 @@ jobs:
         run: |
           mise exec -- tuist generate
 
-      - name: List available simulators
-        run: |
-          xcrun simctl list devices available
-
       - name: Build and test iOS
         run: |
-          DEVICE=$(xcrun simctl list devices available iPhone | grep -E "iPhone.*\(" | head -n 1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
-          echo "Using simulator ID: $DEVICE"
-          xcodebuild test \
-            -workspace macmo.xcworkspace \
-            -scheme macmo \
-            -destination "platform=iOS Simulator,id=$DEVICE" \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+          mise exec -- tuist test macmoiOSTests -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
