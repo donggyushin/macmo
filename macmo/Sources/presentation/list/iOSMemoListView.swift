@@ -69,17 +69,16 @@ struct iOSMemoListView: View {
     private var memoList: some View {
         List(selection: $model.selectedMemoId) {
             ForEach(model.memos, id: \.id) { memo in
-                Button {
-                    navigationManager.push(.detail(memo.id))
-                } label: {
-                    MemoRowView(memo: memo)
-                        .tag(memo.id)
-                        .onAppear {
-                            if memo.id == model.memos.last?.id {
-                                loadMoreMemos()
-                            }
+                MemoRowView(memo: memo)
+                    .tag(memo.id)
+                    .onAppear {
+                        if memo.id == model.memos.last?.id {
+                            loadMoreMemos()
                         }
-                }
+                    }
+                    .onTapGesture {
+                        navigationManager.push(.detail(memo.id))
+                    }
             }
             .onDelete(perform: deleteMemos)
         }
