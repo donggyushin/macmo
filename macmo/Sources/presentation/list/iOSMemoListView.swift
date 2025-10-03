@@ -22,7 +22,7 @@ struct iOSMemoListView: View {
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 Button(action: {
-                    print("tap search")
+                    navigationManager.push(.search)
                 }) {
                     Image(systemName: "magnifyingglass")
                 }

@@ -17,6 +17,8 @@ public struct ContentView: View {
                         MemoDetailView(model: .init(id: id))
                     case .setting:
                         SettingView(model: .init())
+                    case .search:
+                        SearchMemoView(model: .init())
                     }
                 }
         }
