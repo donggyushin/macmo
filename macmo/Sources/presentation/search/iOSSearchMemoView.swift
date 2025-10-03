@@ -18,6 +18,19 @@ struct iOSSearchMemoView: View {
             searchResults
         }
         .navigationTitle("Search Memos")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Urgent") {
+                    model.tapUrgentTag()
+                }
+            }
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Uncompleted") {
+                    model.tapUncompleted()
+                }
+            }
+        }
     }
     
     private var searchField: some View {
@@ -90,4 +103,21 @@ struct iOSSearchMemoView: View {
             print("Failed to load more search results: \(error)")
         }
     }
+}
+
+private struct iOSSearchMemoViewPreview: View {
+    
+    @StateObject var model = SearchMemoViewModel()
+    
+    var body: some View {
+        NavigationStack {
+            iOSSearchMemoView(model: model)
+                .environmentObject(NavigationManager())
+        }
+    }
+}
+
+#Preview {
+    iOSSearchMemoViewPreview()
+    .preferredColorScheme(.dark)
 }

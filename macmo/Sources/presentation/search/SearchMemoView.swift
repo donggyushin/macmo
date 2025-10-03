@@ -21,6 +21,19 @@ struct SearchMemoView: View {
                 searchResults
             }
             .navigationTitle("Search Memos")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Urgent") {
+                        model.tapUrgentTag()
+                    }
+                }
+
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Uncompleted") {
+                        model.tapUncompleted()
+                    }
+                }
+            }
         } detail: {
             if let selectedMemoId = model.selectedMemoId {
                 MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))

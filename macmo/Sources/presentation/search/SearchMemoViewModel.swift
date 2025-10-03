@@ -37,6 +37,35 @@ final class SearchMemoViewModel: ObservableObject {
     }
     
     @MainActor
+    func tapUrgentTag() {
+        animateTyping(text: "Urgent")
+    }
+
+    @MainActor
+    func tapUncompleted() {
+        animateTyping(text: "Uncompleted")
+    }
+
+    @MainActor
+    private func animateTyping(text: String) {
+        let currentQuery = query
+
+        Task {
+            // Animate deleting existing text
+            for i in stride(from: currentQuery.count, through: 0, by: -1) {
+                try? await Task.sleep(nanoseconds: 30_000_000) // 0.03 seconds per character
+                query = String(currentQuery.prefix(i))
+            }
+
+            // Animate typing new text
+            for (index, character) in text.enumerated() {
+                try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds per character
+                query = String(text.prefix(index + 1))
+            }
+        }
+    }
+    
+    @MainActor
     func delete(_ id: String) {
         selectedMemoId = nil
         guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
