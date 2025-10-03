@@ -35,6 +35,7 @@ jobs:
             -workspace macmo.xcworkspace \
             -scheme macmo \
             -destination 'platform=macOS' \
+            -skip-testing:macmoiOSTests \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
@@ -67,6 +68,7 @@ jobs:
             -workspace macmo.xcworkspace \
             -scheme macmo \
             -destination "platform=iOS Simulator,id=$DEVICE" \
+            -skip-testing:macmoTests \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
