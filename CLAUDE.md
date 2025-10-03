@@ -51,22 +51,28 @@ This is a **Tuist-managed macOS SwiftUI application** following **Domain-Driven 
 ```
 macmo/Sources/
 ├── domain/          # Core business logic (entities, protocols, interfaces)
-│   ├── entity/      # Domain entities (Memo, MemoSort)
+│   ├── entity/      # Domain entities (Memo, MemoSort, CalendarServiceError)
 │   ├── repository/  # Repository protocol interfaces
-│   ├── service/     # Service protocol interfaces (CalendarService)
-│   └── usecase/     # Application use cases (business logic orchestration)
+│   ├── service/     # Service protocol interfaces (CalendarServiceProtocol)
+│   └── usecase/     # Application use cases (MemoUseCase)
 ├── data/            # Infrastructure & data layer
-│   ├── dao/         # Data Access Object (DAO) implementations & protocols
-│   ├── dto/         # Data Transfer Objects for persistence (SwiftData models)
-│   ├── repository/  # Repository implementations
-│   ├── schema/      # SwiftData schema versions & migrations
-│   └── service/     # Service implementations (CalendarService, etc.)
-└── presentation/    # UI layer (SwiftUI views & ViewModels)
-    ├── list/        # Memo list views
-    ├── detail/      # Memo detail views
-    ├── search/      # Search views
-    ├── components/  # Reusable UI components
-    └── store/       # State management (MemoStore)
+│   ├── dao/         # Data Access Object (MemoDAO, MockMemoDAO, MemoDAOProtocol)
+│   ├── dto/         # Data Transfer Objects (MemoDTO)
+│   ├── repository/  # Repository implementations (MemoRepository)
+│   ├── schema/      # SwiftData schema versions (MemoSchemaV1, MemoSchemaV2)
+│   ├── service/     # Service implementations (CalendarService, MockCalendarService)
+│   ├── MemoMigrationPlan.swift  # Schema migration plan
+│   └── UserDefaultPropertyWrapper.swift  # UserDefaults wrapper
+└── app/             # UI layer (SwiftUI views, ViewModels, and app configuration)
+    ├── MacmoApp.swift           # App entry point
+    ├── ContentView.swift        # Main content view
+    ├── Dependencies.swift       # Factory DI configuration
+    ├── components/  # Reusable UI components (MemoRowView, SearchTextField)
+    ├── detail/      # Memo detail views (MemoDetailView, MemoDetailViewModel)
+    ├── list/        # Memo list views (MemoListView, MemoListViewModel, iOSMemoListView)
+    ├── search/      # Search views (SearchMemoView, SearchMemoViewModel, iOSSearchMemoView)
+    ├── navigation/  # Navigation management (Navigation, NavigationManager)
+    └── setting/     # Settings views (SettingView, DeveloperView, LicenseView)
 ```
 
 ### Key Architectural Patterns
@@ -99,11 +105,16 @@ macmo/Sources/
     - `CalendarService.swift`: EventKit-based calendar integration
     - `MockCalendarService.swift`: Mock calendar service for testing
 
-- **Presentation Layer** (`/presentation/`): SwiftUI views, ViewModels, and state management
-  - `MemoStore.swift`: Centralized state management with selection tracking
+- **App Layer** (`/app/`): SwiftUI views, ViewModels, and app configuration
+  - `MacmoApp.swift`: App entry point with SwiftData and window configuration
+  - `Dependencies.swift`: Factory DI configuration for all dependencies
+  - `ContentView.swift`: Main split view layout
   - `MemoDetailViewModel.swift`: Detail view business logic
+  - `MemoListViewModel.swift`: List view business logic
   - `SearchMemoViewModel.swift`: Search functionality
-  - Various SwiftUI views organized by feature
+  - `SettingViewModel.swift`: Settings management
+  - `NavigationManager.swift`: Navigation state management
+  - Various SwiftUI views organized by feature (list, detail, search, setting, navigation, components)
 
 #### 2. Repository Pattern with DAO Abstraction
 The codebase implements a **multi-layered Repository pattern**:
@@ -134,14 +145,14 @@ The codebase implements a **multi-layered Repository pattern**:
 
 #### 3. Dependency Injection with Factory
 - **Factory Framework**: Fully integrated Factory DI framework (v2.5.3)
-- **Configured in**: `presentation/Dependencies.swift`
+- **Configured in**: `app/Dependencies.swift`
 - **Injection Hierarchy**:
   - `ModelContainer` → `ModelContext` (SwiftData setup)
   - `MemoDAO` (production: `MemoDAO`, preview: `MockMemoDAO`)
   - `MemoRepository` (wraps `MemoDAO`)
   - `CalendarService` (production: `CalendarService`, preview: `MockCalendarService`)
   - `MemoUseCase` (combines `MemoRepository` + `CalendarService`)
-- **Usage Pattern**: `@Injected(\.memoRepository)` in ViewModels and stores
+- **Usage Pattern**: `@Injected(\.memoUseCase)` in ViewModels, `@Injected(\.memoRepository)` when direct repository access needed
 
 ### Key Dependencies
 
@@ -153,8 +164,8 @@ The codebase implements a **multi-layered Repository pattern**:
 
 #### External Dependencies
 - **Factory** (v2.5.3): Dependency injection framework by @hmlongco
-  - Fully integrated in `presentation/Dependencies.swift`
-  - Used throughout the app for injecting repositories, DAOs, and services
+  - Fully integrated in `app/Dependencies.swift`
+  - Used throughout the app for injecting use cases, repositories, DAOs, and services
 
 #### Development Tools
 - **Tuist** (v4.68.0): Project generation and build system management
@@ -171,18 +182,22 @@ The codebase implements a **multi-layered Repository pattern**:
 5. **Sample data patterns**: Mock implementations include realistic sample data via static factory methods
 
 ### Layered Architecture Patterns
-- **Domain Layer**: Pure business logic, no external dependencies
+- **Domain Layer** (`/domain/`): Pure business logic, no external dependencies
   - Protocols define contracts
   - Entities define business objects
   - Use cases orchestrate business operations
-- **Data Layer**: Infrastructure implementations
+- **Data Layer** (`/data/`): Infrastructure implementations
   - DAOs handle low-level persistence
   - Repositories add caching/preferences on top of DAOs
   - Services implement external integrations (Calendar, etc.)
-- **Presentation Layer**: UI and user interaction
-  - Views (SwiftUI)
+  - DTOs for SwiftData persistence models
+  - Schema management and migrations
+- **App Layer** (`/app/`): UI and user interaction
+  - Views (SwiftUI) organized by feature
   - ViewModels (business logic for views)
-  - Stores (centralized state management)
+  - Navigation management (NavigationManager)
+  - App configuration (MacmoApp, Dependencies)
+  - Reusable UI components
 
 ### Persistence Patterns
 - **SwiftData Integration**: Uses `@Model` macro for DTOs with `@Attribute(.unique)` for IDs
@@ -231,16 +246,18 @@ The codebase implements a **multi-layered Repository pattern**:
   - Schema migration (`MemoSchemaV1`, `MemoSchemaV2`, `MemoMigrationPlan`)
   - Calendar service integration (`CalendarService`, `MockCalendarService`)
 
-- **Presentation Layer**:
+- **App Layer**:
   - Complete MVVM pattern with ViewModels
-  - Centralized state management (`MemoStore`)
+  - Navigation management (`NavigationManager`)
   - Full UI implementation:
-    - Split view navigation with list and detail
-    - Search functionality with special filters
+    - Split view navigation with list and detail (`ContentView`)
+    - Search functionality with special filters (`SearchMemoView`, `SearchMemoViewModel`)
     - Multi-window support for new memos
     - Context menu operations
     - Due date management with overdue indicators
     - Task completion tracking
+    - iOS-specific views (`iOSMemoListView`, `iOSSearchMemoView`)
+    - Settings screen with developer options (`SettingView`, `DeveloperView`, `LicenseView`)
 
 - **Infrastructure**:
   - Factory dependency injection fully configured
@@ -281,11 +298,14 @@ The codebase implements a **multi-layered Repository pattern**:
    - DAO pattern for persistence abstraction
    - Repository pattern for caching + DAO delegation
    - Service implementations for external integrations
+   - DTOs for SwiftData persistence
+   - Schema versioning and migrations
 
-3. **Presentation Layer** (`/presentation/`): UI and interaction
+3. **App Layer** (`/app/`): UI and interaction
    - MVVM pattern with ViewModels
-   - Centralized state management (MemoStore)
-   - SwiftUI views organized by feature
+   - Navigation management (NavigationManager)
+   - SwiftUI views organized by feature (list, detail, search, setting, navigation, components)
+   - App configuration and DI setup (MacmoApp, Dependencies)
 
 #### Key Design Patterns
 - **Repository + DAO**: Repository handles caching, DAO handles persistence
