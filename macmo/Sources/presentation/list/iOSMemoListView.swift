@@ -14,12 +14,11 @@ struct iOSMemoListView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack {
             sortingPicker
             memoList
         }
         .navigationTitle("Memos")
-        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigation) {
                 Button(action: {
