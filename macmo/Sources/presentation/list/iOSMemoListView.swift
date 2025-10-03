@@ -30,7 +30,7 @@ struct iOSMemoListView: View {
 
             ToolbarItem(placement: .navigation) {
                 Button(action: {
-                    print("tap setting")
+                    navigationManager.push(.setting)
                 }) {
                     Image(systemName: "gear")
                 }

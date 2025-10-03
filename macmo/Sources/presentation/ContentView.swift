@@ -15,6 +15,8 @@ public struct ContentView: View {
                     switch navigation {
                     case .detail(let id):
                         MemoDetailView(model: .init(id: id))
+                    case .setting:
+                        SettingView(model: .init())
                     }
                 }
         }
