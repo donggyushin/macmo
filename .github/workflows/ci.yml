@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-and-test-macos:
     runs-on: macos-15
 
     steps:
@@ -25,6 +25,36 @@ jobs:
         run: |
           mise install
 
-      - name: Build and test
+      - name: Build and test macOS
         run: |
           mise exec -- tuist test -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+  build-and-test-ios:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install mise
+        run: |
+          curl https://mise.run | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install Tuist via mise
+        run: |
+          mise install
+
+      - name: Generate Xcode project
+        run: |
+          mise exec -- tuist generate
+
+      - name: Build and test iOS
+        run: |
+          xcodebuild test \
+            -workspace macmo.xcworkspace \
+            -scheme macmo \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.0' \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
