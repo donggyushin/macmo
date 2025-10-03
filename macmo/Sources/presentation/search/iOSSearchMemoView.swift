@@ -36,39 +36,7 @@ struct iOSSearchMemoView: View {
     }
     
     private var searchField: some View {
-        #if os(iOS)
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-
-            TextField("Type urgent or uncompleted", text: $model.query)
-                .textFieldStyle(PlainTextFieldStyle())
-                .focused($focusSearchField)
-                .onAppear {
-                    focusSearchField = true
-                }
-        }
-        .padding(8)
-        .background(Color(uiColor: .secondarySystemBackground))
-        .cornerRadius(8)
-        .padding(.horizontal)
-        #else
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-
-            TextField("Type urgent or uncompleted", text: $model.query)
-                .textFieldStyle(PlainTextFieldStyle())
-                .focused($focusSearchField)
-                .onAppear {
-                    focusSearchField = true
-                }
-        }
-        .padding(8)
-        .background(Color(.controlBackgroundColor))
-        .cornerRadius(8)
-        .padding(.horizontal)
-        #endif
+        SearchTextField(text: $model.query, focusState: $focusSearchField)
     }
 
     private var searchResults: some View {
