@@ -33,10 +33,25 @@ struct SettingView: View {
             }
             
             Section {
+                #if os(iOS)
+                Button(action: {
+                    if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    HStack {
+                        Text("Download macOS App")
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                            .foregroundColor(.secondary)
+                    }
+                }
+                #endif
+
                 NavigationLink("Developer") {
                     DeveloperView()
                 }
-                
+
                 NavigationLink("Open Source Licenses") {
                     LicenseView()
                 }
@@ -51,9 +66,15 @@ struct SettingView: View {
         }
         .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
             Button("Open System Settings") {
+                #if os(macOS)
                 if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
                     NSWorkspace.shared.open(url)
                 }
+                #else
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+                #endif
             }
             Button("Cancel", role: .cancel) {
                 model.isCalendarSyncEnabled = false

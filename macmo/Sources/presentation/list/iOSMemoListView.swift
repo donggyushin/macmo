@@ -1,51 +1,45 @@
 //
-//  MemoListView.swift
+//  iOSMemoListView.swift
 //  macmo
 //
-//  Created by 신동규 on 9/27/25.
+//  Created by 신동규 on 10/3/25.
 //
 
 import SwiftUI
-import MarkdownUI
 import Factory
 
-struct MemoListView: View {
+struct iOSMemoListView: View {
+    
     @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
-    @Environment(\.openWindow) var openWindow
-
+    @EnvironmentObject private var navigationManager: NavigationManager
+    
     var body: some View {
-        NavigationSplitView {
-            VStack {
-                sortingPicker
-                memoList
-            }
-            .navigationTitle("Memos")
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {
-                        openWindow(id: "search-memo")
-                    }) {
-                        Image(systemName: "magnifyingglass")
-                    }
-                }
-
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {
-                        openWindow(id: "setting")
-                    }) {
-                        Image(systemName: "gear")
-                    }
-                }
-
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Add") {
-                        openWindow(id: "memo-detail")
-                    }
+        VStack {
+            sortingPicker
+            memoList
+        }
+        .navigationTitle("Memos")
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button(action: {
+                    navigationManager.push(.search)
+                }) {
+                    Image(systemName: "magnifyingglass")
                 }
             }
-        } detail: {
-            if let selectedMemoId = model.selectedMemoId {
-                MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
+
+            ToolbarItem(placement: .navigation) {
+                Button(action: {
+                    navigationManager.push(.setting)
+                }) {
+                    Image(systemName: "gear")
+                }
+            }
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Add") {
+                    navigationManager.push(.detail(nil))
+                }
             }
         }
         .task {
@@ -73,21 +67,17 @@ struct MemoListView: View {
     }
 
     private var memoList: some View {
-        List(selection: $model.selectedMemoId) {
+        List {
             ForEach(model.memos, id: \.id) { memo in
                 MemoRowView(memo: memo)
                     .tag(memo.id)
-                    .contextMenu {
-                        Button("Delete", role: .destructive) {
-                            Task {
-                                try await model.delete(memo.id)
-                            }
-                        }
-                    }
                     .onAppear {
                         if memo.id == model.memos.last?.id {
                             loadMoreMemos()
                         }
+                    }
+                    .onTapGesture {
+                        navigationManager.push(.detail(memo.id))
                     }
             }
             .onDelete(perform: deleteMemos)
@@ -130,8 +120,3 @@ struct MemoListView: View {
         }
     }
 }
-
-#Preview {
-    MemoListView()
-}
-
