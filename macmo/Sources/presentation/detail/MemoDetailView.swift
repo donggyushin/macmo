@@ -15,6 +15,7 @@ struct MemoDetailView: View {
     @State private var showingDeleteAlert = false
     
     @Environment(\.dismissWindow) var dismissWindow
+    @EnvironmentObject var navigationManager: NavigationManager
 
     enum FocusField {
         case title
@@ -62,6 +63,7 @@ struct MemoDetailView: View {
                         model.cancel()
                         if model.isNewMemo {
                             dismissWindow(id: "memo-detail")
+                            navigationManager.pop()
                         }
                     }
                 }
