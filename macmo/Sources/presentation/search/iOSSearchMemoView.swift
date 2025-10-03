@@ -22,12 +22,14 @@ struct iOSSearchMemoView: View {
             ToolbarItem(placement: .primaryAction) {
                 Button("Urgent") {
                     model.tapUrgentTag()
+                    focusSearchField = false
                 }
             }
 
             ToolbarItem(placement: .primaryAction) {
                 Button("Uncompleted") {
                     model.tapUncompleted()
+                    focusSearchField = false
                 }
             }
         }

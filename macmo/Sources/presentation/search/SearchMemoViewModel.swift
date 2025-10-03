@@ -58,7 +58,7 @@ final class SearchMemoViewModel: ObservableObject {
             }
 
             // Animate typing new text
-            for (index, character) in text.enumerated() {
+            for (index, _) in text.enumerated() {
                 try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds per character
                 query = String(text.prefix(index + 1))
             }
