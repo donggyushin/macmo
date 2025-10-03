@@ -50,7 +50,7 @@ let project = Project(
         ),
         .target(
             name: "macmoTests",
-            destinations: .macOS,
+            destinations: [.mac, .iPhone, .iPad],
             product: .unitTests,
             bundleId: "dev.tuist.macmoTests",
             infoPlist: .default,
