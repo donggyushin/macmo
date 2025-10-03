@@ -33,10 +33,25 @@ struct SettingView: View {
             }
             
             Section {
+                #if os(iOS)
+                Button(action: {
+                    if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    HStack {
+                        Text("Download macOS App")
+                        Spacer()
+                        Image(systemName: "arrow.up.forward.app")
+                            .foregroundColor(.secondary)
+                    }
+                }
+                #endif
+
                 NavigationLink("Developer") {
                     DeveloperView()
                 }
-                
+
                 NavigationLink("Open Source Licenses") {
                     LicenseView()
                 }
