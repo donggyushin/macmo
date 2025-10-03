@@ -25,6 +25,27 @@ Build and sign for distribution
 
 ----
 
+
+## iOS
+
+### ios release
+
+```sh
+[bundle exec] fastlane ios release
+```
+
+Build and sign iOS app for distribution
+
+### ios dev
+
+```sh
+[bundle exec] fastlane ios dev
+```
+
+Build iOS app for development
+
+----
+
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 
 More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).

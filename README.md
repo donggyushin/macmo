@@ -1,8 +1,9 @@
 # macmo
 
-A clean, simple memo application for macOS with iCloud sync.
+A clean, simple memo application for macOS and iOS with iCloud sync.
 
 ![macOS](https://img.shields.io/badge/macOS-15.0+-blue)
+![iOS](https://img.shields.io/badge/iOS-18.0+-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9+-orange)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-✓-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
@@ -26,7 +27,9 @@ A clean, simple memo application for macOS with iCloud sync.
 
 ## Installation
 
-### Quick Install (Recommended)
+### macOS
+
+#### Quick Install (Recommended)
 
 ```bash
 curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo.zip
@@ -36,17 +39,47 @@ rm macmo.zip
 echo "✅ macmo installed successfully!"
 ```
 
-### Manual Install
+**First Launch Instructions:**
+
+Since macmo is not distributed through the App Store, macOS will block it by default. Follow these steps to open it:
+
+1. **Try to open the app** - Double-click `macmo.app` in Applications folder
+2. **macOS will block it** - You'll see a message saying the app "cannot be opened because it is from an unidentified developer"
+3. **Open System Settings** - Go to **System Settings → Privacy & Security**
+4. **Allow the app** - Scroll down to find the security message about macmo and click **"Open Anyway"**
+5. **Confirm** - Click **"Open"** in the confirmation dialog
+
+Alternatively, you can **right-click (or Control-click) the app** and select **"Open"**, then click **"Open"** in the dialog.
+
+> **Note**: You only need to do this once. After the first launch, you can open macmo normally.
+
+
+#### Manual Install
 
 1. Download the latest `macmo.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
 2. Unzip the file
 3. Drag `macmo.app` to your Applications folder
-4. Right-click the app and select "Open" (first time only)
+4. **First launch only**: Follow the "First Launch Instructions" above to allow the app to run
+
+### iOS / iPadOS
+
+**Coming Soon to the App Store!**
+
+The iOS version of macmo is currently in development and will be available on the App Store soon. The iOS app includes:
+
+- 📱 **Native iOS interface** - Designed specifically for iPhone and iPad
+- 🔄 **Seamless iCloud sync** - Your memos automatically sync between Mac, iPhone, and iPad
+- 🎨 **iOS-optimized UI** - Large navigation titles, pull-to-refresh, and native gestures
+- 🔍 **Smart search with animations** - Beautiful typing animations for quick filters
+- 📅 **Calendar integration** - Sync memos with due dates to iOS Calendar
+
+> **Note**: While the iOS app is pending App Store approval, you can build and install it yourself from source (see Development section below).
 
 ## Requirements
 
-- **macOS 15.0** or later
-- **iCloud account** for sync (optional but recommended)
+- **macOS 15.0+** for Mac app
+- **iOS 18.0+** for iPhone/iPad app
+- **iCloud account** for sync across devices (optional but recommended)
 
 ## Usage
 
@@ -76,40 +109,8 @@ echo "✅ macmo installed successfully!"
 - **⌘N** - New memo (opens in separate window)
 - **Return** - Move from title to contents when editing
 
-## Architecture
 
-This project follows **Clean Architecture** and **Domain-Driven Design (DDD)** principles with clear separation of concerns:
-
-### Three-Layer Architecture
-
-#### 1. Domain Layer (`/domain/`)
-Pure business logic with no framework dependencies:
-- **Entities**: Core business objects (`Memo`, `MemoSort`)
-- **Repository Protocols**: Data access interfaces (`MemoRepositoryProtocol`)
-- **Service Protocols**: External service interfaces (`CalendarServiceProtocol`)
-- **Use Cases**: Business logic orchestration (`MemoUseCase`)
-
-#### 2. Data Layer (`/data/`)
-Infrastructure implementations and persistence:
-- **DAO**: Low-level data access (`MemoDAO`, `MockMemoDAO`)
-- **Repository**: Caching + DAO delegation (`MemoRepository`)
-- **DTO**: SwiftData models with domain mapping (`MemoDTO`)
-- **Schema**: Versioned schemas with migrations (`MemoSchemaV1`, `V2`)
-- **Services**: External integrations (`CalendarService`)
-
-#### 3. Presentation Layer (`/presentation/`)
-UI and user interaction:
-- **MVVM Pattern**: ViewModels handle business logic for views
-- **State Management**: Centralized state with `MemoStore`
-- **SwiftUI Views**: Organized by feature (list, detail, search, components)
-
-### Key Design Patterns
-
-- **Repository + DAO Pattern**: Repository adds caching on top of DAO persistence
-- **Use Case Pattern**: Orchestrates multiple services (Repository + Calendar)
-- **Clean Architecture Boundaries**: UseCase → Repository → DAO (proper layer separation)
-- **Protocol-Oriented Design**: Every implementation has a domain protocol
-- **Dependency Injection**: Factory framework with automatic preview mocks
+## Development
 
 ### Key Technologies
 - **SwiftUI** - Modern UI framework
@@ -119,7 +120,6 @@ UI and user interaction:
 - **Tuist** - Project generation and dependency management
 - **Fastlane** - Automated build and release pipeline
 
-## Development
 
 ### Prerequisites
 - Xcode 15.0+
@@ -139,32 +139,11 @@ tuist generate
 open macmo.xcworkspace
 ```
 
-### Project Structure
-```
-macmo/Sources/
-├── domain/              # Core business logic (no framework dependencies)
-│   ├── entity/          # Domain entities (Memo, MemoSort)
-│   ├── repository/      # Repository protocol interfaces
-│   ├── service/         # Service protocol interfaces
-│   └── usecase/         # Business logic orchestration
-├── data/                # Infrastructure & data layer
-│   ├── dao/             # Data Access Object implementations
-│   ├── repository/      # Repository implementations
-│   ├── dto/             # SwiftData models
-│   ├── schema/          # Schema versions & migrations
-│   └── service/         # Service implementations (Calendar, etc.)
-└── presentation/        # UI layer (SwiftUI + MVVM)
-    ├── list/            # Memo list views
-    ├── detail/          # Memo detail views
-    ├── search/          # Search functionality
-    ├── components/      # Reusable UI components
-    └── store/           # State management (MemoStore)
-```
-
 ### Building for Release
 ```bash
 tuist generate
-bundle exec fastlane release
+[bundle exec] fastlane mac release
+[bundle exec] fastlane ios release
 ```
 
 ## Contributing
@@ -184,7 +163,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] Calendar integration
 - [ ] Tags and categories
 - [x] Rich text formatting
-- [ ] Release iOS mobile application sharing data through iCloud
+- [x] iOS/iPadOS native application
+- [ ] App Store release for iOS
+- [ ] iPad-optimized layout
+- [ ] Widgets for iOS and macOS
+- [ ] Shortcuts integration
 
 ## Security & Privacy
 
