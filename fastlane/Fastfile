@@ -18,13 +18,39 @@ default_platform(:mac)
 platform :mac do
   desc "Build and sign for distribution"
   lane :release do
-    match
+    match(platform: "macos")
     build_mac_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
       # export_method: "developer-id",
+      export_method: "development"
+    )
+  end
+end
+
+platform :ios do
+  desc "Build and sign iOS app for distribution"
+  lane :release do
+    match(type: "appstore", platform: "ios")
+    build_app(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo",
+      configuration: "Release",
+      output_directory: "./build",
+      export_method: "app-store"
+    )
+  end
+
+  desc "Build iOS app for development"
+  lane :dev do
+    match(type: "development", platform: "ios")
+    build_app(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo",
+      configuration: "Debug",
+      output_directory: "./build",
       export_method: "development"
     )
   end

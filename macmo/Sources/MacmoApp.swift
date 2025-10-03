@@ -2,9 +2,13 @@ import SwiftUI
 
 @main
 struct MacmoApp: App {
+    
+    @StateObject var navigationManager = NavigationManager()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(navigationManager)
         }
         
         WindowGroup("New Memo", id: "memo-detail") {
