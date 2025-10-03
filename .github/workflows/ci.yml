@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and test macOS
         run: |
-          mise exec -- tuist test -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          mise exec -- tuist test macmoTests -- CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
 
   build-and-test-ios:
     runs-on: macos-15
