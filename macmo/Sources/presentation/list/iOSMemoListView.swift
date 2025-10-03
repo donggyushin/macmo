@@ -1,51 +1,44 @@
 //
-//  MemoListView.swift
+//  iOSMemoListView.swift
 //  macmo
 //
-//  Created by 신동규 on 9/27/25.
+//  Created by 신동규 on 10/3/25.
 //
 
 import SwiftUI
-import MarkdownUI
 import Factory
 
-struct MemoListView: View {
+struct iOSMemoListView: View {
+    
     @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
-    @Environment(\.openWindow) var openWindow
-
+    
     var body: some View {
-        NavigationSplitView {
-            VStack {
-                sortingPicker
-                memoList
-            }
-            .navigationTitle("Memos")
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {
-                        openWindow(id: "search-memo")
-                    }) {
-                        Image(systemName: "magnifyingglass")
-                    }
-                }
-
-                ToolbarItem(placement: .navigation) {
-                    Button(action: {
-                        openWindow(id: "setting")
-                    }) {
-                        Image(systemName: "gear")
-                    }
-                }
-
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Add") {
-                        openWindow(id: "memo-detail")
-                    }
+        VStack {
+            sortingPicker
+            memoList
+        }
+        .navigationTitle("Memos")
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button(action: {
+                    print("tap search")
+                }) {
+                    Image(systemName: "magnifyingglass")
                 }
             }
-        } detail: {
-            if let selectedMemoId = model.selectedMemoId {
-                MemoDetailView(model: MemoDetailViewModel(id: selectedMemoId))
+
+            ToolbarItem(placement: .navigation) {
+                Button(action: {
+                    print("tap setting")
+                }) {
+                    Image(systemName: "gear")
+                }
+            }
+
+            ToolbarItem(placement: .primaryAction) {
+                Button("Add") {
+                    print("tap add")
+                }
             }
         }
         .task {
@@ -54,7 +47,6 @@ struct MemoListView: View {
         }
     }
     
-    // note: Same with iOS
     private var sortingPicker: some View {
         HStack {
             Picker("Sort by", selection: $model.sortBy) {
@@ -130,10 +122,4 @@ struct MemoListView: View {
             }
         }
     }
-    // note: Same with iOS
 }
-
-#Preview {
-    MemoListView()
-}
-
