@@ -3,8 +3,8 @@ import SwiftUI
 public struct ContentView: View {
     public init() {}
     
-    @EnvironmentObject var navigationManager: NavigationManager
-
+    @EnvironmentObject private var navigationManager: NavigationManager
+    
     public var body: some View {
         #if os(macOS)
         MemoListView()

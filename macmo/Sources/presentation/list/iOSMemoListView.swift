@@ -11,6 +11,7 @@ import Factory
 struct iOSMemoListView: View {
     
     @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
+    @EnvironmentObject private var navigationManager: NavigationManager
     
     var body: some View {
         VStack {
@@ -37,7 +38,7 @@ struct iOSMemoListView: View {
 
             ToolbarItem(placement: .primaryAction) {
                 Button("Add") {
-                    print("tap add")
+                    navigationManager.push(.detail(nil))
                 }
             }
         }
@@ -68,20 +69,17 @@ struct iOSMemoListView: View {
     private var memoList: some View {
         List(selection: $model.selectedMemoId) {
             ForEach(model.memos, id: \.id) { memo in
-                MemoRowView(memo: memo)
-                    .tag(memo.id)
-                    .contextMenu {
-                        Button("Delete", role: .destructive) {
-                            Task {
-                                try await model.delete(memo.id)
+                Button {
+                    navigationManager.push(.detail(memo.id))
+                } label: {
+                    MemoRowView(memo: memo)
+                        .tag(memo.id)
+                        .onAppear {
+                            if memo.id == model.memos.last?.id {
+                                loadMoreMemos()
                             }
                         }
-                    }
-                    .onAppear {
-                        if memo.id == model.memos.last?.id {
-                            loadMoreMemos()
-                        }
-                    }
+                }
             }
             .onDelete(perform: deleteMemos)
         }

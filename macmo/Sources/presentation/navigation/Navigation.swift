@@ -8,5 +8,5 @@
 import Foundation
 
 enum Navigation: Hashable {
-    case detail(String)
+    case detail(String?)
 }

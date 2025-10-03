@@ -35,7 +35,8 @@ let project = Project(
             bundleId: "dev.tuist.macmo",
             infoPlist: .extendingDefault(with: [
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
-                "UILaunchScreen": [:]
+                "UILaunchScreen": [:],
+                "UIBackgroundModes": ["remote-notification"]
             ]),
             buildableFolders: [
                 "macmo/Sources",

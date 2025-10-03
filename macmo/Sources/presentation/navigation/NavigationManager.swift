@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 final class NavigationManager: ObservableObject {
+    
     @Published var paths: [Navigation] = []
     
     @MainActor
