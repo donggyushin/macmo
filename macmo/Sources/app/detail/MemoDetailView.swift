@@ -11,7 +11,6 @@ import MarkdownUI
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @FocusState private var focusedField: FocusField?
-    @State private var previousContents: String = ""
     @State private var showingDeleteAlert = false
     
     @Environment(\.dismissWindow) var dismissWindow
@@ -145,8 +144,8 @@ struct MemoDetailView: View {
                     .frame(minHeight: 120)
                     .scrollContentBackground(.hidden)
                     .focused($focusedField, equals: .contents)
-                    .onReceive(model.$contents) { newValue in
-                        handleMarkdownListContinuation(newValue)
+                    .onChange(of: model.contents) { oldValue, newValue in
+                        handleMarkdownListContinuation(oldValue: oldValue, newValue: newValue)
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
@@ -265,43 +264,57 @@ struct MemoDetailView: View {
         }
     }
 
-    private func handleMarkdownListContinuation(_ newValue: String) {
-        // Only trigger if text length increased (not decreased/deleted)
-        guard newValue.count > previousContents.count else {
-            previousContents = newValue
+    private func handleMarkdownListContinuation(oldValue: String, newValue: String) {
+        // Only trigger if text length increased
+        guard newValue.count > oldValue.count else {
             return
         }
 
-        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
-            let lines = newValue.components(separatedBy: "\n")
-            if lines.count >= 2 {
-                let previousLine = lines[lines.count - 2]
-
-                // Check for task list items (- [ ] or - [x])
-                if previousLine.hasPrefix("- [") && previousLine.contains("]") {
-                    let trimmed = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if trimmed == "- [ ]" || trimmed == "- [x]" {
-                        // Empty task item, stop the list
-                        let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
-                        model.contents = linesWithoutEmpty.joined(separator: "\n")
-                    } else {
-                        // Continue with new unchecked task
-                        model.contents = newValue + "- [ ] "
-                    }
-                }
-                // Check for regular list items
-                else if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
-                    // Empty list item, stop the list
-                    let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
-                    model.contents = linesWithoutEmpty.joined(separator: "\n")
-                } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    // Continue with regular list item
-                    model.contents = newValue + "- "
-                }
-            }
+        // Check if we just added a continuation marker ourselves (to prevent re-processing)
+        let diff = String(newValue.dropFirst(oldValue.count))
+        if diff == "- [ ] " || diff == "- [x] " || diff == "- " {
+            return
         }
 
-        previousContents = newValue
+        // Only trigger if a newline was just added
+        guard oldValue.count > 0,
+              diff.first == "\n" else {
+            return
+        }
+
+        // Only process single newlines that we haven't already handled
+        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
+            let lines = newValue.components(separatedBy: "\n")
+            guard lines.count >= 2 else { return }
+
+            let previousLine = lines[lines.count - 2]
+            let currentLine = lines[lines.count - 1]
+
+            // Skip if current line already has list marker (already processed)
+            guard currentLine.isEmpty else { return }
+
+            // Check for task list items (- [ ] or - [x])
+            if previousLine.hasPrefix("- [") && previousLine.contains("]") {
+                let trimmed = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
+                if trimmed == "- [ ]" || trimmed == "- [x]" {
+                    // Empty task item, stop the list
+                    let linesWithoutEmpty = lines.dropLast(2) + [""]
+                    model.contents = linesWithoutEmpty.joined(separator: "\n")
+                } else {
+                    // Continue with new unchecked task
+                    model.contents = newValue + "- [ ] "
+                }
+            }
+            // Check for regular list items
+            else if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
+                // Empty list item, stop the list
+                let linesWithoutEmpty = lines.dropLast(2) + [""]
+                model.contents = linesWithoutEmpty.joined(separator: "\n")
+            } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                // Continue with regular list item
+                model.contents = newValue + "- "
+            }
+        }
     }
 }
 

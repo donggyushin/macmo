@@ -31,7 +31,7 @@ jobs:
 
       - name: Build and test macOS
         run: |
-          tuist test
+          mise exec -- tuist test
 
   build-ios:
     runs-on: macos-15
