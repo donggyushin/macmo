@@ -21,7 +21,7 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane mac release
 ```
 
-Build and sign for distribution
+Build and upload macOS app to App Store
 
 ----
 
@@ -34,15 +34,7 @@ Build and sign for distribution
 [bundle exec] fastlane ios release
 ```
 
-Build and sign iOS app for distribution
-
-### ios dev
-
-```sh
-[bundle exec] fastlane ios dev
-```
-
-Build iOS app for development
+Build and upload iOS app to App Store
 
 ----
 

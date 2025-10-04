@@ -34,9 +34,14 @@ let project = Project(
             product: .app,
             bundleId: "dev.tuist.macmo",
             infoPlist: .extendingDefault(with: [
+                "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+                "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                "CFBundleDisplayName": "$(INFOPLIST_KEY_CFBundleDisplayName)",
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
-                "UIBackgroundModes": ["remote-notification"]
+                "UIBackgroundModes": ["remote-notification"],
+                "LSApplicationCategoryType": "public.app-category.productivity",
+                "ITSAppUsesNonExemptEncryption": false
             ]),
             buildableFolders: [
                 "macmo/Sources",
@@ -46,7 +51,12 @@ let project = Project(
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI")
-            ]
+            ],
+            settings: .settings(base: [
+                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
+                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]": "AppIconIOS",
+                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIconIOS"
+            ])
         ),
         .target(
             name: "macmoTests",
