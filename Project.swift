@@ -12,7 +12,7 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.7.1",
+            "MARKETING_VERSION": "1.7.2",
             "CURRENT_PROJECT_VERSION": "1",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
         ],
