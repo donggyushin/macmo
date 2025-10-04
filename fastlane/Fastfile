@@ -16,27 +16,57 @@
 default_platform(:mac)
 
 platform :mac do
-  desc "Build and sign for App Store distribution"
+  desc "Build and upload macOS app to App Store"
   lane :release do
-    # Sync code signing certificates for App Store
-    match(
-      type: "appstore",
-      platform: "macos"
+    # Build the macOS app for App Store with automatic signing
+    build_mac_app(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo",
+      configuration: "Release",
+      output_directory: "./build",
+      export_method: "app-store",
+      clean: true,
+      export_options: {
+        signingStyle: "automatic",
+        method: "app-store"
+      }
     )
 
-    # Build the macOS app for App Store
-    upload_to_app_store
+    # Upload to App Store Connect
+    upload_to_app_store(
+      platform: "osx",
+      skip_screenshots: true,
+      skip_metadata: false,
+      submit_for_review: false,
+      automatic_release: false
+    )
   end
 end
 
 platform :ios do
-  desc "Build and sign iOS app for App Store distribution"
+  desc "Build and upload iOS app to App Store"
   lane :release do
-    # Sync code signing certificates
-    match(
-      type: "appstore",
-      platform: "ios"
+    # Build the iOS app with automatic signing
+    build_app(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo",
+      configuration: "Release",
+      output_directory: "./build",
+      export_method: "app-store",
+      clean: true,
+      export_options: {
+        signingStyle: "automatic",
+        method: "app-store"
+      }
     )
-    upload_to_app_store
+
+    # Upload to App Store Connect
+    upload_to_app_store(
+      platform: "ios",
+      skip_screenshots: true,
+      skip_metadata: false,
+      submit_for_review: false,
+      automatic_release: false
+    )
   end
 end
