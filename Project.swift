@@ -40,7 +40,8 @@ let project = Project(
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
                 "UIBackgroundModes": ["remote-notification"],
-                "LSApplicationCategoryType": "public.app-category.productivity"
+                "LSApplicationCategoryType": "public.app-category.productivity",
+                "ITSAppUsesNonExemptEncryption": false
             ]),
             buildableFolders: [
                 "macmo/Sources",
