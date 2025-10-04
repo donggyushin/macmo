@@ -11,10 +11,10 @@ import MarkdownUI
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @FocusState private var focusedField: FocusField?
-    @State private var previousContents: String = ""
     @State private var showingDeleteAlert = false
     
     @Environment(\.dismissWindow) var dismissWindow
+    @EnvironmentObject var navigationManager: NavigationManager
 
     enum FocusField {
         case title
@@ -62,6 +62,7 @@ struct MemoDetailView: View {
                         model.cancel()
                         if model.isNewMemo {
                             dismissWindow(id: "memo-detail")
+                            navigationManager.pop()
                         }
                     }
                 }
@@ -143,8 +144,8 @@ struct MemoDetailView: View {
                     .frame(minHeight: 120)
                     .scrollContentBackground(.hidden)
                     .focused($focusedField, equals: .contents)
-                    .onReceive(model.$contents) { newValue in
-                        handleMarkdownListContinuation(newValue)
+                    .onChange(of: model.contents) { oldValue, newValue in
+                        handleMarkdownListContinuation(oldValue: oldValue, newValue: newValue)
                     }
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
@@ -263,43 +264,10 @@ struct MemoDetailView: View {
         }
     }
 
-    private func handleMarkdownListContinuation(_ newValue: String) {
-        // Only trigger if text length increased (not decreased/deleted)
-        guard newValue.count > previousContents.count else {
-            previousContents = newValue
-            return
+    private func handleMarkdownListContinuation(oldValue: String, newValue: String) {
+        if let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue) {
+            model.contents = result
         }
-
-        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
-            let lines = newValue.components(separatedBy: "\n")
-            if lines.count >= 2 {
-                let previousLine = lines[lines.count - 2]
-
-                // Check for task list items (- [ ] or - [x])
-                if previousLine.hasPrefix("- [") && previousLine.contains("]") {
-                    let trimmed = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if trimmed == "- [ ]" || trimmed == "- [x]" {
-                        // Empty task item, stop the list
-                        let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
-                        model.contents = linesWithoutEmpty.joined(separator: "\n")
-                    } else {
-                        // Continue with new unchecked task
-                        model.contents = newValue + "- [ ] "
-                    }
-                }
-                // Check for regular list items
-                else if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
-                    // Empty list item, stop the list
-                    let linesWithoutEmpty = lines.dropLast(2) + [lines[lines.count - 1]]
-                    model.contents = linesWithoutEmpty.joined(separator: "\n")
-                } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    // Continue with regular list item
-                    model.contents = newValue + "- "
-                }
-            }
-        }
-
-        previousContents = newValue
     }
 }
 

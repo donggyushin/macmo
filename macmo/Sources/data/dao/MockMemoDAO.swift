@@ -71,6 +71,7 @@ class MockMemoDAO: MemoDAOProtocol {
             contents: memo.contents,
             due: memo.due,
             done: memo.done,
+            eventIdentifier: memo.eventIdentifier,
             createdAt: memo.createdAt,
             updatedAt: Date()
         )

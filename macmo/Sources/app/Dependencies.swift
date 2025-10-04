@@ -44,6 +44,9 @@ extension Container {
         .onPreview {
             MockMemoDAO.withSampleData()
         }
+        .onTest {
+            MockMemoDAO.withSampleData()
+        }
         .singleton
     }
     
@@ -59,6 +62,9 @@ extension Container {
             CalendarService()
         }
         .onPreview {
+            MockCalendarService()
+        }
+        .onTest {
             MockCalendarService()
         }
         .singleton
