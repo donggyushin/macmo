@@ -14,7 +14,10 @@ let project = Project(
             "CODE_SIGN_STYLE": "Automatic",
             "MARKETING_VERSION": "1.7.1",
             "CURRENT_PROJECT_VERSION": "1",
-            "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
+            "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
+            "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
+            "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]": "AppIcon iOS",
+            "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIcon iOS"
         ],
         configurations: [
             .debug(name: .debug, settings: [
