@@ -265,55 +265,8 @@ struct MemoDetailView: View {
     }
 
     private func handleMarkdownListContinuation(oldValue: String, newValue: String) {
-        // Only trigger if text length increased
-        guard newValue.count > oldValue.count else {
-            return
-        }
-
-        // Check if we just added a continuation marker ourselves (to prevent re-processing)
-        let diff = String(newValue.dropFirst(oldValue.count))
-        if diff == "- [ ] " || diff == "- [x] " || diff == "- " {
-            return
-        }
-
-        // Only trigger if a newline was just added
-        guard oldValue.count > 0,
-              diff.first == "\n" else {
-            return
-        }
-
-        // Only process single newlines that we haven't already handled
-        if newValue.hasSuffix("\n") && !newValue.hasSuffix("\n\n") {
-            let lines = newValue.components(separatedBy: "\n")
-            guard lines.count >= 2 else { return }
-
-            let previousLine = lines[lines.count - 2]
-            let currentLine = lines[lines.count - 1]
-
-            // Skip if current line already has list marker (already processed)
-            guard currentLine.isEmpty else { return }
-
-            // Check for task list items (- [ ] or - [x])
-            if previousLine.hasPrefix("- [") && previousLine.contains("]") {
-                let trimmed = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
-                if trimmed == "- [ ]" || trimmed == "- [x]" {
-                    // Empty task item, stop the list
-                    let linesWithoutEmpty = lines.dropLast(2) + [""]
-                    model.contents = linesWithoutEmpty.joined(separator: "\n")
-                } else {
-                    // Continue with new unchecked task
-                    model.contents = newValue + "- [ ] "
-                }
-            }
-            // Check for regular list items
-            else if previousLine.trimmingCharacters(in: .whitespacesAndNewlines) == "-" {
-                // Empty list item, stop the list
-                let linesWithoutEmpty = lines.dropLast(2) + [""]
-                model.contents = linesWithoutEmpty.joined(separator: "\n")
-            } else if previousLine.hasPrefix("- ") && !previousLine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                // Continue with regular list item
-                model.contents = newValue + "- "
-            }
+        if let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue) {
+            model.contents = result
         }
     }
 }
