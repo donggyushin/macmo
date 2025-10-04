@@ -26,10 +26,7 @@ platform :mac do
       output_directory: "./build",
       export_method: "app-store",
       clean: true,
-      export_options: {
-        signingStyle: "automatic",
-        method: "app-store"
-      }
+      export_method: "app-store"
     )
 
     # Upload to App Store Connect
@@ -54,10 +51,7 @@ platform :ios do
       output_directory: "./build",
       export_method: "app-store",
       clean: true,
-      export_options: {
-        signingStyle: "automatic",
-        method: "app-store"
-      }
+      export_method: "app-store"
     )
 
     # Upload to App Store Connect
