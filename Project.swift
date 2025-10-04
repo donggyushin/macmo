@@ -36,6 +36,7 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                "CFBundleDisplayName": "$(INFOPLIST_KEY_CFBundleDisplayName)",
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
                 "UIBackgroundModes": ["remote-notification"],
