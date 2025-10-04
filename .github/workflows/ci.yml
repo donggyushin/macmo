@@ -31,14 +31,7 @@ jobs:
 
       - name: Build and test macOS
         run: |
-          xcodebuild test \
-            -workspace macmo.xcworkspace \
-            -scheme macmo \
-            -destination 'platform=macOS' \
-            -skip-testing:macmoiOSTests \
-            CODE_SIGN_IDENTITY="-" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+          tuist test
 
   build-ios:
     runs-on: macos-15
