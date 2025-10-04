@@ -21,8 +21,7 @@ platform :mac do
     # Sync code signing certificates for App Store
     match(
       type: "appstore",
-      platform: "macos",
-      readonly: true
+      platform: "macos"
     )
 
     # Build the macOS app for App Store
@@ -59,8 +58,7 @@ platform :mac do
   lane :dev do
     match(
       type: "developer_id",
-      platform: "macos",
-      readonly: true
+      platform: "macos"
     )
 
     build_mac_app(
@@ -84,16 +82,10 @@ end
 platform :ios do
   desc "Build and sign iOS app for App Store distribution"
   lane :release do
-    # Increment build number
-    increment_build_number(
-      xcodeproj: "macmo.xcodeproj"
-    )
-
     # Sync code signing certificates
     match(
       type: "appstore",
-      platform: "ios",
-      readonly: true
+      platform: "ios"
     )
 
     # Build the iOS app
@@ -141,8 +133,7 @@ platform :ios do
   lane :dev do
     match(
       type: "development",
-      platform: "ios",
-      readonly: true
+      platform: "ios"
     )
 
     build_app(
