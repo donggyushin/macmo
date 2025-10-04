@@ -16,42 +16,159 @@
 default_platform(:mac)
 
 platform :mac do
-  desc "Build and sign for distribution"
+  desc "Build and sign for App Store distribution"
   lane :release do
-    match(platform: "macos")
+    # Sync code signing certificates for App Store
+    match(
+      type: "appstore",
+      platform: "macos",
+      readonly: true
+    )
+
+    # Build the macOS app for App Store
     build_mac_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      # export_method: "developer-id",
-      export_method: "development"
+      export_method: "app-store",
+      clean: true
+    )
+  end
+
+  desc "Upload macOS app to App Store Connect"
+  lane :upload do
+    # Upload to App Store Connect
+    upload_to_app_store(
+      platform: "osx",
+      skip_screenshots: true,
+      skip_metadata: false,
+      submit_for_review: false,
+      automatic_release: false,
+      force: true
+    )
+  end
+
+  desc "Build and upload macOS app to App Store Connect"
+  lane :deploy do
+    release
+    upload
+  end
+
+  desc "Build for development/testing (Developer ID)"
+  lane :dev do
+    match(
+      type: "developer_id",
+      platform: "macos",
+      readonly: true
+    )
+
+    build_mac_app(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo",
+      configuration: "Release",
+      output_directory: "./build",
+      export_method: "developer-id"
+    )
+  end
+
+  desc "Notarize macOS app for distribution outside App Store"
+  lane :notarize do
+    notarize(
+      package: "./build/macmo.pkg",
+      bundle_id: "dev.tuist.macmo"
     )
   end
 end
 
 platform :ios do
-  desc "Build and sign iOS app for distribution"
+  desc "Build and sign iOS app for App Store distribution"
   lane :release do
-    match(type: "appstore", platform: "ios")
+    # Increment build number
+    increment_build_number(
+      xcodeproj: "macmo.xcodeproj"
+    )
+
+    # Sync code signing certificates
+    match(
+      type: "appstore",
+      platform: "ios",
+      readonly: true
+    )
+
+    # Build the iOS app
     build_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "app-store"
+      export_method: "app-store",
+      clean: true,
+      include_bitcode: false
+    )
+  end
+
+  desc "Upload iOS app to App Store Connect"
+  lane :upload do
+    # Upload to App Store Connect
+    upload_to_app_store(
+      platform: "ios",
+      skip_screenshots: true,
+      skip_metadata: false,
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      precheck_include_in_app_purchases: false
+    )
+  end
+
+  desc "Build and upload iOS app to App Store Connect"
+  lane :deploy do
+    release
+    upload
+  end
+
+  desc "Upload to TestFlight"
+  lane :beta do
+    release
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      distribute_external: false
     )
   end
 
   desc "Build iOS app for development"
   lane :dev do
-    match(type: "development", platform: "ios")
+    match(
+      type: "development",
+      platform: "ios",
+      readonly: true
+    )
+
     build_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Debug",
       output_directory: "./build",
       export_method: "development"
+    )
+  end
+
+  desc "Take screenshots for App Store"
+  lane :screenshots do
+    capture_screenshots(
+      workspace: "macmo.xcworkspace",
+      scheme: "macmo"
+    )
+  end
+
+  desc "Update App Store metadata only"
+  lane :metadata do
+    upload_to_app_store(
+      platform: "ios",
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      force: true
     )
   end
 end
