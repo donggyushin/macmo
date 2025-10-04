@@ -34,6 +34,8 @@ let project = Project(
             product: .app,
             bundleId: "dev.tuist.macmo",
             infoPlist: .extendingDefault(with: [
+                "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+                "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
                 "UIBackgroundModes": ["remote-notification"],
