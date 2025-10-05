@@ -18,6 +18,12 @@ default_platform(:mac)
 platform :mac do
   desc "Build and upload macOS app to App Store"
   lane :release do
+    # Sync code signing certificates and provisioning profiles
+    match(
+      type: "appstore",
+      platform: "macos"
+    )
+
     # Build the macOS app for App Store with automatic signing
     build_mac_app(
       workspace: "macmo.xcworkspace",
@@ -43,6 +49,12 @@ end
 platform :ios do
   desc "Build and upload iOS app to App Store"
   lane :release do
+    # Sync code signing certificates and provisioning profiles
+    match(
+      type: "appstore",
+      platform: "ios"
+    )
+
     # Build the iOS app with automatic signing
     build_app(
       workspace: "macmo.xcworkspace",
