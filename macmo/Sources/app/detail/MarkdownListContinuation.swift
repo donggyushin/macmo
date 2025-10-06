@@ -104,10 +104,17 @@ enum MarkdownListContinuation {
             return nil
         }
 
-        // Check if there's a space after the dot
+        // Check if there's a space after the dot (or if dot is at the end after trimming)
         let afterDotIndex = trimmedPrevious.index(after: dotIndex)
-        guard afterDotIndex < trimmedPrevious.endIndex,
-              trimmedPrevious[afterDotIndex] == " " else {
+
+        // Handle case where line is just "1." after trimming (empty item)
+        if afterDotIndex >= trimmedPrevious.endIndex {
+            // Empty numbered item, stop the list
+            let linesWithoutEmpty = lines.dropLast(2) + [""]
+            return linesWithoutEmpty.joined(separator: "\n")
+        }
+
+        guard trimmedPrevious[afterDotIndex] == " " else {
             return nil
         }
 
