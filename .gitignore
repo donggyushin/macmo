@@ -70,3 +70,5 @@ Derived/
 Tuist/.build
 
 report.xml
+
+buildServer.json
