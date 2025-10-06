@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DeveloperView: View {
-
     var body: some View {
         Form {
             Section {
