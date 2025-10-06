@@ -169,4 +169,84 @@ struct MarkdownListContinuationTests {
 
         #expect(result == "- level 1\n\t- nested with tab\n\t- ")
     }
+
+    @Test("Numbered list continuation - adds next number")
+    func numberedListContinuation() {
+        let oldValue = "1. first item"
+        let newValue = "1. first item\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "1. first item\n2. ")
+    }
+
+    @Test("Numbered list continuation - continues from any number")
+    func numberedListContinuesFromAnyNumber() {
+        let oldValue = "5. fifth item"
+        let newValue = "5. fifth item\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "5. fifth item\n6. ")
+    }
+
+    @Test("Numbered list continuation - stops on empty item")
+    func numberedListStopsOnEmpty() {
+        let oldValue = "1. first item\n2. "
+        let newValue = "1. first item\n2. \n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "1. first item\n")
+    }
+
+    @Test("Numbered list continuation - handles double digit numbers")
+    func numberedListHandlesDoubleDigits() {
+        let oldValue = "99. item ninety-nine"
+        let newValue = "99. item ninety-nine\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "99. item ninety-nine\n100. ")
+    }
+
+    @Test("Numbered list continuation - preserves indentation")
+    func numberedListPreservesIndentation() {
+        let oldValue = "1. first level\n  1. nested item"
+        let newValue = "1. first level\n  1. nested item\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "1. first level\n  1. nested item\n  2. ")
+    }
+
+    @Test("Numbered list continuation - stops indented empty item")
+    func numberedListStopsIndentedEmpty() {
+        let oldValue = "1. first level\n  1. nested\n  2. "
+        let newValue = "1. first level\n  1. nested\n  2. \n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "1. first level\n  1. nested\n")
+    }
+
+    @Test("Numbered list - ignores non-numbered patterns")
+    func numberedListIgnoresNonNumberedPatterns() {
+        let oldValue = "a. not a number"
+        let newValue = "a. not a number\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == nil)
+    }
+
+    @Test("Numbered list - prevents reprocessing after adding marker")
+    func numberedListPreventsReprocessing() {
+        let oldValue = "1. first item\n"
+        let newValue = "1. first item\n2. "
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == nil)
+    }
 }

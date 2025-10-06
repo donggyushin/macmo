@@ -26,6 +26,10 @@ enum MarkdownListContinuation {
         if diff.hasPrefix("- [ ] ") || diff.hasPrefix("- [x] ") || diff.hasPrefix("- ") {
             return nil
         }
+        // Check if we just added a numbered list marker
+        if diff.first?.isNumber == true && diff.contains(". ") {
+            return nil
+        }
 
         // Only trigger if a newline was just added
         guard oldValue.count > 0,
@@ -50,8 +54,12 @@ enum MarkdownListContinuation {
             // Get trimmed line without indentation
             let trimmedPrevious = previousLine.trimmingCharacters(in: .whitespacesAndNewlines)
 
+            // Check for numbered list items (1. , 2. , etc.)
+            if let numberedResult = processNumberedList(trimmedPrevious: trimmedPrevious, newValue: newValue, indentation: indentation, lines: lines) {
+                return numberedResult
+            }
             // Check for task list items (- [ ] or - [x])
-            if trimmedPrevious.hasPrefix("- [") && trimmedPrevious.contains("]") {
+            else if trimmedPrevious.hasPrefix("- [") && trimmedPrevious.contains("]") {
                 if trimmedPrevious == "- [ ]" || trimmedPrevious == "- [x]" {
                     // Empty task item, stop the list
                     let linesWithoutEmpty = lines.dropLast(2) + [""]
@@ -70,6 +78,51 @@ enum MarkdownListContinuation {
                 // Continue with regular list item, preserving indentation
                 return newValue + indentation + "- "
             }
+        }
+
+        return nil
+    }
+
+    /// Process numbered list continuation
+    /// - Parameters:
+    ///   - trimmedPrevious: The trimmed previous line
+    ///   - newValue: The new text value
+    ///   - indentation: The indentation to preserve
+    ///   - lines: All lines in the text
+    /// - Returns: Modified text with numbered continuation, or nil if not a numbered list
+    private static func processNumberedList(trimmedPrevious: String, newValue: String, indentation: String, lines: [String]) -> String? {
+        // Check if line matches numbered list pattern (e.g., "1. ", "23. ")
+        guard let dotIndex = trimmedPrevious.firstIndex(of: "."),
+              dotIndex != trimmedPrevious.startIndex else {
+            return nil
+        }
+
+        let numberPart = trimmedPrevious[..<dotIndex]
+
+        // Verify all characters before dot are digits
+        guard numberPart.allSatisfy({ $0.isNumber }) else {
+            return nil
+        }
+
+        // Check if there's a space after the dot
+        let afterDotIndex = trimmedPrevious.index(after: dotIndex)
+        guard afterDotIndex < trimmedPrevious.endIndex,
+              trimmedPrevious[afterDotIndex] == " " else {
+            return nil
+        }
+
+        // Check if this is an empty numbered item (just "1. ")
+        let contentAfterMarker = trimmedPrevious[trimmedPrevious.index(after: afterDotIndex)...].trimmingCharacters(in: .whitespaces)
+        if contentAfterMarker.isEmpty {
+            // Empty numbered item, stop the list
+            let linesWithoutEmpty = lines.dropLast(2) + [""]
+            return linesWithoutEmpty.joined(separator: "\n")
+        }
+
+        // Continue with next number
+        if let currentNumber = Int(numberPart) {
+            let nextNumber = currentNumber + 1
+            return newValue + indentation + "\(nextNumber). "
         }
 
         return nil
