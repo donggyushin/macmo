@@ -109,4 +109,64 @@ struct MarkdownListContinuationTests {
 
         #expect(result == "- [x] done item\n- [ ] ")
     }
+
+    @Test("Continues indented regular list items")
+    func continuesIndentedRegularList() {
+        let oldValue = "- some text\n  - nested item"
+        let newValue = "- some text\n  - nested item\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- some text\n  - nested item\n  - ")
+    }
+
+    @Test("Continues indented task list items")
+    func continuesIndentedTaskList() {
+        let oldValue = "- [ ] some text\n  - [ ] nested task"
+        let newValue = "- [ ] some text\n  - [ ] nested task\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- [ ] some text\n  - [ ] nested task\n  - [ ] ")
+    }
+
+    @Test("Stops indented task list on empty item")
+    func stopsIndentedTaskListOnEmpty() {
+        let oldValue = "- [ ] some text\n  - [ ] "
+        let newValue = "- [ ] some text\n  - [ ] \n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- [ ] some text\n")
+    }
+
+    @Test("Stops indented regular list on empty item")
+    func stopsIndentedRegularListOnEmpty() {
+        let oldValue = "- some text\n  - "
+        let newValue = "- some text\n  - \n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- some text\n")
+    }
+
+    @Test("Continues deeply indented list items")
+    func continuesDeeplyIndentedList() {
+        let oldValue = "- level 1\n  - level 2\n    - level 3"
+        let newValue = "- level 1\n  - level 2\n    - level 3\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- level 1\n  - level 2\n    - level 3\n    - ")
+    }
+
+    @Test("Preserves tab indentation")
+    func preservesTabIndentation() {
+        let oldValue = "- level 1\n\t- nested with tab"
+        let newValue = "- level 1\n\t- nested with tab\n"
+
+        let result = MarkdownListContinuation.process(oldValue: oldValue, newValue: newValue)
+
+        #expect(result == "- level 1\n\t- nested with tab\n\t- ")
+    }
 }
