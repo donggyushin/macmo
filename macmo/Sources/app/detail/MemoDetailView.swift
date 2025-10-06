@@ -75,6 +75,7 @@ struct MemoDetailView: View {
                             try await model.save()
                             if model.isNewMemo {
                                 dismissWindow(id: "memo-detail")
+                                navigationManager.pop()     
                             }
                             changeAction?()
                         }
