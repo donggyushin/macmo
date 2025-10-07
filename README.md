@@ -1,4 +1,4 @@
-# macmo
+# dgmemo
 
 A clean, simple memo application for macOS and iOS with iCloud sync.
 
@@ -35,48 +35,46 @@ A clean, simple memo application for macOS and iOS with iCloud sync.
 #### Quick Install (Recommended)
 
 ```bash
-curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/macmo.zip
-unzip macmo.zip
-mv macmo.app /Applications/
-rm macmo.zip
-echo "✅ macmo installed successfully!"
+curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/dgmemo.zip
+unzip dgmemo.zip
+mv dgmemo.app /Applications/
+rm dgmemo.zip
+echo "✅ dgmemo installed successfully!"
 ```
 
 **First Launch Instructions:**
 
-Since macmo is not distributed through the App Store, macOS will block it by default. Follow these steps to open it:
+Since dgmemo is not distributed through the App Store, macOS will block it by default. Follow these steps to open it:
 
-1. **Try to open the app** - Double-click `macmo.app` in Applications folder
+1. **Try to open the app** - Double-click `dgmemo.app` in Applications folder
 2. **macOS will block it** - You'll see a message saying the app "cannot be opened because it is from an unidentified developer"
 3. **Open System Settings** - Go to **System Settings → Privacy & Security**
-4. **Allow the app** - Scroll down to find the security message about macmo and click **"Open Anyway"**
+4. **Allow the app** - Scroll down to find the security message about dgmemo and click **"Open Anyway"**
 5. **Confirm** - Click **"Open"** in the confirmation dialog
 
 Alternatively, you can **right-click (or Control-click) the app** and select **"Open"**, then click **"Open"** in the dialog.
 
-> **Note**: You only need to do this once. After the first launch, you can open macmo normally.
+> **Note**: You only need to do this once. After the first launch, you can open dgmemo normally.
 
 
 #### Manual Install
 
-1. Download the latest `macmo.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
+1. Download the latest `dgmemo.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
 2. Unzip the file
-3. Drag `macmo.app` to your Applications folder
+3. Drag `dgmemo.app` to your Applications folder
 4. **First launch only**: Follow the "First Launch Instructions" above to allow the app to run
 
 ### iOS / iPadOS
 
-**Coming Soon to the App Store!**
+**[📱 Download on the App Store](https://apps.apple.com/kr/app/macmo/id6753157832)**
 
-The iOS version of macmo is currently in development and will be available on the App Store soon. The iOS app includes:
+The iOS version of dgmemo is now available! The iOS app includes:
 
 - 📱 **Native iOS interface** - Designed specifically for iPhone and iPad
 - 🔄 **Seamless iCloud sync** - Your memos automatically sync between Mac, iPhone, and iPad
 - 🎨 **iOS-optimized UI** - Large navigation titles, pull-to-refresh, and native gestures
 - 🔍 **Smart search with animations** - Beautiful typing animations for quick filters
 - 📅 **Calendar integration** - Sync memos with due dates to iOS Calendar
-
-> **Note**: While the iOS app is pending App Store approval, you can build and install it yourself from source (see Development section below).
 
 ## Requirements
 
@@ -167,7 +165,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [ ] Tags and categories
 - [x] Rich text formatting
 - [x] iOS/iPadOS native application
-- [ ] App Store release for iOS
+- [x] App Store release for iOS
+- [ ] App Store release for macOS
 - [ ] iPad-optimized layout
 - [ ] Widgets for iOS and macOS
 - [ ] Shortcuts integration
