@@ -72,6 +72,12 @@ struct SettingView: View {
             } header: {
                 Text("About")
             }
+            if model.memoStatistics.isEmpty == false {
+                MemoStatisticsComponent(statistics: model.memoStatistics)
+            }
+        }
+        .onAppear {
+            model.fetchMemoStatistics()
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
