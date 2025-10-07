@@ -34,6 +34,7 @@ struct SettingView: View {
             Section {
                 #if os(iOS)
                     Button(action: {
+                        // Replace real appstore url
                         if let url = URL(string: "https://github.com/donggyushin/macmo") {
                             UIApplication.shared.open(url)
                         }
@@ -47,6 +48,7 @@ struct SettingView: View {
                     }
                 #else
                     Button {
+                        // Replace real appstore url
                         if let url = URL(string: "https://github.com/donggyushin/macmo") {
                             NSWorkspace.shared.open(url)
                         }
