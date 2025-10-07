@@ -72,3 +72,4 @@ Tuist/.build
 report.xml
 
 .nvim
+buildServer.json
