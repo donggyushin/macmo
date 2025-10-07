@@ -44,7 +44,8 @@ struct MemoDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 titleSection
                 contentsSection
-                if model.isEditing == false && model.hasDueDate == false {
+
+                if model.isEditing || model.hasDueDate {
                     dueDateSection
                 }
 
