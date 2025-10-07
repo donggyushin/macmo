@@ -88,8 +88,8 @@ struct SettingView: View {
             }
         }
         .onAppear {
-            model.fetchMemoStatistics()
             model.fetchSelectedStatistics()
+            model.fetchMemoStatistics()
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
