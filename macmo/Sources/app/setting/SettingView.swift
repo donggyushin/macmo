@@ -49,7 +49,7 @@ struct SettingView: View {
                 #else
                     Button {
                         // Replace real appstore url
-                        if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                        if let url = URL(string: "https://apps.apple.com/kr/app/macmo/id6753157832") {
                             NSWorkspace.shared.open(url)
                         }
                     } label: {
