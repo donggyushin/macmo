@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct SettingView: View {
-    
     @StateObject var model: SettingViewModel
     @State var isCalendarAccessDeniedDialogOpen = false
-    
+
     var body: some View {
         Form {
             Section {
@@ -31,21 +30,34 @@ struct SettingView: View {
             } footer: {
                 Text("Automatically create calendar events for memos with due dates")
             }
-            
+
             Section {
                 #if os(iOS)
-                Button(action: {
-                    if let url = URL(string: "https://github.com/donggyushin/macmo") {
-                        UIApplication.shared.open(url)
+                    Button(action: {
+                        if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        HStack {
+                            Text("Download macOS App")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward.app")
+                                .foregroundColor(.secondary)
+                        }
                     }
-                }) {
-                    HStack {
-                        Text("Download macOS App")
-                        Spacer()
-                        Image(systemName: "arrow.up.forward.app")
-                            .foregroundColor(.secondary)
+                #else
+                    Button {
+                        if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        HStack {
+                            Text("Download iOS App")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward.app")
+                                .foregroundColor(.secondary)
+                        }
                     }
-                }
                 #endif
 
                 NavigationLink("Developer") {
@@ -67,13 +79,13 @@ struct SettingView: View {
         .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
             Button("Open System Settings") {
                 #if os(macOS)
-                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
-                    NSWorkspace.shared.open(url)
-                }
+                    if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
+                        NSWorkspace.shared.open(url)
+                    }
                 #else
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 #endif
             }
             Button("Cancel", role: .cancel) {
