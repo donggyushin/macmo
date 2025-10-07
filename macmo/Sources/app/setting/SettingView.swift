@@ -73,11 +73,23 @@ struct SettingView: View {
                 Text("About")
             }
             if model.memoStatistics.isEmpty == false {
-                BarChartView(statistics: model.memoStatistics)
+                switch model.selectedStatistics {
+                case .bar:
+                    BarChartView(statistics: model.memoStatistics)
+                        .onTapGesture {
+                            model.tapChart()
+                        }
+                case .chart:
+                    PieChartView(statistics: model.memoStatistics)
+                        .onTapGesture {
+                            model.tapChart()
+                        }
+                }
             }
         }
         .onAppear {
             model.fetchMemoStatistics()
+            model.fetchSelectedStatistics()
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
