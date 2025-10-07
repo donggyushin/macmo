@@ -167,9 +167,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] iOS/iPadOS native application
 - [x] App Store release for iOS
 - [ ] App Store release for macOS
-- [ ] iPad-optimized layout
+- [x] iPad-optimized layout
 - [ ] Widgets for iOS and macOS
-- [ ] Shortcuts integration
 
 ## Security & Privacy
 
