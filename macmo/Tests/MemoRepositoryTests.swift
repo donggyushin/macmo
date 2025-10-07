@@ -15,8 +15,8 @@ struct MemoRepositoryTests {
 
     @Test("Get returns default sort")
     func getReturnsDefaultSort() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults for clean state
         UserDefaults.standard.removeObject(forKey: "memo-sort")
@@ -28,8 +28,8 @@ struct MemoRepositoryTests {
 
     @Test("Set saves to UserDefaults")
     func setSavesToUserDefaults() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
@@ -45,15 +45,15 @@ struct MemoRepositoryTests {
 
     @Test("Set persists across instances")
     func setPersistsAcrossInstances() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
 
         repository.set(.due)
 
-        let newRepository = MemoRepository(memoDAO: mockDAO)
+        let newRepository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         #expect(newRepository.get() == .due)
 
@@ -63,8 +63,8 @@ struct MemoRepositoryTests {
 
     @Test("GetAscending returns default value")
     func getAscendingReturnsDefaultValue() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
@@ -76,8 +76,8 @@ struct MemoRepositoryTests {
 
     @Test("SetAscending saves to UserDefaults")
     func setAscendingSavesToUserDefaults() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
@@ -93,15 +93,15 @@ struct MemoRepositoryTests {
 
     @Test("SetAscending persists across instances")
     func setAscendingPersistsAcrossInstances() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
 
         repository.setAscending(true)
 
-        let newRepository = MemoRepository(memoDAO: mockDAO)
+        let newRepository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         #expect(newRepository.getAscending() == true)
 
@@ -113,8 +113,8 @@ struct MemoRepositoryTests {
 
     @Test("Save delegates to DAO")
     func saveDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo = Memo(title: "Test Memo", contents: "Content")
 
@@ -127,8 +127,8 @@ struct MemoRepositoryTests {
 
     @Test("FindAll delegates to DAO")
     func findAllDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo1 = Memo(title: "Memo 1")
         let memo2 = Memo(title: "Memo 2")
@@ -142,8 +142,8 @@ struct MemoRepositoryTests {
 
     @Test("FindAll passes correct parameters")
     func findAllPassesCorrectParameters() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         for i in 1...5 {
             let memo = Memo(title: "Memo \(i)")
@@ -157,8 +157,8 @@ struct MemoRepositoryTests {
 
     @Test("FindById delegates to DAO")
     func findByIdDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo = Memo(title: "Test Memo")
         try mockDAO.save(memo)
@@ -171,8 +171,8 @@ struct MemoRepositoryTests {
 
     @Test("FindById returns nil for nonexistent")
     func findByIdReturnsNilForNonexistent() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let foundMemo = try repository.findById("nonexistent-id")
 
@@ -181,8 +181,8 @@ struct MemoRepositoryTests {
 
     @Test("Update delegates to DAO")
     func updateDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo = Memo(title: "Original Title", contents: "Original Content")
         try mockDAO.save(memo)
@@ -197,8 +197,8 @@ struct MemoRepositoryTests {
 
     @Test("Delete delegates to DAO")
     func deleteDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo = Memo(title: "To Delete")
         try mockDAO.save(memo)
@@ -212,8 +212,8 @@ struct MemoRepositoryTests {
 
     @Test("Search delegates to DAO")
     func searchDelegatesToDAO() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo1 = Memo(title: "Swift Programming", contents: "Learn Swift")
         let memo2 = Memo(title: "Java Programming", contents: "Learn Java")
@@ -230,8 +230,8 @@ struct MemoRepositoryTests {
 
     @Test("Search with empty query returns empty")
     func searchWithEmptyQueryReturnsEmpty() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         let memo = Memo(title: "Test Memo")
         try mockDAO.save(memo)
@@ -243,8 +243,8 @@ struct MemoRepositoryTests {
 
     @Test("Search with pagination")
     func searchWithPagination() throws {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         for i in 1...10 {
             let memo = Memo(title: "Test Memo \(i)", contents: "Content")
@@ -260,8 +260,8 @@ struct MemoRepositoryTests {
 
     @Test("Sort preference used in multiple calls")
     func sortPreferenceUsedInMultipleCalls() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
@@ -283,8 +283,8 @@ struct MemoRepositoryTests {
 
     @Test("Cache independence - sort and ascending")
     func cacheIndependenceSortAndAscending() {
-        let mockDAO = MockMemoDAO()
-        let repository = MemoRepository(memoDAO: mockDAO)
+        let mockDAO = MemoDAOMock()
+        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")

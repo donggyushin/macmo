@@ -37,22 +37,22 @@ extension Container {
         }
     }
 
-    var memoDAO: Factory<MemoDAOProtocol> {
+    var memoDAO: Factory<MemoDAO> {
         self {
-            MemoDAO(modelContext: self.modelContext())
+            MemoDAOImpl(modelContext: self.modelContext())
         }
         .onPreview {
-            MockMemoDAO.withSampleData()
+            MemoDAOMock.withSampleData()
         }
         .onTest {
-            MockMemoDAO.withSampleData()
+            MemoDAOMock.withSampleData()
         }
         .singleton
     }
     
-    var memoRepository: Factory<MemoRepositoryProtocol> {
+    var memoRepository: Factory<MemoRepository> {
         self {
-            MemoRepository(memoDAO: self.memoDAO())
+            MemoRepositoryImpl(memoDAO: self.memoDAO())
         }
         .singleton
     }
