@@ -24,7 +24,7 @@ struct PieChartView: View {
                 title: "Urgent",
                 count: statistics.urgentsCount,
                 color: .red
-            )
+            ),
         ].filter { $0.count > 0 }
     }
 
@@ -51,9 +51,15 @@ struct PieChartView: View {
                 }
 
                 // Center white circle for donut effect
-                Circle()
-                    .fill(Color(nsColor: .windowBackgroundColor))
-                    .frame(width: 120, height: 120)
+                #if os(iOS)
+                    Circle()
+                        .fill(Color(uiColor: .systemBackground))
+                        .frame(width: 120, height: 120)
+                #else
+                    Circle()
+                        .fill(Color(nsColor: .windowBackgroundColor))
+                        .frame(width: 120, height: 120)
+                #endif
 
                 // Center text
                 VStack(spacing: 4) {
