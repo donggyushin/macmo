@@ -12,20 +12,20 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.8.0",
-            "CURRENT_PROJECT_VERSION": "1",
+            "MARKETING_VERSION": "1.7.1",
+            "CURRENT_PROJECT_VERSION": "2",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
-            "PRODUCT_NAME": "boot",
-            "INFOPLIST_KEY_CFBundleDisplayName": "boot",
+            "PRODUCT_NAME": "dgmemo",
+            "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
         ],
         configurations: [
             .debug(name: .debug, settings: [
-                "PRODUCT_NAME": "boot-debug",
-                "INFOPLIST_KEY_CFBundleDisplayName": "boot-debug",
+                "PRODUCT_NAME": "dgmemo-debug",
+                "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo-debug",
             ]),
             .release(name: .release, settings: [
-                "PRODUCT_NAME": "boot",
-                "INFOPLIST_KEY_CFBundleDisplayName": "boot",
+                "PRODUCT_NAME": "dgmemo",
+                "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
             ]),
         ]
     ),
