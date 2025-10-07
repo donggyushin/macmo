@@ -18,12 +18,12 @@ let project = Project(
         ],
         configurations: [
             .debug(name: .debug, settings: [
-                "PRODUCT_NAME": "macmo-debug",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo-debug",
+                "PRODUCT_NAME": "boot-debug",
+                "INFOPLIST_KEY_CFBundleDisplayName": "boot-debug",
             ]),
             .release(name: .release, settings: [
-                "PRODUCT_NAME": "macmo",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo",
+                "PRODUCT_NAME": "boot",
+                "INFOPLIST_KEY_CFBundleDisplayName": "boot",
             ]),
         ]
     ),
