@@ -4,7 +4,7 @@ let project = Project(
     name: "macmo",
     packages: [
         .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2")),
-        .remote(url: "https://github.com/gonzalezreal/swift-markdown-ui", requirement: .upToNextMajor(from: "2.4.0"))
+        .remote(url: "https://github.com/gonzalezreal/swift-markdown-ui", requirement: .upToNextMajor(from: "2.4.0")),
     ],
     settings: .settings(
         base: [
@@ -12,19 +12,19 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.7.2",
+            "MARKETING_VERSION": "1.8.0",
             "CURRENT_PROJECT_VERSION": "1",
-            "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity"
+            "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
         ],
         configurations: [
             .debug(name: .debug, settings: [
                 "PRODUCT_NAME": "macmo-debug",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo-debug"
+                "INFOPLIST_KEY_CFBundleDisplayName": "macmo-debug",
             ]),
             .release(name: .release, settings: [
                 "PRODUCT_NAME": "macmo",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo"
-            ])
+                "INFOPLIST_KEY_CFBundleDisplayName": "macmo",
+            ]),
         ]
     ),
     targets: [
@@ -41,7 +41,7 @@ let project = Project(
                 "UILaunchScreen": [:],
                 "UIBackgroundModes": ["remote-notification"],
                 "LSApplicationCategoryType": "public.app-category.productivity",
-                "ITSAppUsesNonExemptEncryption": false
+                "ITSAppUsesNonExemptEncryption": false,
             ]),
             buildableFolders: [
                 "macmo/Sources",
@@ -50,12 +50,12 @@ let project = Project(
             entitlements: "macmo/macmo.entitlements",
             dependencies: [
                 .package(product: "Factory"),
-                .package(product: "MarkdownUI")
+                .package(product: "MarkdownUI"),
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]": "AppIconIOS",
-                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIconIOS"
+                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIconIOS",
             ])
         ),
         .target(
@@ -65,7 +65,7 @@ let project = Project(
             bundleId: "dev.tuist.macmoTests",
             infoPlist: .default,
             buildableFolders: [
-                "macmo/Tests"
+                "macmo/Tests",
             ],
             dependencies: [.target(name: "macmo")]
         ),
