@@ -73,7 +73,7 @@ struct SettingView: View {
                 Text("About")
             }
             if model.memoStatistics.isEmpty == false {
-                MemoStatisticsComponent(statistics: model.memoStatistics)
+                BarChartView(statistics: model.memoStatistics)
             }
         }
         .onAppear {

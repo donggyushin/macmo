@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct MemoStatisticsComponent: View {
+struct BarChartView: View {
     let statistics: MemoStatistics
     @State private var animationProgress: CGFloat = 0
 
@@ -169,7 +169,7 @@ private struct BarItem: View {
 }
 
 #Preview {
-    MemoStatisticsComponent(
+    BarChartView(
         statistics: MemoStatistics(
             totalCount: 42,
             uncompletedCount: 15,
