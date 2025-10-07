@@ -48,7 +48,7 @@ struct SettingView: View {
                 #else
                     Button {
                         if let url = URL(string: "https://github.com/donggyushin/macmo") {
-                            UIApplication.shared.open(url)
+                            NSWorkspace.shared.open(url)
                         }
                     } label: {
                         HStack {
