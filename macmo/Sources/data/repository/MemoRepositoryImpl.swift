@@ -1,5 +1,5 @@
 //
-//  MemoRepository.swift
+//  MemoRepositoryImpl.swift
 //  macmo
 //
 //  Created by 신동규 on 9/30/25.
@@ -7,14 +7,14 @@
 
 import Foundation
 
-public final class MemoRepository: MemoRepositoryProtocol {
+public final class MemoRepositoryImpl: MemoRepository {
     
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     
-    let memoDAO: MemoDAOProtocol
+    let memoDAO: MemoDAO
     
-    public init(memoDAO: MemoDAOProtocol) {
+    public init(memoDAO: MemoDAO) {
         self.memoDAO = memoDAO
     }
     

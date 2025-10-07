@@ -1,5 +1,5 @@
 //
-//  MockMemoDAO.swift
+//  MemoDAOMock.swift
 //  macmo
 //
 //  Created by 신동규 on 9/27/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MockMemoDAO: MemoDAOProtocol {
+class MemoDAOMock: MemoDAO {
     private var memos: [String: Memo] = [:]
     
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
@@ -112,8 +112,8 @@ class MockMemoDAO: MemoDAOProtocol {
     }
 }
 
-extension MockMemoDAO {
-    static func withSampleData() -> MockMemoDAO {
+extension MemoDAOMock {
+    static func withSampleData() -> MemoDAOMock {
         let now = Date()
         let calendar = Calendar.current
 
@@ -208,7 +208,7 @@ extension MockMemoDAO {
                 done: true
             )
         ]
-        return MockMemoDAO(initialMemos: sampleMemos)
+        return MemoDAOMock(initialMemos: sampleMemos)
     }
     
     func get() -> MemoSort {

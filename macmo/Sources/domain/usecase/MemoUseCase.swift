@@ -8,10 +8,10 @@
 import Foundation
 
 public final class MemoUseCase {
-    let memoRepository: MemoRepositoryProtocol
+    let memoRepository: MemoRepository
     let calendarService: CalendarServiceProtocol
 
-    public init(memoRepository: MemoRepositoryProtocol, calendarService: CalendarServiceProtocol) {
+    public init(memoRepository: MemoRepository, calendarService: CalendarServiceProtocol) {
         self.memoRepository = memoRepository
         self.calendarService = calendarService
     }
