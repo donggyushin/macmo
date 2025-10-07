@@ -11,9 +11,6 @@ import SwiftData
 class MemoDAOImpl: MemoDAO {
     private let modelContext: ModelContext
 
-    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
-    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
-
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
@@ -186,22 +183,6 @@ class MemoDAOImpl: MemoDAO {
 
         // Apply limit
         return Array(filteredMemos.prefix(limit))
-    }
-
-    func get() -> MemoSort {
-        return memoSortCache
-    }
-
-    func set(_ sort: MemoSort) {
-        memoSortCache = sort
-    }
-
-    func getAscending() -> Bool {
-        ascendingCache
-    }
-
-    func setAscending(_ ascending: Bool) {
-        ascendingCache = ascending
     }
 
     func getMemoStatics() -> MemoStatistics {

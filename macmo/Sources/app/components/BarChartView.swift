@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct MemoStatisticsComponent: View {
+struct BarChartView: View {
     let statistics: MemoStatistics
+    @State private var animationProgress: CGFloat = 0
 
     var body: some View {
         VStack(spacing: 16) {
@@ -9,25 +10,33 @@ struct MemoStatisticsComponent: View {
                 StatisticCard(
                     title: "Total",
                     count: statistics.totalCount,
-                    color: .blue
+                    color: .blue,
+                    animationProgress: animationProgress
                 )
 
                 StatisticCard(
                     title: "Uncompleted",
                     count: statistics.uncompletedCount,
-                    color: .orange
+                    color: .orange,
+                    animationProgress: animationProgress
                 )
 
                 StatisticCard(
                     title: "Urgent",
                     count: statistics.urgentsCount,
-                    color: .red
+                    color: .red,
+                    animationProgress: animationProgress
                 )
             }
 
-            SimpleBarChart(statistics: statistics)
+            SimpleBarChart(statistics: statistics, animationProgress: animationProgress)
         }
         .padding()
+        .onAppear {
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
+                animationProgress = 1.0
+            }
+        }
     }
 }
 
@@ -35,6 +44,11 @@ private struct StatisticCard: View {
     let title: String
     let count: Int
     let color: Color
+    let animationProgress: CGFloat
+
+    private var animatedCount: Int {
+        Int(Double(count) * animationProgress)
+    }
 
     var body: some View {
         VStack(spacing: 8) {
@@ -42,21 +56,24 @@ private struct StatisticCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            Text("\(count)")
+            Text("\(animatedCount)")
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundStyle(color)
+                .contentTransition(.numericText())
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .fill(color.opacity(0.1))
+                .fill(color.opacity(0.1 * animationProgress))
         )
+        .scaleEffect(animationProgress)
     }
 }
 
 private struct SimpleBarChart: View {
     let statistics: MemoStatistics
+    let animationProgress: CGFloat
 
     private var completedCount: Int {
         statistics.totalCount - statistics.uncompletedCount
@@ -78,21 +95,24 @@ private struct SimpleBarChart: View {
                     title: "Completed",
                     count: completedCount,
                     maxCount: maxCount,
-                    color: .green
+                    color: .green,
+                    animationProgress: animationProgress
                 )
 
                 BarItem(
                     title: "Uncompleted",
                     count: statistics.uncompletedCount,
                     maxCount: maxCount,
-                    color: .orange
+                    color: .orange,
+                    animationProgress: animationProgress
                 )
 
                 BarItem(
                     title: "Urgent",
                     count: statistics.urgentsCount,
                     maxCount: maxCount,
-                    color: .red
+                    color: .red,
+                    animationProgress: animationProgress
                 )
             }
             .frame(height: 120)
@@ -102,6 +122,7 @@ private struct SimpleBarChart: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.gray.opacity(0.05))
         )
+        .opacity(animationProgress)
     }
 }
 
@@ -110,10 +131,19 @@ private struct BarItem: View {
     let count: Int
     let maxCount: Int
     let color: Color
+    let animationProgress: CGFloat
 
-    private var height: CGFloat {
+    private var targetHeight: CGFloat {
         guard maxCount > 0 else { return 0 }
         return CGFloat(count) / CGFloat(maxCount) * 100
+    }
+
+    private var animatedHeight: CGFloat {
+        max(targetHeight * animationProgress, count > 0 ? 20 : 0)
+    }
+
+    private var animatedCount: Int {
+        Int(Double(count) * animationProgress)
     }
 
     var body: some View {
@@ -122,12 +152,13 @@ private struct BarItem: View {
                 Spacer()
                 RoundedRectangle(cornerRadius: 6)
                     .fill(color)
-                    .frame(height: max(height, count > 0 ? 20 : 0))
+                    .frame(height: animatedHeight)
             }
 
-            Text("\(count)")
+            Text("\(animatedCount)")
                 .font(.caption.bold())
                 .foregroundStyle(color)
+                .contentTransition(.numericText())
 
             Text(title)
                 .font(.caption2)
@@ -138,7 +169,7 @@ private struct BarItem: View {
 }
 
 #Preview {
-    MemoStatisticsComponent(
+    BarChartView(
         statistics: MemoStatistics(
             totalCount: 42,
             uncompletedCount: 15,

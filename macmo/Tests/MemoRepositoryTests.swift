@@ -21,7 +21,7 @@ struct MemoRepositoryTests {
         // Clear UserDefaults for clean state
         UserDefaults.standard.removeObject(forKey: "memo-sort")
 
-        let sort = repository.get()
+        let sort: MemoSort = repository.get()
 
         #expect(sort == .createdAt)
     }
@@ -36,7 +36,7 @@ struct MemoRepositoryTests {
 
         repository.set(.updatedAt)
 
-        let retrievedSort = repository.get()
+        let retrievedSort: MemoSort = repository.get()
         #expect(retrievedSort == .updatedAt)
 
         // Cleanup

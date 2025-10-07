@@ -10,11 +10,20 @@ import Foundation
 public final class MemoRepositoryImpl: MemoRepository {
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
+    @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
 
     let memoDAO: MemoDAO
 
     public init(memoDAO: MemoDAO) {
         self.memoDAO = memoDAO
+    }
+
+    public func set(_ statisticsEnum: StatisticsEnum) {
+        self.statisticsEnum = statisticsEnum
+    }
+
+    public func get() -> StatisticsEnum {
+        statisticsEnum
     }
 
     public func save(_ memo: Memo) throws {

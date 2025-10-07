@@ -12,6 +12,7 @@ import Foundation
 final class SettingViewModel: ObservableObject {
     @Published var isCalendarSyncEnabled = true
     @Published var memoStatistics: MemoStatistics = .init(totalCount: 0, uncompletedCount: 0, urgentsCount: 0)
+    @Published var selectedStatistics = StatisticsEnum.chart
 
     @Injected(\.calendarService) var calendarService
     @Injected(\.memoRepository) var memoRepository
@@ -21,6 +22,21 @@ final class SettingViewModel: ObservableObject {
     init() {
         isCalendarSyncEnabled = calendarService.isCalendarSyncEnabled
         bind()
+    }
+
+    @MainActor
+    func tapChart() {
+        switch selectedStatistics {
+        case .bar:
+            selectedStatistics = .chart
+        case .chart:
+            selectedStatistics = .bar
+        }
+    }
+
+    @MainActor
+    func fetchSelectedStatistics() {
+        selectedStatistics = memoRepository.get()
     }
 
     @MainActor
@@ -42,6 +58,14 @@ final class SettingViewModel: ObservableObject {
 
     private func bind() {
         cancellables.removeAll()
+
+        $selectedStatistics
+            .removeDuplicates()
+            .dropFirst()
+            .sink { [weak self] statistics in
+                self?.memoRepository.set(statistics)
+            }
+            .store(in: &cancellables)
 
         $isCalendarSyncEnabled
             .removeDuplicates()
