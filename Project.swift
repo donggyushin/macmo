@@ -15,15 +15,17 @@ let project = Project(
             "MARKETING_VERSION": "1.8.0",
             "CURRENT_PROJECT_VERSION": "1",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
+            "PRODUCT_NAME": "boot",
+            "INFOPLIST_KEY_CFBundleDisplayName": "boot",
         ],
         configurations: [
             .debug(name: .debug, settings: [
-                "PRODUCT_NAME": "macmo-debug",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo-debug",
+                "PRODUCT_NAME": "boot-debug",
+                "INFOPLIST_KEY_CFBundleDisplayName": "boot-debug",
             ]),
             .release(name: .release, settings: [
-                "PRODUCT_NAME": "macmo",
-                "INFOPLIST_KEY_CFBundleDisplayName": "macmo",
+                "PRODUCT_NAME": "boot",
+                "INFOPLIST_KEY_CFBundleDisplayName": "boot",
             ]),
         ]
     ),
@@ -36,6 +38,7 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
+                "CFBundleName": "$(PRODUCT_NAME)",
                 "CFBundleDisplayName": "$(INFOPLIST_KEY_CFBundleDisplayName)",
                 "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
