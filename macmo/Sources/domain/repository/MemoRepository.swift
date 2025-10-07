@@ -18,4 +18,6 @@ public protocol MemoRepository {
     func getAscending() -> Bool
     func setAscending(_ ascending: Bool)
     func getMemoStatics() -> MemoStatistics
+    func set(_ statisticsEnum: StatisticsEnum)
+    func get() -> StatisticsEnum
 }
