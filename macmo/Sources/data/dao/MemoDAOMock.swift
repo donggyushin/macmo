@@ -10,9 +10,6 @@ import Foundation
 class MemoDAOMock: MemoDAO {
     private var memos: [String: Memo] = [:]
 
-    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
-    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
-
     init(initialMemos: [Memo] = []) {
         for memo in initialMemos {
             memos[memo.id] = memo
@@ -211,22 +208,6 @@ extension MemoDAOMock {
             ),
         ]
         return MemoDAOMock(initialMemos: sampleMemos)
-    }
-
-    func get() -> MemoSort {
-        return memoSortCache
-    }
-
-    func set(_ sort: MemoSort) {
-        memoSortCache = sort
-    }
-
-    func getAscending() -> Bool {
-        ascendingCache
-    }
-
-    func setAscending(_ ascending: Bool) {
-        ascendingCache = ascending
     }
 
     func getMemoStatics() -> MemoStatistics {
