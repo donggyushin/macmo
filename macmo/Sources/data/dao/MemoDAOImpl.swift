@@ -10,7 +10,7 @@ import SwiftData
 
 class MemoDAOImpl: MemoDAO {
     private let modelContext: ModelContext
-    
+
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
@@ -70,7 +70,7 @@ class MemoDAOImpl: MemoDAO {
         )
 
         // For due date sorting with cursor, we need to fetch all and filter in memory
-        if sortBy == .due && cursorId != nil {
+        if sortBy == .due, cursorId != nil {
             // Don't set fetchLimit, we'll apply it after filtering
         } else {
             descriptor.fetchLimit = limit
@@ -154,18 +154,18 @@ class MemoDAOImpl: MemoDAO {
                 let now = Date()
                 let timeInterval = dueDate.timeIntervalSince(now)
                 // Consider urgent if due within 3 days (259200 seconds) and not completed
-                urgentMatch = timeInterval <= 259200
+                urgentMatch = timeInterval <= 259_200
             }
 
             // Special "completed" feature: include all completed memos
             var completedMatch = false
-            if searchQuery == "completed" && memo.done {
+            if searchQuery == "completed", memo.done {
                 completedMatch = true
             }
-            
+
             // Special "uncompleted" feature: include all uncompleted memos
             var uncompletedMatch = false
-            if searchQuery == "uncompleted" && memo.done == false {
+            if searchQuery == "uncompleted", memo.done == false {
                 uncompletedMatch = true
             }
 
@@ -174,7 +174,8 @@ class MemoDAOImpl: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
+        {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
@@ -190,17 +191,46 @@ class MemoDAOImpl: MemoDAO {
     func get() -> MemoSort {
         return memoSortCache
     }
-    
-    
+
     func set(_ sort: MemoSort) {
         memoSortCache = sort
     }
-    
+
     func getAscending() -> Bool {
         ascendingCache
     }
-    
+
     func setAscending(_ ascending: Bool) {
         ascendingCache = ascending
+    }
+
+    func getMemoStatics() -> MemoStatistics {
+        // 1. Total count - 전체 메모 개수
+        let totalDescriptor = FetchDescriptor<MemoDTO>()
+        let totalCount = (try? modelContext.fetchCount(totalDescriptor)) ?? 0
+
+        // 2. Uncompleted count - 미완료 메모 개수
+        let uncompletedPredicate = #Predicate<MemoDTO> { $0.done == false }
+        let uncompletedDescriptor = FetchDescriptor<MemoDTO>(predicate: uncompletedPredicate)
+        let uncompletedCount = (try? modelContext.fetchCount(uncompletedDescriptor)) ?? 0
+
+        // 3. Urgent count - 3일 이내 마감 & 미완료 메모 개수
+        let now = Date()
+        let threeDaysLater = now.addingTimeInterval(259_200) // 3 days in seconds
+
+        let urgentPredicate = #Predicate<MemoDTO> { memo in
+            memo.done == false &&
+                memo.due != nil &&
+                memo.due! >= now &&
+                memo.due! <= threeDaysLater
+        }
+        let urgentDescriptor = FetchDescriptor<MemoDTO>(predicate: urgentPredicate)
+        let urgentsCount = (try? modelContext.fetchCount(urgentDescriptor)) ?? 0
+
+        return MemoStatistics(
+            totalCount: totalCount,
+            uncompletedCount: uncompletedCount,
+            urgentsCount: urgentsCount
+        )
     }
 }

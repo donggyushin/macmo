@@ -9,7 +9,7 @@ import Foundation
 
 class MemoDAOMock: MemoDAO {
     private var memos: [String: Memo] = [:]
-    
+
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
@@ -46,7 +46,8 @@ class MemoDAOMock: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId }) {
+           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId })
+        {
             let nextIndex = cursorIndex + 1
             if nextIndex < allMemos.count {
                 allMemos = Array(allMemos[nextIndex...])
@@ -90,7 +91,7 @@ class MemoDAOMock: MemoDAO {
         let searchQuery = query.lowercased()
         var filteredMemos = Array(memos.values).filter { memo in
             memo.title.lowercased().contains(searchQuery) ||
-            (memo.contents?.lowercased().contains(searchQuery) ?? false)
+                (memo.contents?.lowercased().contains(searchQuery) ?? false)
         }
 
         // Sort by updatedAt in reverse order (newest first)
@@ -98,7 +99,8 @@ class MemoDAOMock: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
+        {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
@@ -206,25 +208,36 @@ extension MemoDAOMock {
                 contents: "Quarterly review of investment accounts\n\n**Accounts to review:**\n- 401(k)\n- Roth IRA\n- Brokerage account\n- Emergency fund\n\n**Rebalancing needed:** Check asset allocation",
                 due: calendar.date(byAdding: .day, value: -14, to: now),
                 done: true
-            )
+            ),
         ]
         return MemoDAOMock(initialMemos: sampleMemos)
     }
-    
+
     func get() -> MemoSort {
         return memoSortCache
     }
-    
-    
+
     func set(_ sort: MemoSort) {
         memoSortCache = sort
     }
-    
+
     func getAscending() -> Bool {
         ascendingCache
     }
-    
+
     func setAscending(_ ascending: Bool) {
         ascendingCache = ascending
+    }
+
+    func getMemoStatics() -> MemoStatistics {
+        let totalCount = memos.count
+        let uncompletedCount = memos.count(where: { (_: String, value: Memo) in
+            value.done == false
+        })
+        let urgentsCount = memos.count(where: { (_: String, value: Memo) in
+            value.isUrgent == true
+        })
+
+        return MemoStatistics(totalCount: totalCount, uncompletedCount: uncompletedCount, urgentsCount: urgentsCount)
     }
 }
