@@ -45,6 +45,10 @@ struct SmallWidgetView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(3)
                 }
+                .onTapGesture {
+                    guard let url = URL(string: "macmo://memo/\(firstMemo.id)") else { return }
+                    UIApplication().open(url)
+                }
             } else {
                 Text("메모가 없습니다")
                     .font(.caption)
@@ -99,6 +103,10 @@ struct MediumWidgetView: View {
                         }
 
                         Spacer()
+                    }
+                    .onTapGesture {
+                        guard let url = URL(string: "macmo://memo/\(memo.id)") else { return }
+                        UIApplication().open(url)
                     }
                 }
 
