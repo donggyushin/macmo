@@ -195,14 +195,13 @@ class MemoDAOImpl: MemoDAO {
         let uncompletedDescriptor = FetchDescriptor<MemoDTO>(predicate: uncompletedPredicate)
         let uncompletedCount = (try? modelContext.fetchCount(uncompletedDescriptor)) ?? 0
 
-        // 3. Urgent count - 3일 이내 마감 & 미완료 메모 개수
+        // 3. Urgent count - 3일 이내 마감 & 미완료 메모 개수 (과거 마감일 포함)
         let now = Date()
         let threeDaysLater = now.addingTimeInterval(259_200) // 3 days in seconds
 
         let urgentPredicate = #Predicate<MemoDTO> { memo in
             memo.done == false &&
                 memo.due != nil &&
-                memo.due! >= now &&
                 memo.due! <= threeDaysLater
         }
         let urgentDescriptor = FetchDescriptor<MemoDTO>(predicate: urgentPredicate)
