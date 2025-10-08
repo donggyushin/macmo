@@ -1,21 +1,13 @@
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 struct MemoWidgetEntry: TimelineEntry {
     let date: Date
     let memos: [MemoData]
 }
 
-struct MemoData: Identifiable {
-    let id: UUID
-    let title: String
-    let content: String
-    let createdAt: Date
-    let isCompleted: Bool
-}
-
 struct MemoWidgetProvider: TimelineProvider {
-    func placeholder(in context: Context) -> MemoWidgetEntry {
+    func placeholder(in _: Context) -> MemoWidgetEntry {
         MemoWidgetEntry(
             date: Date(),
             memos: [
@@ -25,7 +17,7 @@ struct MemoWidgetProvider: TimelineProvider {
                     content: "위젯에서 최근 메모를 확인할 수 있습니다",
                     createdAt: Date(),
                     isCompleted: false
-                )
+                ),
             ]
         )
     }
@@ -35,7 +27,7 @@ struct MemoWidgetProvider: TimelineProvider {
         completion(entry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<MemoWidgetEntry>) -> Void) {
+    func getTimeline(in _: Context, completion: @escaping (Timeline<MemoWidgetEntry>) -> Void) {
         // TODO: MemoRepository를 통해 실제 메모 데이터 가져오기
         // 현재는 샘플 데이터 사용
         let currentDate = Date()
@@ -53,7 +45,7 @@ struct MemoWidgetProvider: TimelineProvider {
                 content: "두 번째 메모 내용",
                 createdAt: currentDate.addingTimeInterval(-3600),
                 isCompleted: true
-            )
+            ),
         ]
 
         let entry = MemoWidgetEntry(date: currentDate, memos: memos)
