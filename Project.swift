@@ -54,6 +54,7 @@ let project = Project(
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI"),
+                .target(name: "macmoWidgetExtension", condition: .when([.ios])),
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
