@@ -131,42 +131,41 @@ class MemoDAOImpl: MemoDAO {
             return []
         }
 
-        // SwiftData predicates don't support case-insensitive search well,
-        // so we fetch all and filter in memory for better user experience
+        let searchQuery = query.lowercased()
+
+        // Handle special search keywords that require in-memory filtering
+        let isSpecialKeyword = ["urgent", "completed", "uncompleted"].contains(searchQuery)
+
+        var filteredMemos: [Memo]
+
+        // Fetch all memos and filter in memory for reliable case-insensitive search
         let descriptor = FetchDescriptor<MemoDTO>(
             sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
         )
         let allDtos = try modelContext.fetch(descriptor)
 
-        // Convert to domain objects and filter case-insensitively
-        let searchQuery = query.lowercased()
-        var filteredMemos = allDtos.compactMap { dto -> Memo? in
+        filteredMemos = allDtos.compactMap { dto -> Memo? in
             let memo = dto.toDomain()
-            let titleMatch = memo.title.lowercased().contains(searchQuery)
-            let contentMatch = memo.contents?.lowercased().contains(searchQuery) ?? false
 
-            // Special "urgent" feature: include memos with approaching due dates
-            var urgentMatch = false
-            if searchQuery == "urgent", let dueDate = memo.due, !memo.done {
-                let now = Date()
-                let timeInterval = dueDate.timeIntervalSince(now)
-                // Consider urgent if due within 3 days (259200 seconds) and not completed
-                urgentMatch = timeInterval <= 259_200
+            // Regular text matching
+            let titleMatch = memo.title.localizedStandardContains(query)
+            let contentMatch = memo.contents?.localizedStandardContains(query) ?? false
+
+            // Special keyword matching (in addition to text matching)
+            var specialMatch = false
+            if isSpecialKeyword {
+                if searchQuery == "urgent", let dueDate = memo.due, !memo.done {
+                    let now = Date()
+                    let timeInterval = dueDate.timeIntervalSince(now)
+                    specialMatch = timeInterval <= 259_200
+                } else if searchQuery == "completed", memo.done {
+                    specialMatch = true
+                } else if searchQuery == "uncompleted", !memo.done {
+                    specialMatch = true
+                }
             }
 
-            // Special "completed" feature: include all completed memos
-            var completedMatch = false
-            if searchQuery == "completed", memo.done {
-                completedMatch = true
-            }
-
-            // Special "uncompleted" feature: include all uncompleted memos
-            var uncompletedMatch = false
-            if searchQuery == "uncompleted", memo.done == false {
-                uncompletedMatch = true
-            }
-
-            return (titleMatch || contentMatch || urgentMatch || completedMatch || uncompletedMatch) ? memo : nil
+            return (titleMatch || contentMatch || specialMatch) ? memo : nil
         }
 
         // Apply cursor pagination
