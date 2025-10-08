@@ -18,7 +18,7 @@ final class ServiceLocator {
     static let shared = ServiceLocator()
     private init() {}
 
-    lazy var modelContainer: ModelContainer = {
+    private lazy var modelContainer: ModelContainer = {
         do {
             let configuration: ModelConfiguration
 
@@ -48,7 +48,7 @@ final class ServiceLocator {
 
     }()
 
-    var modelContext: ModelContext {
+    private var modelContext: ModelContext {
         let container = modelContainer
         return ModelContext(container)
     }
