@@ -38,8 +38,6 @@ struct MemoWidgetProvider: TimelineProvider {
     }
 
     func getTimeline(in _: Context, completion: @escaping (Timeline<MemoWidgetEntry>) -> Void) {
-        // TODO: MemoRepository를 통해 실제 메모 데이터 가져오기
-        // 현재는 샘플 데이터 사용
         let currentDate = Date()
         let memos = (try? memoRepository.get()) ?? []
 
