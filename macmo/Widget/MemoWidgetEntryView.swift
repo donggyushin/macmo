@@ -28,26 +28,24 @@ struct SmallWidgetView: View {
                 .foregroundStyle(.secondary)
 
             if let firstMemo = entry.memos.first {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack {
-                        if firstMemo.isCompleted {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.green)
+                Link(destination: URL(string: "macmo://memo/\(firstMemo.id)")!) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack {
+                            if firstMemo.isCompleted {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.green)
+                            }
+                            Text(firstMemo.title)
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .lineLimit(2)
                         }
-                        Text(firstMemo.title)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .lineLimit(2)
-                    }
 
-                    Text(firstMemo.content)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(3)
-                }
-                .onTapGesture {
-                    guard let url = URL(string: "macmo://memo/\(firstMemo.id)") else { return }
-                    UIApplication().open(url)
+                        Text(firstMemo.content)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(3)
+                    }
                 }
             } else {
                 Text("메모가 없습니다")
@@ -85,28 +83,26 @@ struct MediumWidgetView: View {
                 Spacer()
             } else {
                 ForEach(entry.memos.prefix(3)) { memo in
-                    HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: memo.isCompleted ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(memo.isCompleted ? .green : .secondary)
-                            .font(.caption)
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(memo.title)
+                    Link(destination: URL(string: "macmo://memo/\(memo.id)")!) {
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: memo.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(memo.isCompleted ? .green : .secondary)
                                 .font(.caption)
-                                .fontWeight(.medium)
-                                .lineLimit(1)
 
-                            Text(memo.content)
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(memo.title)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .lineLimit(1)
+
+                                Text(memo.content)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+
+                            Spacer()
                         }
-
-                        Spacer()
-                    }
-                    .onTapGesture {
-                        guard let url = URL(string: "macmo://memo/\(memo.id)") else { return }
-                        UIApplication().open(url)
                     }
                 }
 
