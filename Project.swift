@@ -72,5 +72,23 @@ let project = Project(
             ],
             dependencies: [.target(name: "macmo")]
         ),
+        .target(
+            name: "macmoWidgetExtension",
+            destinations: [.iPhone, .iPad],
+            product: .appExtension,
+            bundleId: "dev.tuist.macmo.widget",
+            infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": "dgmemo Widget",
+                "NSExtension": [
+                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
+                ]
+            ]),
+            buildableFolders: [
+                "macmo/Widget",
+            ],
+            dependencies: [
+                .target(name: "macmo")
+            ]
+        ),
     ]
 )
