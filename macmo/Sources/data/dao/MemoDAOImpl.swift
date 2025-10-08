@@ -186,26 +186,27 @@ class MemoDAOImpl: MemoDAO {
     }
 
     func getMemoStatics() -> MemoStatistics {
-        // 1. Total count - 전체 메모 개수
-        let totalDescriptor = FetchDescriptor<MemoDTO>()
-        let totalCount = (try? modelContext.fetchCount(totalDescriptor)) ?? 0
-
-        // 2. Uncompleted count - 미완료 메모 개수
-        let uncompletedPredicate = #Predicate<MemoDTO> { $0.done == false }
-        let uncompletedDescriptor = FetchDescriptor<MemoDTO>(predicate: uncompletedPredicate)
-        let uncompletedCount = (try? modelContext.fetchCount(uncompletedDescriptor)) ?? 0
-
-        // 3. Urgent count - 3일 이내 마감 & 미완료 메모 개수 (과거 마감일 포함)
-        let now = Date()
-        let threeDaysLater = now.addingTimeInterval(259_200) // 3 days in seconds
-
-        let urgentPredicate = #Predicate<MemoDTO> { memo in
-            memo.done == false &&
-                memo.due != nil &&
-                memo.due! <= threeDaysLater
+        // Fetch all memos and calculate statistics in memory to match search() behavior
+        let descriptor = FetchDescriptor<MemoDTO>()
+        guard let allDtos = try? modelContext.fetch(descriptor) else {
+            return MemoStatistics(totalCount: 0, uncompletedCount: 0, urgentsCount: 0)
         }
-        let urgentDescriptor = FetchDescriptor<MemoDTO>(predicate: urgentPredicate)
-        let urgentsCount = (try? modelContext.fetchCount(urgentDescriptor)) ?? 0
+
+        let allMemos = allDtos.map { $0.toDomain() }
+
+        // 1. Total count
+        let totalCount = allMemos.count
+
+        // 2. Uncompleted count
+        let uncompletedCount = allMemos.filter { !$0.done }.count
+
+        // 3. Urgent count - using same logic as search() and Memo.isUrgent
+        let now = Date()
+        let urgentsCount = allMemos.filter { memo in
+            guard let dueDate = memo.due, !memo.done else { return false }
+            let timeInterval = dueDate.timeIntervalSince(now)
+            return timeInterval <= 259_200
+        }.count
 
         return MemoStatistics(
             totalCount: totalCount,
