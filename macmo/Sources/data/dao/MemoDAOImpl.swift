@@ -21,6 +21,8 @@ class MemoDAOImpl: MemoDAO {
         try modelContext.save()
     }
 
+    /// sortBy default value is createdAt,
+    /// ascending default value is false
     func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {
         let sortOrder: SortOrder = ascending ? .forward : .reverse
         let sortDescriptor: SortDescriptor<MemoDTO>
