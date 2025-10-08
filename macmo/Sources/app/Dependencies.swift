@@ -25,7 +25,6 @@ extension Container {
                         url: appGroupURL,
                         cloudKitDatabase: .automatic
                     )
-                    print("AppGroup configuration success")
                 } else {
                     configuration = ModelConfiguration(
                         cloudKitDatabase: .automatic

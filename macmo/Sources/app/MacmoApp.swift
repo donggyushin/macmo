@@ -6,11 +6,7 @@ struct MacmoApp: App {
     @Environment(\.openWindow) private var openWindow
 
     init() {
-        do {
-            try migrateToAppGroup()
-        } catch {
-            print(error)
-        }
+        try? migrateToAppGroup()
     }
 
     var body: some Scene {
