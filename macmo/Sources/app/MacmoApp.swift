@@ -13,6 +13,9 @@ struct MacmoApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationManager)
+                .onOpenURL { url in
+                    iOSURLSchemeManager.execute(url, navigationManager)
+                }
         }
         .commands {
             CommandMenu("Memo") {
