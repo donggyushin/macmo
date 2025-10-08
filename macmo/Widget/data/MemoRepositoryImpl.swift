@@ -28,8 +28,8 @@ public final class MemoRepositoryImpl: MemoRepository {
         return [
             MemoData(
                 id: "sample",
-                title: "샘플 메모",
-                content: "위젯에서 최근 메모를 확인할 수 있습니다",
+                title: "Sample memo",
+                content: "Can check recent memo from widget",
                 createdAt: Date(),
                 isCompleted: false
             ),

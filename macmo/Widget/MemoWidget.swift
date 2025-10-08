@@ -1,5 +1,5 @@
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 @main
 struct MemoWidget: Widget {
@@ -11,7 +11,7 @@ struct MemoWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("dgmemo")
-        .description("최근 메모를 빠르게 확인하세요")
+        .description("Check recent memos quickly")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
