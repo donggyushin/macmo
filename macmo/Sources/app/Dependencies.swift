@@ -5,18 +5,33 @@
 //  Created by 신동규 on 9/27/25.
 //
 
-import Foundation
 import Factory
+import Foundation
 import SwiftData
 
 // MARK: - Register Data layer instances
+
 extension Container {
     var modelContainer: Factory<ModelContainer> {
         self {
             do {
-                let configuration = ModelConfiguration(
-                    cloudKitDatabase: .automatic
-                )
+                let configuration: ModelConfiguration
+
+                if let appGroupURL = FileManager.default
+                    .containerURL(forSecurityApplicationGroupIdentifier: "group.dev.tuist.macmo")?
+                    .appendingPathComponent("default.store")
+                {
+                    configuration = ModelConfiguration(
+                        url: appGroupURL,
+                        cloudKitDatabase: .automatic
+                    )
+                    print("AppGroup configuration success")
+                } else {
+                    configuration = ModelConfiguration(
+                        cloudKitDatabase: .automatic
+                    )
+                }
+
                 let container = try ModelContainer(
                     for: MemoDTO.self,
                     configurations: configuration
@@ -49,14 +64,14 @@ extension Container {
         }
         .singleton
     }
-    
+
     var memoRepository: Factory<MemoRepository> {
         self {
             MemoRepositoryImpl(memoDAO: self.memoDAO())
         }
         .singleton
     }
-    
+
     var calendarService: Factory<CalendarServiceProtocol> {
         self {
             CalendarService()
@@ -72,6 +87,7 @@ extension Container {
 }
 
 // MARK: - Register Domain layer instances
+
 extension Container {
     var memoUseCase: Factory<MemoUseCase> {
         self {
@@ -82,6 +98,7 @@ extension Container {
 }
 
 // MARK: - Register App instances
+
 extension Container {
     var memoListViewModel: Factory<MemoListViewModel> {
         self {

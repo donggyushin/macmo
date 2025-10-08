@@ -80,12 +80,13 @@ let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": "dgmemo Widget",
                 "NSExtension": [
-                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
-                ]
+                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension",
+                ],
             ]),
             buildableFolders: [
                 "macmo/Widget",
             ],
+            entitlements: "macmo/macmo.entitlements",
             dependencies: []
         ),
     ]
