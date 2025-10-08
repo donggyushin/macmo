@@ -5,6 +5,14 @@ struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
     @Environment(\.openWindow) private var openWindow
 
+    init() {
+        do {
+            try migrateToAppGroup()
+        } catch {
+            print(error)
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
