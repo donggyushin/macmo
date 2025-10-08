@@ -14,7 +14,8 @@ final class iOSURLSchemeManager {
             navigationManager.push(.search)
         } else {
             if url.host() == "memo" {
-                navigationManager.push(.detail(url.lastPathComponent))
+                let memoId = url.path.isEmpty ? nil : url.path
+                navigationManager.push(.detail(memoId))
             }
         }
     }
