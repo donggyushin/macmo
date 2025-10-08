@@ -45,6 +45,12 @@ let project = Project(
                 "UIBackgroundModes": ["remote-notification"],
                 "LSApplicationCategoryType": "public.app-category.productivity",
                 "ITSAppUsesNonExemptEncryption": false,
+                "CFBundleURLTypes": [
+                    [
+                        "CFBundleURLSchemes": ["macmo"],
+                        "CFBundleURLName": "dev.tuist.macmo",
+                    ],
+                ],
             ]),
             buildableFolders: [
                 "macmo/Sources",
