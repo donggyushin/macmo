@@ -3,6 +3,7 @@ import Foundation
 final class iOSURLSchemeManager {
     private init() {}
 
+    /// TEST NEEDED
     /// macmo://setting
     /// macmo://search
     /// macmo://memo/{id}
