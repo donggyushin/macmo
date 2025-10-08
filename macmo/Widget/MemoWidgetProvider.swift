@@ -12,7 +12,7 @@ struct MemoWidgetProvider: TimelineProvider {
             date: Date(),
             memos: [
                 MemoData(
-                    id: UUID(),
+                    id: "sample",
                     title: "샘플 메모",
                     content: "위젯에서 최근 메모를 확인할 수 있습니다",
                     createdAt: Date(),
@@ -33,14 +33,14 @@ struct MemoWidgetProvider: TimelineProvider {
         let currentDate = Date()
         let memos = [
             MemoData(
-                id: UUID(),
+                id: "sample1",
                 title: "샘플 메모 1",
                 content: "첫 번째 메모 내용",
                 createdAt: currentDate,
                 isCompleted: false
             ),
             MemoData(
-                id: UUID(),
+                id: "sample2",
                 title: "샘플 메모 2",
                 content: "두 번째 메모 내용",
                 createdAt: currentDate.addingTimeInterval(-3600),
