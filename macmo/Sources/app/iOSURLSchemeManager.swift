@@ -4,7 +4,18 @@ final class iOSURLSchemeManager {
     private init() {}
 
     /// macmo://setting
-    /// macmo://memo/{id}
     /// macmo://search
-    static func execute(_: URL, _: NavigationManager) {}
+    /// macmo://memo/{id}
+    @MainActor
+    static func execute(_ url: URL, _ navigationManager: NavigationManager) {
+        if url.absoluteString == "macmo://setting" {
+            navigationManager.push(.setting)
+        } else if url.absoluteString == "macmo://search" {
+            navigationManager.push(.search)
+        } else {
+            if url.host() == "memo" {
+                navigationManager.push(.detail(url.lastPathComponent))
+            }
+        }
+    }
 }
