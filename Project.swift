@@ -86,9 +86,7 @@ let project = Project(
             buildableFolders: [
                 "macmo/Widget",
             ],
-            dependencies: [
-                .target(name: "macmo")
-            ]
+            dependencies: []
         ),
     ]
 )
