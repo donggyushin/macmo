@@ -17,7 +17,7 @@ struct MacmoApp: App {
                 }
                 .keyboardShortcut("n", modifiers: .command)
 
-                Button("Search") {
+                Button("Finder") {
                     openWindow(id: "search-memo")
                 }
                 .keyboardShortcut("f", modifiers: .command)
