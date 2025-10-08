@@ -78,9 +78,7 @@ struct MemoDetailView: View {
                             try await model.save()
                             if model.isNewMemo {
                                 dismissWindow(id: "memo-detail")
-                                #if os(iOS)
                                 navigationManager.pop()
-                                #endif
                             }
                             changeAction?()
                         }
@@ -107,6 +105,7 @@ struct MemoDetailView: View {
             Button("Delete", role: .destructive) {
                 Task {
                     try await model.delete()
+                    navigationManager.pop()
                     deleteAction?()
                 }
             }
