@@ -6,7 +6,7 @@ final class iOSURLSchemeManager {
     /// TEST NEEDED
     /// macmo://setting
     /// macmo://search
-    /// macmo://memo/{id}
+    /// macmo://memo/7379ACF6-D4CB-4AEB-A43A-62D72D035CF8
     @MainActor
     static func execute(_ url: URL, _ navigationManager: NavigationManager) {
         if url.absoluteString == "macmo://setting" {
@@ -15,7 +15,8 @@ final class iOSURLSchemeManager {
             navigationManager.push(.search)
         } else {
             if url.host() == "memo" {
-                let memoId = url.path.isEmpty ? nil : url.path
+                let pathString = url.path
+                let memoId = pathString.isEmpty ? nil : String(pathString.dropFirst())
                 navigationManager.push(.detail(memoId))
             }
         }
