@@ -5,14 +5,13 @@
 //  Created by 신동규 on 10/3/25.
 //
 
-import SwiftUI
 import Factory
+import SwiftUI
 
 struct iOSMemoListView: View {
-    
     @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
     @EnvironmentObject private var navigationManager: NavigationManager
-    
+
     var body: some View {
         VStack {
             sortingPicker
@@ -49,7 +48,7 @@ struct iOSMemoListView: View {
             loadMemos()
         }
     }
-    
+
     private var sortingPicker: some View {
         HStack {
             Picker("Sort by", selection: $model.sortBy) {
@@ -91,7 +90,7 @@ struct iOSMemoListView: View {
 
     private func loadMemos() {
         do {
-            try model.refreshMemos(model.sortBy, ascending: model.ascending)
+            try model.refreshMemos()
         } catch {
             print("Failed to load memos: \(error)")
         }
@@ -99,7 +98,7 @@ struct iOSMemoListView: View {
 
     private func refreshMemos() {
         do {
-            try model.refreshMemos(model.sortBy, ascending: model.ascending)
+            try model.refreshMemos()
         } catch {
             print("Failed to refresh memos: \(error)")
         }
@@ -107,7 +106,7 @@ struct iOSMemoListView: View {
 
     private func loadMoreMemos() {
         do {
-            try model.fetchMemos(model.sortBy, ascending: model.ascending)
+            try model.fetchMemos()
         } catch {
             print("Failed to load more memos: \(error)")
         }
