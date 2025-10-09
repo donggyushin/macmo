@@ -285,8 +285,8 @@ private struct MemoDetailViewPreview: View {
             MemoDetailView(model: .init(id: memo?.id))
         }
         .task {
-            let dao = Container.shared.memoDAO()
-            memo = try? dao.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
+            let repository = Container.shared.memoRepository()
+            memo = try? repository.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
         }
     }
 }

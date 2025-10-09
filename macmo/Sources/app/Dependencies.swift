@@ -12,7 +12,7 @@ import SwiftData
 // MARK: - Register Data layer instances
 
 extension Container {
-    var modelContainer: Factory<ModelContainer> {
+    private var modelContainer: Factory<ModelContainer> {
         self {
             do {
                 let configuration: ModelConfiguration
@@ -44,14 +44,14 @@ extension Container {
         .singleton
     }
 
-    var modelContext: Factory<ModelContext> {
+    private var modelContext: Factory<ModelContext> {
         self {
             let container = self.modelContainer()
             return ModelContext(container)
         }
     }
 
-    var memoDAO: Factory<MemoDAO> {
+    private var memoDAO: Factory<MemoDAO> {
         self {
             MemoDAOImpl(modelContext: self.modelContext())
         }

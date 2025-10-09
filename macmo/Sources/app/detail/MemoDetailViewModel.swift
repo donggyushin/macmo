@@ -10,7 +10,7 @@ import Factory
 import Foundation
 
 final class MemoDetailViewModel: ObservableObject {
-    @Injected(\.memoDAO) private var memoDAO
+    @Injected(\.memoRepository) private var memoRepository
 
     let memoListViewModel: MemoListViewModel
 
@@ -35,7 +35,7 @@ final class MemoDetailViewModel: ObservableObject {
 
         Task { @MainActor in
             if let id {
-                memo = try? memoDAO.findById(id)
+                memo = try? memoRepository.findById(id)
             }
 
             if memo == nil {
