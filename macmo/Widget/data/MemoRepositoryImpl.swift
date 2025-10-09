@@ -17,7 +17,7 @@ public final class MemoRepositoryImpl: MemoRepository {
             sortBy: [sortDescriptor]
         )
 
-        descriptor.fetchLimit = 10
+        descriptor.fetchLimit = 1000
 
         let dtos = try modelContext.fetch(descriptor)
 
@@ -31,7 +31,7 @@ public final class MemoRepositoryImpl: MemoRepository {
 
                 // 2. due 존재 여부 및 값 비교
                 switch (lhs.due, rhs.due) {
-                case (.some(let lhsDue), .some(let rhsDue)):
+                case let (.some(lhsDue), .some(rhsDue)):
                     // 둘 다 due가 있으면 날짜 비교 (작은 값이 먼저)
                     return lhsDue < rhsDue
                 case (.some, .none):
