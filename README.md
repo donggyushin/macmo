@@ -32,37 +32,16 @@ A clean, simple memo application for macOS and iOS with iCloud sync.
 
 ### macOS
 
-#### Quick Install (Recommended)
+**[💻 Download on the Mac App Store](https://apps.apple.com/kr/app/macmo/id6753157832)**
 
-```bash
-curl -L -O https://github.com/donggyushin/macmo/releases/latest/download/dgmemo.zip
-unzip dgmemo.zip
-mv dgmemo.app /Applications/
-rm dgmemo.zip
-echo "✅ dgmemo installed successfully!"
-```
+The macOS version of dgmemo is now available on the App Store! The Mac app includes:
 
-**First Launch Instructions:**
-
-Since dgmemo is not distributed through the App Store, macOS will block it by default. Follow these steps to open it:
-
-1. **Try to open the app** - Double-click `dgmemo.app` in Applications folder
-2. **macOS will block it** - You'll see a message saying the app "cannot be opened because it is from an unidentified developer"
-3. **Open System Settings** - Go to **System Settings → Privacy & Security**
-4. **Allow the app** - Scroll down to find the security message about dgmemo and click **"Open Anyway"**
-5. **Confirm** - Click **"Open"** in the confirmation dialog
-
-Alternatively, you can **right-click (or Control-click) the app** and select **"Open"**, then click **"Open"** in the dialog.
-
-> **Note**: You only need to do this once. After the first launch, you can open dgmemo normally.
-
-
-#### Manual Install
-
-1. Download the latest `dgmemo.zip` from [Releases](https://github.com/donggyushin/macmo/releases)
-2. Unzip the file
-3. Drag `dgmemo.app` to your Applications folder
-4. **First launch only**: Follow the "First Launch Instructions" above to allow the app to run
+- 💻 **Native macOS interface** - Clean design that follows macOS guidelines
+- 🔄 **Seamless iCloud sync** - Your memos automatically sync between Mac, iPhone, and iPad
+- 🪟 **Multi-window support** - Open new memos in separate windows
+- 📅 **Calendar integration** - Automatically sync memos with due dates to macOS Calendar
+- ⌨️ **Keyboard shortcuts** - Quick access with ⌘N for new memos
+- 🎯 **Context menus** - Right-click for quick actions
 
 ### iOS / iPadOS
 
@@ -166,7 +145,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] Rich text formatting
 - [x] iOS/iPadOS native application
 - [x] App Store release for iOS
-- [ ] App Store release for macOS
+- [x] App Store release for macOS
 - [x] iPad-optimized layout
 - [ ] Widgets for iOS and macOS
 
