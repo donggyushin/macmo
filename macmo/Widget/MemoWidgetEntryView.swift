@@ -35,10 +35,16 @@ struct SmallWidgetView: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.green)
                             }
+                            if firstMemo.isUrgent {
+                                Image(systemName: "exclamationmark.circle.fill")
+                                    .foregroundStyle(.red)
+                                    .font(.caption)
+                            }
                             Text(firstMemo.title)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .lineLimit(2)
+                                .foregroundStyle(firstMemo.isUrgent ? .red : .primary)
                         }
 
                         Text(firstMemo.content)
@@ -90,10 +96,19 @@ struct MediumWidgetView: View {
                                 .font(.caption)
 
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(memo.title)
-                                    .font(.caption)
-                                    .fontWeight(.medium)
-                                    .lineLimit(1)
+                                HStack(spacing: 4) {
+                                    Text(memo.title)
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                        .lineLimit(1)
+                                        .foregroundStyle(memo.isUrgent ? .red : .primary)
+
+                                    if memo.isUrgent {
+                                        Image(systemName: "exclamationmark.circle.fill")
+                                            .foregroundStyle(.red)
+                                            .font(.caption2)
+                                    }
+                                }
 
                                 Text(memo.content)
                                     .font(.caption2)
