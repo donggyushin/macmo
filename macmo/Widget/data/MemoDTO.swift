@@ -30,6 +30,6 @@ class MemoDTO {
 
 extension MemoDTO {
     func toDomainData() -> MemoData {
-        MemoData(id: id, title: title, content: contents ?? "", createdAt: createdAt, isCompleted: done)
+        MemoData(id: id, title: title, content: contents ?? "", createdAt: createdAt, isCompleted: done, due: due)
     }
 }
