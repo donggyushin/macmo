@@ -48,7 +48,7 @@ platform :mac do
     api_key = app_store_connect_api_key(
       key_id: "B23DD4KZ7Z",
       issuer_id: "c60be45c-20c8-4bad-b6b2-7aee665f0f11",
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./fastlane/keys/AuthKey_*.p8",
+      key_filepath: "./fastlane/keys/AuthKey_B23DD4KZ7Z.p8",
       in_house: false
     )
 
@@ -98,7 +98,7 @@ platform :ios do
     api_key = app_store_connect_api_key(
       key_id: "B23DD4KZ7Z",
       issuer_id: "c60be45c-20c8-4bad-b6b2-7aee665f0f11",
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./fastlane/keys/AuthKey_*.p8",
+      key_filepath: "./fastlane/keys/AuthKey_B23DD4KZ7Z.p8",
       in_house: false
     )
 

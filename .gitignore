@@ -73,3 +73,4 @@ report.xml
 
 .nvim
 buildServer.json
+fastlane/keys/**
