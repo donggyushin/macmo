@@ -21,18 +21,27 @@ platform :mac do
     # Sync code signing certificates and provisioning profiles
     match(
       type: "appstore",
-      platform: "macos"
+      platform: "macos",
+      app_identifier: "dev.tuist.macmo",
+      readonly: false,
+      force_for_new_devices: true
     )
 
-    # Build the macOS app for App Store with automatic signing
+    # Build the macOS app for App Store with manual signing
     build_mac_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "app-store",
       clean: true,
-      export_method: "app-store"
+      export_method: "app-store",
+      skip_package_pkg: true,
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "dev.tuist.macmo" => "match AppStore dev.tuist.macmo macos"
+        }
+      }
     )
 
     # Upload to App Store Connect

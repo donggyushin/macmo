@@ -13,7 +13,7 @@ let project = Project(
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
             "MARKETING_VERSION": "1.8.0",
-            "CURRENT_PROJECT_VERSION": "3",
+            "CURRENT_PROJECT_VERSION": "4",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
             "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
