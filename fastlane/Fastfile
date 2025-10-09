@@ -18,27 +18,49 @@ default_platform(:mac)
 platform :mac do
   desc "Build and upload macOS app to App Store"
   lane :release do
-    # Build the macOS app for App Store with automatic signing
+    # Sync code signing certificates and provisioning profiles
+    match(
+      type: "appstore",
+      platform: "macos",
+      app_identifier: "dev.tuist.macmo",
+      readonly: false,
+      force_for_new_devices: true
+    )
+
+    # Build the macOS app for App Store with manual signing
     build_mac_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "app-store",
       clean: true,
+      export_method: "app-store",
+      skip_package_pkg: true,
       export_options: {
-        signingStyle: "automatic",
-        method: "app-store"
+        method: "app-store",
+        provisioningProfiles: {
+          "dev.tuist.macmo" => "match AppStore dev.tuist.macmo macos"
+        }
       }
     )
 
     # Upload to App Store Connect
+    api_key = app_store_connect_api_key(
+      key_id: "B23DD4KZ7Z",
+      issuer_id: "c60be45c-20c8-4bad-b6b2-7aee665f0f11",
+      key_filepath: "./fastlane/keys/AuthKey_B23DD4KZ7Z.p8",
+      in_house: false
+    )
+
     upload_to_app_store(
+      api_key: api_key,
       platform: "osx",
       skip_screenshots: true,
       skip_metadata: false,
       submit_for_review: false,
-      automatic_release: false
+      automatic_release: false,
+      force: true,
+      run_precheck_before_submit: false
     )
   end
 end
@@ -46,27 +68,50 @@ end
 platform :ios do
   desc "Build and upload iOS app to App Store"
   lane :release do
-    # Build the iOS app with automatic signing
+    # Sync code signing certificates and provisioning profiles for main app
+    match(
+      type: "appstore",
+      platform: "ios",
+      app_identifier: ["dev.tuist.macmo", "dev.tuist.macmo.widget"],
+      readonly: false,
+      force_for_new_devices: true
+    )
+
+    # Build the iOS app with manual signing
     build_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "app-store",
       clean: true,
+      sdk: "iphoneos",
+      export_method: "app-store",
       export_options: {
-        signingStyle: "automatic",
-        method: "app-store"
+        method: "app-store",
+        provisioningProfiles: {
+          "dev.tuist.macmo" => "match AppStore dev.tuist.macmo",
+          "dev.tuist.macmo.widget" => "match AppStore dev.tuist.macmo.widget"
+        }
       }
     )
 
     # Upload to App Store Connect
+    api_key = app_store_connect_api_key(
+      key_id: "B23DD4KZ7Z",
+      issuer_id: "c60be45c-20c8-4bad-b6b2-7aee665f0f11",
+      key_filepath: "./fastlane/keys/AuthKey_B23DD4KZ7Z.p8",
+      in_house: false
+    )
+
     upload_to_app_store(
+      api_key: api_key,
       platform: "ios",
       skip_screenshots: true,
       skip_metadata: false,
       submit_for_review: false,
-      automatic_release: false
+      automatic_release: false,
+      force: true,
+      run_precheck_before_submit: false
     )
   end
 end

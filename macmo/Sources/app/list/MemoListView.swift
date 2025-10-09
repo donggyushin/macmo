@@ -5,9 +5,9 @@
 //  Created by 신동규 on 9/27/25.
 //
 
-import SwiftUI
-import MarkdownUI
 import Factory
+import MarkdownUI
+import SwiftUI
 
 struct MemoListView: View {
     @ObservedObject private var model: MemoListViewModel = Container.shared.memoListViewModel()
@@ -38,9 +38,20 @@ struct MemoListView: View {
                 }
 
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Add") {
+                    Button {
                         openWindow(id: "memo-detail")
+                    } label: {
+                        Image(systemName: "folder.badge.plus")
                     }
+                }
+
+                ToolbarItem(placement: .secondaryAction) {
+                    Button(action: {
+                        try? model.refreshMemos()
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                    .keyboardShortcut("r", modifiers: .command)
                 }
             }
         } detail: {
@@ -53,7 +64,7 @@ struct MemoListView: View {
             loadMemos()
         }
     }
-    
+
     private var sortingPicker: some View {
         HStack {
             Picker("Sort by", selection: $model.sortBy) {
@@ -99,7 +110,7 @@ struct MemoListView: View {
 
     private func loadMemos() {
         do {
-            try model.refreshMemos(model.sortBy, ascending: model.ascending)
+            try model.refreshMemos()
         } catch {
             print("Failed to load memos: \(error)")
         }
@@ -107,7 +118,7 @@ struct MemoListView: View {
 
     private func refreshMemos() {
         do {
-            try model.refreshMemos(model.sortBy, ascending: model.ascending)
+            try model.refreshMemos()
         } catch {
             print("Failed to refresh memos: \(error)")
         }
@@ -115,7 +126,7 @@ struct MemoListView: View {
 
     private func loadMoreMemos() {
         do {
-            try model.fetchMemos(model.sortBy, ascending: model.ascending)
+            try model.fetchMemos()
         } catch {
             print("Failed to load more memos: \(error)")
         }
@@ -134,4 +145,3 @@ struct MemoListView: View {
 #Preview {
     MemoListView()
 }
-

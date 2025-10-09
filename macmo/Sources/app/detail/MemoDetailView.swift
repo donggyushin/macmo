@@ -5,14 +5,14 @@
 //  Created by 신동규 on 9/27/25.
 //
 
-import SwiftUI
 import MarkdownUI
+import SwiftUI
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
     @FocusState private var focusedField: FocusField?
     @State private var showingDeleteAlert = false
-    
+
     @Environment(\.dismissWindow) var dismissWindow
     @EnvironmentObject var navigationManager: NavigationManager
 
@@ -20,21 +20,21 @@ struct MemoDetailView: View {
         case title
         case contents
     }
-    
-    var changeAction: (() -> ())?
-    func onChangeAction(_ action: (() -> ())?) -> Self {
+
+    var changeAction: (() -> Void)?
+    func onChangeAction(_ action: (() -> Void)?) -> Self {
         var copy = self
         copy.changeAction = action
         return copy
     }
-    
-    var deleteAction: (() -> ())?
-    func onDeleteAction(_ action: (() -> ())?) -> Self {
+
+    var deleteAction: (() -> Void)?
+    func onDeleteAction(_ action: (() -> Void)?) -> Self {
         var copy = self
         copy.deleteAction = action
         return copy
     }
-    
+
     init(model: MemoDetailViewModel) {
         _model = .init(initialValue: model)
     }
@@ -44,7 +44,11 @@ struct MemoDetailView: View {
             VStack(alignment: .leading, spacing: 16) {
                 titleSection
                 contentsSection
-                dueDateSection
+
+                if model.isEditing || model.hasDueDate {
+                    dueDateSection
+                }
+
                 completionSection
 
                 if !model.isNewMemo {
@@ -55,7 +59,6 @@ struct MemoDetailView: View {
         }
         .navigationTitle(model.isNewMemo ? "New Memo" : "Memo")
         .toolbar {
-
             if model.isEditing {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -75,6 +78,7 @@ struct MemoDetailView: View {
                             try await model.save()
                             if model.isNewMemo {
                                 dismissWindow(id: "memo-detail")
+                                navigationManager.pop()
                             }
                             changeAction?()
                         }
@@ -97,10 +101,11 @@ struct MemoDetailView: View {
             }
         }
         .alert("Delete Memo", isPresented: $showingDeleteAlert) {
-            Button("Cancel", role: .cancel) { }
+            Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 Task {
                     try await model.delete()
+                    navigationManager.pop()
                     deleteAction?()
                 }
             }
@@ -124,7 +129,7 @@ struct MemoDetailView: View {
                     .onAppear {
                         focusedField = .title
                     }
-                
+
             } else {
                 Text(model.title)
                     .font(.title2)
@@ -176,7 +181,6 @@ struct MemoDetailView: View {
                         .datePickerStyle(CompactDatePickerStyle())
                 }
             } else {
-                
                 HStack {
                     Text(model.dueDate, style: .date)
                     Text(model.dueDate, style: .time)
@@ -271,22 +275,22 @@ struct MemoDetailView: View {
     }
 }
 
-
 import Factory
+
 private struct MemoDetailViewPreview: View {
-    
     @State var memo: Memo?
-    
+
     var body: some View {
         ZStack {
             MemoDetailView(model: .init(id: memo?.id))
         }
         .task {
-            let dao = Container.shared.memoDAO()
-            memo = try? dao.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
+            let repository = Container.shared.memoRepository()
+            memo = try? repository.findAll(cursorId: nil, limit: 1, sortBy: .createdAt, ascending: true).first
         }
     }
 }
+
 #Preview {
     MemoDetailViewPreview()
 }

@@ -70,3 +70,7 @@ Derived/
 Tuist/.build
 
 report.xml
+
+.nvim
+buildServer.json
+fastlane/keys/**

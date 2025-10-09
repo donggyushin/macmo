@@ -5,18 +5,32 @@
 //  Created by 신동규 on 9/27/25.
 //
 
-import Foundation
 import Factory
+import Foundation
 import SwiftData
 
 // MARK: - Register Data layer instances
+
 extension Container {
-    var modelContainer: Factory<ModelContainer> {
+    private var modelContainer: Factory<ModelContainer> {
         self {
             do {
-                let configuration = ModelConfiguration(
-                    cloudKitDatabase: .automatic
-                )
+                let configuration: ModelConfiguration
+
+                if let appGroupURL = FileManager.default
+                    .containerURL(forSecurityApplicationGroupIdentifier: "group.dev.tuist.macmo")?
+                    .appendingPathComponent("default.store")
+                {
+                    configuration = ModelConfiguration(
+                        url: appGroupURL,
+                        cloudKitDatabase: .automatic
+                    )
+                } else {
+                    configuration = ModelConfiguration(
+                        cloudKitDatabase: .automatic
+                    )
+                }
+
                 let container = try ModelContainer(
                     for: MemoDTO.self,
                     configurations: configuration
@@ -30,33 +44,33 @@ extension Container {
         .singleton
     }
 
-    var modelContext: Factory<ModelContext> {
+    private var modelContext: Factory<ModelContext> {
         self {
             let container = self.modelContainer()
             return ModelContext(container)
         }
     }
 
-    var memoDAO: Factory<MemoDAOProtocol> {
+    private var memoDAO: Factory<MemoDAO> {
         self {
-            MemoDAO(modelContext: self.modelContext())
+            MemoDAOImpl(modelContext: self.modelContext())
         }
         .onPreview {
-            MockMemoDAO.withSampleData()
+            MemoDAOMock.withSampleData()
         }
         .onTest {
-            MockMemoDAO.withSampleData()
+            MemoDAOMock.withSampleData()
         }
         .singleton
     }
-    
-    var memoRepository: Factory<MemoRepositoryProtocol> {
+
+    var memoRepository: Factory<MemoRepository> {
         self {
-            MemoRepository(memoDAO: self.memoDAO())
+            MemoRepositoryImpl(memoDAO: self.memoDAO())
         }
         .singleton
     }
-    
+
     var calendarService: Factory<CalendarServiceProtocol> {
         self {
             CalendarService()
@@ -72,6 +86,7 @@ extension Container {
 }
 
 // MARK: - Register Domain layer instances
+
 extension Container {
     var memoUseCase: Factory<MemoUseCase> {
         self {
@@ -82,6 +97,7 @@ extension Container {
 }
 
 // MARK: - Register App instances
+
 extension Container {
     var memoListViewModel: Factory<MemoListViewModel> {
         self {

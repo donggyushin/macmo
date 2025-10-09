@@ -1,5 +1,5 @@
 //
-//  MockMemoDAO.swift
+//  MemoDAOMock.swift
 //  macmo
 //
 //  Created by 신동규 on 9/27/25.
@@ -7,11 +7,8 @@
 
 import Foundation
 
-class MockMemoDAO: MemoDAOProtocol {
+class MemoDAOMock: MemoDAO {
     private var memos: [String: Memo] = [:]
-    
-    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
-    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
 
     init(initialMemos: [Memo] = []) {
         for memo in initialMemos {
@@ -46,7 +43,8 @@ class MockMemoDAO: MemoDAOProtocol {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId }) {
+           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId })
+        {
             let nextIndex = cursorIndex + 1
             if nextIndex < allMemos.count {
                 allMemos = Array(allMemos[nextIndex...])
@@ -90,7 +88,7 @@ class MockMemoDAO: MemoDAOProtocol {
         let searchQuery = query.lowercased()
         var filteredMemos = Array(memos.values).filter { memo in
             memo.title.lowercased().contains(searchQuery) ||
-            (memo.contents?.lowercased().contains(searchQuery) ?? false)
+                (memo.contents?.lowercased().contains(searchQuery) ?? false)
         }
 
         // Sort by updatedAt in reverse order (newest first)
@@ -98,7 +96,8 @@ class MockMemoDAO: MemoDAOProtocol {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
+        {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
@@ -112,8 +111,8 @@ class MockMemoDAO: MemoDAOProtocol {
     }
 }
 
-extension MockMemoDAO {
-    static func withSampleData() -> MockMemoDAO {
+extension MemoDAOMock {
+    static func withSampleData() -> MemoDAOMock {
         let now = Date()
         let calendar = Calendar.current
 
@@ -206,25 +205,20 @@ extension MockMemoDAO {
                 contents: "Quarterly review of investment accounts\n\n**Accounts to review:**\n- 401(k)\n- Roth IRA\n- Brokerage account\n- Emergency fund\n\n**Rebalancing needed:** Check asset allocation",
                 due: calendar.date(byAdding: .day, value: -14, to: now),
                 done: true
-            )
+            ),
         ]
-        return MockMemoDAO(initialMemos: sampleMemos)
+        return MemoDAOMock(initialMemos: sampleMemos)
     }
-    
-    func get() -> MemoSort {
-        return memoSortCache
-    }
-    
-    
-    func set(_ sort: MemoSort) {
-        memoSortCache = sort
-    }
-    
-    func getAscending() -> Bool {
-        ascendingCache
-    }
-    
-    func setAscending(_ ascending: Bool) {
-        ascendingCache = ascending
+
+    func getMemoStatics() -> MemoStatistics {
+        let totalCount = memos.count
+        let uncompletedCount = memos.count(where: { (_: String, value: Memo) in
+            value.done == false
+        })
+        let urgentsCount = memos.count(where: { (_: String, value: Memo) in
+            value.isUrgent == true
+        })
+
+        return MemoStatistics(totalCount: totalCount, uncompletedCount: uncompletedCount, urgentsCount: urgentsCount)
     }
 }

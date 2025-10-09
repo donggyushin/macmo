@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct SettingView: View {
-    
     @StateObject var model: SettingViewModel
     @State var isCalendarAccessDeniedDialogOpen = false
-    
+
     var body: some View {
         Form {
             Section {
@@ -31,23 +30,37 @@ struct SettingView: View {
             } footer: {
                 Text("Automatically create calendar events for memos with due dates")
             }
-            
+
             Section {
                 #if os(iOS)
-                Button(action: {
-                    if let url = URL(string: "https://github.com/donggyushin/macmo") {
-                        UIApplication.shared.open(url)
+                    Button(action: {
+                        // Replace real appstore url
+                        if let url = URL(string: "https://apps.apple.com/kr/app/macmo/id6753157832") {
+                            UIApplication.shared.open(url)
+                        }
+                    }) {
+                        HStack {
+                            Text("Download macOS App")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward.app")
+                                .foregroundColor(.secondary)
+                        }
                     }
-                }) {
-                    HStack {
-                        Text("Download macOS App")
-                        Spacer()
-                        Image(systemName: "arrow.up.forward.app")
-                            .foregroundColor(.secondary)
+                #else
+                    Button {
+                        // Replace real appstore url
+                        if let url = URL(string: "https://apps.apple.com/kr/app/macmo/id6753157832") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    } label: {
+                        HStack {
+                            Text("Download iOS App")
+                            Spacer()
+                            Image(systemName: "arrow.up.forward.app")
+                                .foregroundColor(.secondary)
+                        }
                     }
-                }
                 #endif
-
                 NavigationLink("Developer") {
                     DeveloperView()
                 }
@@ -58,6 +71,24 @@ struct SettingView: View {
             } header: {
                 Text("About")
             }
+            if model.memoStatistics.isEmpty == false {
+                switch model.selectedStatistics {
+                case .bar:
+                    BarChartView(statistics: model.memoStatistics)
+                        .onTapGesture {
+                            model.tapChart()
+                        }
+                case .chart:
+                    PieChartView(statistics: model.memoStatistics)
+                        .onTapGesture {
+                            model.tapChart()
+                        }
+                }
+            }
+        }
+        .onAppear {
+            model.fetchSelectedStatistics()
+            model.fetchMemoStatistics()
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
@@ -67,13 +98,13 @@ struct SettingView: View {
         .alert("Calendar Access Required", isPresented: $isCalendarAccessDeniedDialogOpen) {
             Button("Open System Settings") {
                 #if os(macOS)
-                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
-                    NSWorkspace.shared.open(url)
-                }
+                    if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars") {
+                        NSWorkspace.shared.open(url)
+                    }
                 #else
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 #endif
             }
             Button("Cancel", role: .cancel) {
