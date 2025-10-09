@@ -5,13 +5,12 @@
 //  Created by 신동규 on 9/27/25.
 //
 
-import Foundation
 import Combine
 import Factory
+import Foundation
 
 final class MemoDetailViewModel: ObservableObject {
-
-    @Injected(\.memoDAO) private var memoDAO
+    @Injected(\.memoRepository) private var memoRepository
 
     let memoListViewModel: MemoListViewModel
 
@@ -23,9 +22,8 @@ final class MemoDetailViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var contents: String = ""
     @Published var isDone: Bool = false
-    @Published var dueDate: Date = Date() + 100
+    @Published var dueDate: Date = .init() + 100
     @Published var hasDueDate: Bool = false
-
     var canSave: Bool {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -33,26 +31,24 @@ final class MemoDetailViewModel: ObservableObject {
     init(id: String?) {
         memoListViewModel = Container.shared.memoListViewModel()
         // Perform synchronous database fetch - SwiftData is fast for local operations
-        if let id {
-            memo = try? memoDAO.findById(id)
-        }
-
-        if memo == nil {
+        if let memo = try? memoRepository.findById(id ?? "") {
+            self.memo = memo
+            loadMemoData()
+        } else {
             memo = .init(title: "")
-            Task { @MainActor in
-                isNewMemo = true
-                isEditing = true
-            }
+            isNewMemo = true
+            isEditing = true
+            loadMemoData()
         }
-
-        loadMemoData()
     }
-    
+
     // Optimized initializer for existing memos to skip database lookup
     init(memo: Memo) {
         memoListViewModel = .init()
-        self.memo = memo
-        loadMemoData()
+        Task { @MainActor in
+            self.memo = memo
+            loadMemoData()
+        }
     }
 
     private func loadMemoData() {
@@ -69,7 +65,7 @@ final class MemoDetailViewModel: ObservableObject {
             hasDueDate = false
         }
     }
-    
+
     @MainActor
     func cancel() {
         isEditing = false
@@ -84,7 +80,7 @@ final class MemoDetailViewModel: ObservableObject {
     @MainActor
     func save() async throws {
         guard canSave else { return }
-        
+
         let updatedMemo = Memo(
             id: memo?.id ?? UUID().uuidString,
             title: title,
@@ -104,7 +100,7 @@ final class MemoDetailViewModel: ObservableObject {
         memo = updatedMemo
         isEditing = false
     }
-    
+
     @MainActor
     func toggleComplete() async throws {
         guard let currentMemo = memo else { return }

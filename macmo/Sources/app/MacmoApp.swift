@@ -5,10 +5,17 @@ struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
     @Environment(\.openWindow) private var openWindow
 
+    init() {
+        try? migrateToAppGroup()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigationManager)
+                .onOpenURL { url in
+                    iOSURLSchemeManager.execute(url, navigationManager)
+                }
         }
         .commands {
             CommandMenu("Memo") {

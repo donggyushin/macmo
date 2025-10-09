@@ -5,26 +5,25 @@
 //  Created by 신동규 on 9/28/25.
 //
 
-import Foundation
 import Combine
 import Factory
+import Foundation
 
 final class SearchMemoViewModel: ObservableObject {
-    
-    @Injected(\.memoDAO) private var memoDAO
-    
+    @Injected(\.memoRepository) private var memoRepository
+
     @Published var memos: [Memo] = []
     @Published var query = ""
     @Published var selectedMemoId: String?
-    
+
     private var previousSearchQuery = ""
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     init() {
         bind()
     }
-    
+
     private func bind() {
         $query
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
@@ -35,7 +34,7 @@ final class SearchMemoViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
+
     @MainActor
     func tapUrgentTag() {
         animateTyping(text: "Urgent")
@@ -64,30 +63,30 @@ final class SearchMemoViewModel: ObservableObject {
             }
         }
     }
-    
+
     @MainActor
     func delete(_ id: String) {
         selectedMemoId = nil
-        guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
-        self.memos.remove(at: index)
+        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
+        memos.remove(at: index)
     }
-    
+
     @MainActor
     func update(_ id: String) {
-        guard let updatedMemo = try? memoDAO.findById(id) else { return }
-        guard let index = self.memos.firstIndex(where: { $0.id == id }) else { return }
-        self.memos[index] = updatedMemo
+        guard let updatedMemo = try? memoRepository.findById(id) else { return }
+        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
+        memos[index] = updatedMemo
     }
-    
+
     @MainActor
     private func search(_ query: String) throws {
-        let result = try memoDAO.search(query: query, cursorId: nil, limit: 100)
-        self.memos = result
+        let result = try memoRepository.search(query: query, cursorId: nil, limit: 100)
+        memos = result
     }
-    
+
     @MainActor
     func pagination() throws {
-        let result = try memoDAO.search(query: query, cursorId: memos.last?.id, limit: 100)
-        self.memos.append(contentsOf: result)
+        let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100)
+        memos.append(contentsOf: result)
     }
 }

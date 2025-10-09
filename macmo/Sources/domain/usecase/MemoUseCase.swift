@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WidgetKit
 
 public final class MemoUseCase {
     let memoRepository: MemoRepository
@@ -26,6 +27,7 @@ public final class MemoUseCase {
         }
 
         try memoRepository.save(memo)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     public func update(_ memo: Memo) async throws {
@@ -46,12 +48,15 @@ public final class MemoUseCase {
         }
 
         try memoRepository.update(memo)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     public func delete(_ id: String) async throws {
         if let memo = try? memoRepository.findById(id), let identifier = memo.eventIdentifier {
             try? await calendarService.removeFromCalendar(eventIdentifier: identifier)
         }
+
         try memoRepository.delete(id)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

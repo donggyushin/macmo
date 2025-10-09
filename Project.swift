@@ -45,6 +45,12 @@ let project = Project(
                 "UIBackgroundModes": ["remote-notification"],
                 "LSApplicationCategoryType": "public.app-category.productivity",
                 "ITSAppUsesNonExemptEncryption": false,
+                "CFBundleURLTypes": [
+                    [
+                        "CFBundleURLSchemes": ["macmo"],
+                        "CFBundleURLName": "dev.tuist.macmo",
+                    ],
+                ],
             ]),
             buildableFolders: [
                 "macmo/Sources",
@@ -54,6 +60,7 @@ let project = Project(
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI"),
+                .target(name: "macmoWidgetExtension", condition: .when([.ios])),
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
@@ -71,6 +78,23 @@ let project = Project(
                 "macmo/Tests",
             ],
             dependencies: [.target(name: "macmo")]
+        ),
+        .target(
+            name: "macmoWidgetExtension",
+            destinations: [.iPhone, .iPad],
+            product: .appExtension,
+            bundleId: "dev.tuist.macmo.widget",
+            infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": "dgmemo Widget",
+                "NSExtension": [
+                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension",
+                ],
+            ]),
+            buildableFolders: [
+                "macmo/Widget",
+            ],
+            entitlements: "macmo/macmo.entitlements",
+            dependencies: []
         ),
     ]
 )
