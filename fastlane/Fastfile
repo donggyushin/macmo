@@ -59,21 +59,31 @@ end
 platform :ios do
   desc "Build and upload iOS app to App Store"
   lane :release do
-    # Sync code signing certificates and provisioning profiles
+    # Sync code signing certificates and provisioning profiles for main app
     match(
       type: "appstore",
-      platform: "ios"
+      platform: "ios",
+      app_identifier: ["dev.tuist.macmo", "dev.tuist.macmo.widget"],
+      readonly: false,
+      force_for_new_devices: true
     )
 
-    # Build the iOS app with automatic signing
+    # Build the iOS app with manual signing
     build_app(
       workspace: "macmo.xcworkspace",
       scheme: "macmo",
       configuration: "Release",
       output_directory: "./build",
-      export_method: "app-store",
       clean: true,
-      export_method: "app-store"
+      sdk: "iphoneos",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        provisioningProfiles: {
+          "dev.tuist.macmo" => "match AppStore dev.tuist.macmo",
+          "dev.tuist.macmo.widget" => "match AppStore dev.tuist.macmo.widget"
+        }
+      }
     )
 
     # Upload to App Store Connect

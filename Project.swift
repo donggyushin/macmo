@@ -13,7 +13,7 @@ let project = Project(
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
             "MARKETING_VERSION": "1.8.0",
-            "CURRENT_PROJECT_VERSION": "4",
+            "CURRENT_PROJECT_VERSION": "5",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
             "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
@@ -86,6 +86,8 @@ let project = Project(
             bundleId: "dev.tuist.macmo.widget",
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": "dgmemo Widget",
+                "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+                "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
                 "NSExtension": [
                     "NSExtensionPointIdentifier": "com.apple.widgetkit-extension",
                 ],
