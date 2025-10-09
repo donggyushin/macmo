@@ -61,7 +61,6 @@ struct SettingView: View {
                         }
                     }
                 #endif
-
                 NavigationLink("Developer") {
                     DeveloperView()
                 }
