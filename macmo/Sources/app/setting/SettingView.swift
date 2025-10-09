@@ -35,7 +35,7 @@ struct SettingView: View {
                 #if os(iOS)
                     Button(action: {
                         // Replace real appstore url
-                        if let url = URL(string: "https://github.com/donggyushin/macmo") {
+                        if let url = URL(string: "https://apps.apple.com/kr/app/macmo/id6753157832") {
                             UIApplication.shared.open(url)
                         }
                     }) {
