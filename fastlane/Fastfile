@@ -59,7 +59,8 @@ platform :mac do
       skip_metadata: false,
       submit_for_review: false,
       automatic_release: false,
-      force: true
+      force: true,
+      run_precheck_before_submit: false
     )
   end
 end
@@ -109,7 +110,8 @@ platform :ios do
       skip_metadata: false,
       submit_for_review: false,
       automatic_release: false,
-      force: true
+      force: true,
+      run_precheck_before_submit: false
     )
   end
 end
