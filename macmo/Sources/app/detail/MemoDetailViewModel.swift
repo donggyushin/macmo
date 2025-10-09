@@ -24,7 +24,6 @@ final class MemoDetailViewModel: ObservableObject {
     @Published var isDone: Bool = false
     @Published var dueDate: Date = .init() + 100
     @Published var hasDueDate: Bool = false
-
     var canSave: Bool {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
@@ -32,18 +31,13 @@ final class MemoDetailViewModel: ObservableObject {
     init(id: String?) {
         memoListViewModel = Container.shared.memoListViewModel()
         // Perform synchronous database fetch - SwiftData is fast for local operations
-
-        Task { @MainActor in
-            if let id {
-                memo = try? memoRepository.findById(id)
-            }
-
-            if memo == nil {
-                memo = .init(title: "")
-                isNewMemo = true
-                isEditing = true
-            }
-
+        if let memo = try? memoRepository.findById(id ?? "") {
+            self.memo = memo
+            loadMemoData()
+        } else {
+            memo = .init(title: "")
+            isNewMemo = true
+            isEditing = true
             loadMemoData()
         }
     }
@@ -52,12 +46,11 @@ final class MemoDetailViewModel: ObservableObject {
     init(memo: Memo) {
         memoListViewModel = .init()
         Task { @MainActor in
-            loadMemoData()
             self.memo = memo
+            loadMemoData()
         }
     }
 
-    @MainActor
     private func loadMemoData() {
         guard let memo = memo else { return }
 
