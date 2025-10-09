@@ -50,7 +50,8 @@ platform :mac do
       skip_screenshots: true,
       skip_metadata: false,
       submit_for_review: false,
-      automatic_release: false
+      automatic_release: false,
+      force: true
     )
   end
 end
@@ -81,7 +82,8 @@ platform :ios do
       skip_screenshots: true,
       skip_metadata: false,
       submit_for_review: false,
-      automatic_release: false
+      automatic_release: false,
+      force: true
     )
   end
 end
