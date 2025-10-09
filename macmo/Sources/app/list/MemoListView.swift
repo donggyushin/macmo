@@ -21,6 +21,7 @@ struct MemoListView: View {
             }
             .navigationTitle("Memos")
             .toolbar {
+                
                 ToolbarItem(placement: .navigation) {
                     Button(action: {
                         openWindow(id: "search-memo")
@@ -36,12 +37,23 @@ struct MemoListView: View {
                         Image(systemName: "gear")
                     }
                 }
-
+                
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Add") {
+                    Button {
                         openWindow(id: "memo-detail")
+                    } label: {
+                        Image(systemName: "folder.badge.plus")
                     }
                 }
+                
+                ToolbarItem(placement: .secondaryAction) {
+                    Button(action: {
+                        print("reload action")
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+                
             }
         } detail: {
             if let selectedMemoId = model.selectedMemoId {

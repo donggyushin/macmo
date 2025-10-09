@@ -37,8 +37,10 @@ struct iOSMemoListView: View {
             }
 
             ToolbarItem(placement: .primaryAction) {
-                Button("Add") {
+                Button {
                     navigationManager.push(.detail(nil))
+                } label: {
+                    Image(systemName: "folder.badge.plus")
                 }
             }
         }
