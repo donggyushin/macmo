@@ -3,8 +3,13 @@ import ProjectDescription
 let project = Project(
     name: "macmo",
     packages: [
-        .remote(url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2")),
-        .remote(url: "https://github.com/gonzalezreal/swift-markdown-ui", requirement: .upToNextMajor(from: "2.4.0")),
+        .remote(
+            url: "https://github.com/hmlongco/Factory", requirement: .upToNextMajor(from: "2.3.2")
+        ),
+        .remote(
+            url: "https://github.com/gonzalezreal/swift-markdown-ui",
+            requirement: .upToNextMajor(from: "2.4.0")
+        )
     ],
     settings: .settings(
         base: [
@@ -12,21 +17,27 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.8.0",
-            "CURRENT_PROJECT_VERSION": "6",
+            "MARKETING_VERSION": "1.8.1",
+            "CURRENT_PROJECT_VERSION": "8",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
-            "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
+            "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
         ],
         configurations: [
-            .debug(name: .debug, settings: [
-                "PRODUCT_NAME": "dgmemo-debug",
-                "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo-debug",
-            ]),
-            .release(name: .release, settings: [
-                "PRODUCT_NAME": "dgmemo",
-                "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo",
-            ]),
+            .debug(
+                name: .debug,
+                settings: [
+                    "PRODUCT_NAME": "dgmemo-debug",
+                    "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo-debug"
+                ]
+            ),
+            .release(
+                name: .release,
+                settings: [
+                    "PRODUCT_NAME": "dgmemo",
+                    "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
+                ]
+            )
         ]
     ),
     targets: [
@@ -40,7 +51,8 @@ let project = Project(
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
                 "CFBundleName": "$(PRODUCT_NAME)",
                 "CFBundleDisplayName": "$(INFOPLIST_KEY_CFBundleDisplayName)",
-                "NSCalendarsFullAccessUsageDescription": "macmo needs calendar access to save your memos with due dates to your calendar.",
+                "NSCalendarsFullAccessUsageDescription":
+                    "macmo needs calendar access to save your memos with due dates to your calendar.",
                 "UILaunchScreen": [:],
                 "UIBackgroundModes": ["remote-notification"],
                 "LSApplicationCategoryType": "public.app-category.productivity",
@@ -48,24 +60,24 @@ let project = Project(
                 "CFBundleURLTypes": [
                     [
                         "CFBundleURLSchemes": ["macmo"],
-                        "CFBundleURLName": "dev.tuist.macmo",
-                    ],
-                ],
+                        "CFBundleURLName": "dev.tuist.macmo"
+                    ]
+                ]
             ]),
             buildableFolders: [
                 "macmo/Sources",
-                "macmo/Resources",
+                "macmo/Resources"
             ],
             entitlements: "macmo/macmo.entitlements",
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI"),
-                .target(name: "macmoWidgetExtension", condition: .when([.ios])),
+                .target(name: "macmoWidgetExtension", condition: .when([.ios]))
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]": "AppIconIOS",
-                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIconIOS",
+                "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphonesimulator*]": "AppIconIOS"
             ])
         ),
         .target(
@@ -75,7 +87,7 @@ let project = Project(
             bundleId: "dev.tuist.macmoTests",
             infoPlist: .default,
             buildableFolders: [
-                "macmo/Tests",
+                "macmo/Tests"
             ],
             dependencies: [.target(name: "macmo")]
         ),
@@ -89,14 +101,14 @@ let project = Project(
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
                 "NSExtension": [
-                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension",
-                ],
+                    "NSExtensionPointIdentifier": "com.apple.widgetkit-extension"
+                ]
             ]),
             buildableFolders: [
-                "macmo/Widget",
+                "macmo/Widget"
             ],
             entitlements: "macmo/macmo.entitlements",
             dependencies: []
-        ),
+        )
     ]
 )

@@ -147,7 +147,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [x] App Store release for iOS
 - [x] App Store release for macOS
 - [x] iPad-optimized layout
-- [ ] Widgets for iOS and macOS
+- [x] Widget for iOS
+- [ ] Widget for macOS
 
 ## Security & Privacy
 
