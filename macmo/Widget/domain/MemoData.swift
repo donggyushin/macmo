@@ -1,4 +1,3 @@
-
 import Foundation
 
 public struct MemoData: Identifiable {
@@ -13,6 +12,11 @@ public struct MemoData: Identifiable {
         // Consider urgent if due within 3 days (259200 seconds) and not completed
         guard let due = due, !isCompleted else { return false }
         return due.timeIntervalSinceNow <= 259_200
+    }
+
+    public var isOverDue: Bool {
+        guard let due else { return false }
+        return due < Date()
     }
 
     init(
