@@ -72,7 +72,7 @@ let project = Project(
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI"),
-                .target(name: "macmoWidgetExtension", condition: .when([.ios]))
+                .target(name: "macmoWidgetExtension")
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
@@ -93,7 +93,7 @@ let project = Project(
         ),
         .target(
             name: "macmoWidgetExtension",
-            destinations: [.iPhone, .iPad],
+            destinations: [.iPhone, .iPad, .mac],
             product: .appExtension,
             bundleId: "dev.tuist.macmo.widget",
             infoPlist: .extendingDefault(with: [
