@@ -37,7 +37,7 @@ struct SmallWidgetView: View {
                             }
                             if firstMemo.isUrgent {
                                 Image(systemName: "exclamationmark.circle.fill")
-                                    .foregroundStyle(.red)
+                                    .foregroundStyle(firstMemo.isOverDue ? .red : .orange)
                                     .font(.caption)
                             }
                             Text(firstMemo.title)
@@ -101,7 +101,15 @@ struct MediumWidgetView: View {
                                         .font(.caption)
                                         .fontWeight(.medium)
                                         .lineLimit(1)
-                                        .foregroundStyle(memo.isUrgent ? .red : .primary)
+                                        .foregroundStyle({
+                                            if memo.isOverDue {
+                                                return Color.red
+                                            } else if memo.isUrgent {
+                                                return .orange
+                                            } else {
+                                                return .primary
+                                            }
+                                        }())
 
                                     if memo.isUrgent {
                                         Image(systemName: "exclamationmark.circle.fill")
@@ -141,7 +149,7 @@ struct MediumWidgetView: View {
                 createdAt: Date(),
                 isCompleted: false,
                 due: Date()
-            ),
+            )
         ]
     )
 }
@@ -175,7 +183,7 @@ struct MediumWidgetView: View {
                 createdAt: Date(),
                 isCompleted: false,
                 due: Date()
-            ),
+            )
         ]
     )
 }

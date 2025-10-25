@@ -10,7 +10,7 @@ import SwiftUI
 struct MemoRowView: View {
     let memo: Memo
     let query: String?
-    
+
     init(memo: Memo, query: String? = nil) {
         self.memo = memo
         self.query = query
@@ -19,7 +19,6 @@ struct MemoRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                
                 if let query {
                     Text(highlightedText(memo.title, query: query))
                         .font(.headline)
@@ -29,12 +28,21 @@ struct MemoRowView: View {
                         .font(.headline)
                         .strikethrough(memo.done)
                 }
-                
+
                 Spacer()
-                
+
                 if memo.done {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.green)
+                } else if memo.isOverDue {
+                    Text("OVER DUE")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.red)
+                        .cornerRadius(4)
                 } else if memo.isUrgent {
                     Text("URGENT")
                         .font(.caption2)
@@ -42,7 +50,7 @@ struct MemoRowView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
-                        .background(Color.red)
+                        .background(Color.orange)
                         .cornerRadius(4)
                 }
             }
@@ -83,7 +91,7 @@ struct MemoRowView: View {
         }
         .padding(.vertical, 2)
     }
-    
+
     private func highlightedText(_ text: String, query: String) -> AttributedString {
         guard !query.isEmpty else {
             return AttributedString(text)
@@ -95,11 +103,10 @@ struct MemoRowView: View {
 
         var searchRange = lowercaseText.startIndex
         while searchRange < lowercaseText.endIndex,
-              let range = lowercaseText.range(of: lowercaseQuery, range: searchRange..<lowercaseText.endIndex) {
-
+              let range = lowercaseText.range(of: lowercaseQuery, range: searchRange ..< lowercaseText.endIndex) {
             if let startIndex = AttributedString.Index(range.lowerBound, within: attributed),
                let endIndex = AttributedString.Index(range.upperBound, within: attributed) {
-                let attributedRange = startIndex..<endIndex
+                let attributedRange = startIndex ..< endIndex
                 attributed[attributedRange].backgroundColor = .yellow.opacity(0.3)
                 attributed[attributedRange].foregroundColor = .primary
             }
