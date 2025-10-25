@@ -16,11 +16,16 @@ public struct Memo: Equatable {
     public var eventIdentifier: String?
     public let createdAt: Date
     public let updatedAt: Date
-    
+
     public var isUrgent: Bool {
         // Consider urgent if due within 3 days (259200 seconds) and not completed
         guard let due = due, !done else { return false }
-        return due.timeIntervalSinceNow <= 259200
+        return due.timeIntervalSinceNow <= 259_200
+    }
+
+    public var isOverDue: Bool {
+        guard let due else { return false }
+        return due < Date()
     }
 
     public init(
