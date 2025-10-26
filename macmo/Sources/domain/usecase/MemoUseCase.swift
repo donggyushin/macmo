@@ -40,8 +40,8 @@ public final class MemoUseCase {
             memo.eventIdentifier = nil
         }
 
-        // Create new calendar event only if memo has due date
-        if memo.due != nil {
+        // Create new calendar event only if memo has due date and not completed
+        if memo.due != nil, !memo.done {
             if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
                 memo.eventIdentifier = identifier
             }
