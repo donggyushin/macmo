@@ -128,6 +128,94 @@ class MemoDAOImpl: MemoDAO {
         }
     }
 
+    func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+
+        let searchQuery = query.lowercased()
+
+        // Handle special search keywords that require in-memory filtering
+        let isSpecialKeyword = ["urgent", "completed", "uncompleted"].contains(searchQuery)
+
+        var filteredMemos: [Memo]
+
+        // Fetch all memos and filter in memory for reliable case-insensitive search
+        // let descriptor = FetchDescriptor<MemoDTO>(
+        //     sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+        // )
+        let descriptor: FetchDescriptor<MemoDTO>
+
+        switch sortBy {
+        case .createdAt:
+            descriptor = .init(
+                sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+            )
+        case .updatedAt:
+            descriptor = .init(
+                sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+            )
+        case .due:
+            // For due date sorting with cursor, we'll handle filtering in memory
+            // since SwiftData predicates don't handle optional date comparisons well
+            descriptor = .init(
+                sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
+            )
+        }
+
+        let allDtos = try modelContext.fetch(descriptor)
+
+        filteredMemos = allDtos.compactMap { dto -> Memo? in
+            let memo = dto.toDomain()
+
+            // Regular text matching
+            let titleMatch = memo.title.localizedStandardContains(query)
+            let contentMatch = memo.contents?.localizedStandardContains(query) ?? false
+
+            // Special keyword matching (in addition to text matching)
+            var specialMatch = false
+            if isSpecialKeyword {
+                if searchQuery == "urgent", let dueDate = memo.due, !memo.done {
+                    let now = Date()
+                    let timeInterval = dueDate.timeIntervalSince(now)
+                    specialMatch = timeInterval <= 259_200
+                } else if searchQuery == "completed", memo.done {
+                    specialMatch = true
+                } else if searchQuery == "uncompleted", !memo.done {
+                    specialMatch = true
+                }
+            }
+
+            return (titleMatch || contentMatch || specialMatch) ? memo : nil
+        }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
+            }
+        }
+
+        if sortBy == .due {
+            filteredMemos = filteredMemos.sorted { memo1, memo2 in
+                if let date1 = memo1.due, let date2 = memo2.due {
+                    return date1 < date2
+                } else if memo2.due != nil {
+                    return false
+                } else {
+                    return true
+                }
+            }
+        }
+
+        // Apply limit
+        return Array(filteredMemos.prefix(limit))
+    }
+
     func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return []
@@ -172,8 +260,7 @@ class MemoDAOImpl: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
-        {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
