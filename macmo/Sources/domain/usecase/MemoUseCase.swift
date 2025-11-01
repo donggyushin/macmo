@@ -19,8 +19,8 @@ public final class MemoUseCase {
 
     public func save(_ memo: Memo) async throws {
         var memo = memo
-        // Only save to calendar if memo has a due date
-        if memo.due != nil {
+        // Only save to calendar if memo has a due date and not completed
+        if memo.due != nil, !memo.done {
             if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
                 memo.eventIdentifier = identifier
             }
@@ -40,8 +40,8 @@ public final class MemoUseCase {
             memo.eventIdentifier = nil
         }
 
-        // Create new calendar event only if memo has due date
-        if memo.due != nil {
+        // Create new calendar event only if memo has due date and not completed
+        if memo.due != nil, !memo.done {
             if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
                 memo.eventIdentifier = identifier
             }

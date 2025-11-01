@@ -17,8 +17,8 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.8.1",
-            "CURRENT_PROJECT_VERSION": "8",
+            "MARKETING_VERSION": "1.9.0",
+            "CURRENT_PROJECT_VERSION": "10",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
             "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
@@ -72,7 +72,7 @@ let project = Project(
             dependencies: [
                 .package(product: "Factory"),
                 .package(product: "MarkdownUI"),
-                .target(name: "macmoWidgetExtension", condition: .when([.ios]))
+                .target(name: "macmoWidgetExtension")
             ],
             settings: .settings(base: [
                 "ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]": "AppIcon",
@@ -93,7 +93,7 @@ let project = Project(
         ),
         .target(
             name: "macmoWidgetExtension",
-            destinations: [.iPhone, .iPad],
+            destinations: [.iPhone, .iPad, .mac],
             product: .appExtension,
             bundleId: "dev.tuist.macmo.widget",
             infoPlist: .extendingDefault(with: [
