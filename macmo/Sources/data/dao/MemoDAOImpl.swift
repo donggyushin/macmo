@@ -188,18 +188,6 @@ class MemoDAOImpl: MemoDAO {
 
             return (titleMatch || contentMatch || specialMatch) ? memo : nil
         }
-
-        // Apply cursor pagination
-        if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
-            let nextIndex = cursorIndex + 1
-            if nextIndex < filteredMemos.count {
-                filteredMemos = Array(filteredMemos[nextIndex...])
-            } else {
-                filteredMemos = []
-            }
-        }
-
         if sortBy == .due {
             filteredMemos = filteredMemos.sorted { memo1, memo2 in
                 if let date1 = memo1.due, let date2 = memo2.due {
@@ -209,6 +197,17 @@ class MemoDAOImpl: MemoDAO {
                 } else {
                     return true
                 }
+            }
+        }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
             }
         }
 
