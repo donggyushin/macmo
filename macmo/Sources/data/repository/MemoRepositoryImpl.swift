@@ -46,10 +46,6 @@ public final class MemoRepositoryImpl: MemoRepository {
         try memoDAO.delete(id)
     }
 
-    public func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
-        try memoDAO.search(query: query, cursorId: cursorId, limit: limit)
-    }
-
     public func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
         try memoDAO.search(query: query, cursorId: cursorId, limit: limit, sortBy: sortBy)
     }

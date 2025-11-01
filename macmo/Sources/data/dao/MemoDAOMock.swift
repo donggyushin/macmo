@@ -79,7 +79,7 @@ class MemoDAOMock: MemoDAO {
         memos.removeValue(forKey: id)
     }
 
-    func search(query: String, cursorId: String?, limit: Int, sortBy _: MemoSort) throws -> [Memo] {
+    func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return []
         }
@@ -105,33 +105,15 @@ class MemoDAOMock: MemoDAO {
         }
 
         // TODO: - add due logic
-
-        // Apply limit
-        return Array(filteredMemos.prefix(limit))
-    }
-
-    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
-        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return []
-        }
-
-        let searchQuery = query.lowercased()
-        var filteredMemos = Array(memos.values).filter { memo in
-            memo.title.lowercased().contains(searchQuery) ||
-                (memo.contents?.lowercased().contains(searchQuery) ?? false)
-        }
-
-        // Sort by updatedAt in reverse order (newest first)
-        filteredMemos.sort { $0.updatedAt > $1.updatedAt }
-
-        // Apply cursor pagination
-        if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
-            let nextIndex = cursorIndex + 1
-            if nextIndex < filteredMemos.count {
-                filteredMemos = Array(filteredMemos[nextIndex...])
-            } else {
-                filteredMemos = []
+        if sortBy == .due {
+            filteredMemos = filteredMemos.sorted { memo1, memo2 in
+                if let date1 = memo1.due, let date2 = memo2.due {
+                    return date1 < date2
+                } else if memo2.due != nil {
+                    return false
+                } else {
+                    return true
+                }
             }
         }
 

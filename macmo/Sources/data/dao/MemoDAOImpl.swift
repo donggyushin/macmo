@@ -216,63 +216,6 @@ class MemoDAOImpl: MemoDAO {
         return Array(filteredMemos.prefix(limit))
     }
 
-    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
-        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return []
-        }
-
-        let searchQuery = query.lowercased()
-
-        // Handle special search keywords that require in-memory filtering
-        let isSpecialKeyword = ["urgent", "completed", "uncompleted"].contains(searchQuery)
-
-        var filteredMemos: [Memo]
-
-        // Fetch all memos and filter in memory for reliable case-insensitive search
-        let descriptor = FetchDescriptor<MemoDTO>(
-            sortBy: [SortDescriptor(\.updatedAt, order: .reverse)]
-        )
-        let allDtos = try modelContext.fetch(descriptor)
-
-        filteredMemos = allDtos.compactMap { dto -> Memo? in
-            let memo = dto.toDomain()
-
-            // Regular text matching
-            let titleMatch = memo.title.localizedStandardContains(query)
-            let contentMatch = memo.contents?.localizedStandardContains(query) ?? false
-
-            // Special keyword matching (in addition to text matching)
-            var specialMatch = false
-            if isSpecialKeyword {
-                if searchQuery == "urgent", let dueDate = memo.due, !memo.done {
-                    let now = Date()
-                    let timeInterval = dueDate.timeIntervalSince(now)
-                    specialMatch = timeInterval <= 259_200
-                } else if searchQuery == "completed", memo.done {
-                    specialMatch = true
-                } else if searchQuery == "uncompleted", !memo.done {
-                    specialMatch = true
-                }
-            }
-
-            return (titleMatch || contentMatch || specialMatch) ? memo : nil
-        }
-
-        // Apply cursor pagination
-        if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
-            let nextIndex = cursorIndex + 1
-            if nextIndex < filteredMemos.count {
-                filteredMemos = Array(filteredMemos[nextIndex...])
-            } else {
-                filteredMemos = []
-            }
-        }
-
-        // Apply limit
-        return Array(filteredMemos.prefix(limit))
-    }
-
     func getMemoStatics() -> MemoStatistics {
         // Fetch all memos and calculate statistics in memory to match search() behavior
         let descriptor = FetchDescriptor<MemoDTO>()

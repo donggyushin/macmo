@@ -88,7 +88,7 @@ final class SearchMemoViewModel: ObservableObject {
 
     @MainActor
     func pagination() throws {
-        let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100)
+        let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100, sortBy: sortBy)
         memos.append(contentsOf: result)
     }
 }
