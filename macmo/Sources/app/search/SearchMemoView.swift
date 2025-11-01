@@ -18,6 +18,9 @@ struct SearchMemoView: View {
             VStack {
                 searchField
                 SortingPicker(sortBy: $model.sortBy)
+                    .onChange(of: model.sortBy) { _, newValue in
+                        model.setSortByValue(newValue)
+                    }
                 searchResults
             }
             .navigationTitle("Search Memos")
@@ -53,6 +56,9 @@ struct SearchMemoView: View {
                         .foregroundColor(.secondary)
                 }
             }
+        }
+        .task {
+            model.configureInitialSortBy()
         }
     }
 

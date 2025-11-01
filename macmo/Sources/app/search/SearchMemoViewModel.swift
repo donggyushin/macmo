@@ -37,6 +37,14 @@ final class SearchMemoViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    @MainActor func configureInitialSortBy() {
+        sortBy = memoRepository.getMemoSortCacheInSearch()
+    }
+
+    func setSortByValue(_ sortBy: MemoSort) {
+        memoRepository.setMemoSortCacheInSearch(sortBy)
+    }
+
     @MainActor
     func tapUrgentTag() {
         animateTyping(text: "Urgent")
