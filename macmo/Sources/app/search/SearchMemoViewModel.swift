@@ -15,6 +15,7 @@ final class SearchMemoViewModel: ObservableObject {
     @Published var memos: [Memo] = []
     @Published var query = ""
     @Published var selectedMemoId: String?
+    @Published var sortBy = MemoSort.updatedAt
 
     private var previousSearchQuery = ""
 
@@ -27,9 +28,10 @@ final class SearchMemoViewModel: ObservableObject {
     private func bind() {
         $query
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] query in
+            .combineLatest($sortBy)
+            .sink { [weak self] query, sortBy in
                 Task {
-                    try await self?.search(query)
+                    try await self?.search(query, sortBy)
                 }
             }
             .store(in: &cancellables)
@@ -79,8 +81,8 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     @MainActor
-    private func search(_ query: String) throws {
-        let result = try memoRepository.search(query: query, cursorId: nil, limit: 100)
+    private func search(_ query: String, _ sortBy: MemoSort) throws {
+        let result = try memoRepository.search(query: query, cursorId: nil, limit: 100, sortBy: sortBy)
         memos = result
     }
 
