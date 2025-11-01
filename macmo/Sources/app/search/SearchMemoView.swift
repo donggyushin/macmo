@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct SearchMemoView: View {
-
     @Environment(\.openWindow) private var openWindow
     @StateObject var model: SearchMemoViewModel
     @FocusState var focusSearchField
@@ -18,6 +17,7 @@ struct SearchMemoView: View {
         NavigationSplitView {
             VStack {
                 searchField
+                sortingPicker
                 searchResults
             }
             .navigationTitle("Search Memos")
@@ -54,6 +54,18 @@ struct SearchMemoView: View {
                 }
             }
         }
+    }
+
+    private var sortingPicker: some View {
+        HStack {
+            Picker("Sort by", selection: $model.sortBy) {
+                Text("Created").tag(MemoSort.createdAt)
+                Text("Updated").tag(MemoSort.updatedAt)
+                Text("Due").tag(MemoSort.due)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+        }
+        .padding(.horizontal)
     }
 
     private var searchField: some View {
