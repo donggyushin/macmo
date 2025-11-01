@@ -50,6 +50,10 @@ public final class MemoRepositoryImpl: MemoRepository {
         try memoDAO.search(query: query, cursorId: cursorId, limit: limit)
     }
 
+    public func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
+        try memoDAO.search(query: query, cursorId: cursorId, limit: limit, sortBy: sortBy)
+    }
+
     public func get() -> MemoSort {
         return memoSortCache
     }

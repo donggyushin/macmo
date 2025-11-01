@@ -43,8 +43,7 @@ class MemoDAOMock: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId })
-        {
+           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId }) {
             let nextIndex = cursorIndex + 1
             if nextIndex < allMemos.count {
                 allMemos = Array(allMemos[nextIndex...])
@@ -80,6 +79,37 @@ class MemoDAOMock: MemoDAO {
         memos.removeValue(forKey: id)
     }
 
+    func search(query: String, cursorId: String?, limit: Int, sortBy _: MemoSort) throws -> [Memo] {
+        guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return []
+        }
+
+        let searchQuery = query.lowercased()
+        var filteredMemos = Array(memos.values).filter { memo in
+            memo.title.lowercased().contains(searchQuery) ||
+                (memo.contents?.lowercased().contains(searchQuery) ?? false)
+        }
+
+        // Sort by updatedAt in reverse order (newest first)
+        filteredMemos.sort { $0.updatedAt > $1.updatedAt }
+
+        // Apply cursor pagination
+        if let cursorId = cursorId,
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
+            let nextIndex = cursorIndex + 1
+            if nextIndex < filteredMemos.count {
+                filteredMemos = Array(filteredMemos[nextIndex...])
+            } else {
+                filteredMemos = []
+            }
+        }
+
+        // TODO: - add due logic
+
+        // Apply limit
+        return Array(filteredMemos.prefix(limit))
+    }
+
     func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return []
@@ -96,8 +126,7 @@ class MemoDAOMock: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
-        {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
@@ -205,7 +234,7 @@ extension MemoDAOMock {
                 contents: "Quarterly review of investment accounts\n\n**Accounts to review:**\n- 401(k)\n- Roth IRA\n- Brokerage account\n- Emergency fund\n\n**Rebalancing needed:** Check asset allocation",
                 due: calendar.date(byAdding: .day, value: -14, to: now),
                 done: true
-            ),
+            )
         ]
         return MemoDAOMock(initialMemos: sampleMemos)
     }
