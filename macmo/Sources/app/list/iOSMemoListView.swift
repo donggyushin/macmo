@@ -51,13 +51,7 @@ struct iOSMemoListView: View {
 
     private var sortingPicker: some View {
         HStack {
-            Picker("Sort by", selection: $model.sortBy) {
-                Text("Created").tag(MemoSort.createdAt)
-                Text("Updated").tag(MemoSort.updatedAt)
-                Text("Due").tag(MemoSort.due)
-            }
-            .pickerStyle(SegmentedPickerStyle())
-
+            SortingPicker(sortBy: $model.sortBy)
             Button(action: { model.ascending.toggle() }) {
                 Image(systemName: model.ascending ? "arrow.up" : "arrow.down")
             }

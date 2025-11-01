@@ -17,7 +17,7 @@ struct SearchMemoView: View {
         NavigationSplitView {
             VStack {
                 searchField
-                sortingPicker
+                SortingPicker(sortBy: $model.sortBy)
                 searchResults
             }
             .navigationTitle("Search Memos")
@@ -54,18 +54,6 @@ struct SearchMemoView: View {
                 }
             }
         }
-    }
-
-    private var sortingPicker: some View {
-        HStack {
-            Picker("Sort by", selection: $model.sortBy) {
-                Text("Created").tag(MemoSort.createdAt)
-                Text("Updated").tag(MemoSort.updatedAt)
-                Text("Due").tag(MemoSort.due)
-            }
-            .pickerStyle(SegmentedPickerStyle())
-        }
-        .padding(.horizontal)
     }
 
     private var searchField: some View {
