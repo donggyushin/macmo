@@ -58,7 +58,7 @@ struct SearchMemoView: View {
             }
         }
         .task {
-            model.configureInitialSortBy()
+            model.configureInitialSetUp()
         }
     }
 

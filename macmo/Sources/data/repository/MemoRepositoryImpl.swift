@@ -12,6 +12,7 @@ public final class MemoRepositoryImpl: MemoRepository {
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
+    @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
 
     let memoDAO: MemoDAO
 
@@ -77,5 +78,14 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func getMemoStatics() -> MemoStatistics {
         memoDAO.getMemoStatics()
+    }
+
+    public func setMemoSearchQuery(_ query: String) {
+        // TODO: - save query to userdefault
+        memoSearchQuery = query
+    }
+
+    public func getMemoSearchQuery() -> String {
+        memoSearchQuery
     }
 }

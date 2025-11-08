@@ -38,7 +38,7 @@ struct iOSSearchMemoView: View {
             }
         }
         .task {
-            model.configureInitialSortBy()
+            model.configureInitialSetUp()
         }
     }
 
