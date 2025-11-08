@@ -21,4 +21,6 @@ public protocol MemoRepository {
     func get() -> StatisticsEnum
     func getMemoSortCacheInSearch() -> MemoSort
     func setMemoSortCacheInSearch(_ sort: MemoSort)
+    func setMemoSearchQuery(_ query: String)
+    func getMemoSearchQuery() -> String
 }
