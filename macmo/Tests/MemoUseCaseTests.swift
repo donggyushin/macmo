@@ -5,13 +5,12 @@
 //  Created by Claude on 10/4/25.
 //
 
-import Testing
-import Foundation
 import Factory
+import Foundation
+import Testing
 @testable import macmo
 
 struct MemoUseCaseTests {
-
     // MARK: - Save Tests
 
     @Test("Save with due date calls calendar service")
@@ -20,7 +19,6 @@ struct MemoUseCaseTests {
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
         let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
-        let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
         let memo = Memo(
