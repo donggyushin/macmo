@@ -13,6 +13,6 @@ public protocol MemoDAO {
     func findById(_ id: String) throws -> Memo?
     func update(_ memo: Memo) throws
     func delete(_ id: String) throws
-    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo]
+    func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo]
     func getMemoStatics() -> MemoStatistics
 }

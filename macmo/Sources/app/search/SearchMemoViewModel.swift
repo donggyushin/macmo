@@ -15,6 +15,7 @@ final class SearchMemoViewModel: ObservableObject {
     @Published var memos: [Memo] = []
     @Published var query = ""
     @Published var selectedMemoId: String?
+    @Published var sortBy = MemoSort.updatedAt
 
     private var previousSearchQuery = ""
 
@@ -24,29 +25,38 @@ final class SearchMemoViewModel: ObservableObject {
         bind()
     }
 
-    private func bind() {
-        $query
-            .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] query in
-                Task {
-                    try await self?.search(query)
-                }
-            }
-            .store(in: &cancellables)
+    @MainActor func configureInitialSetUp() {
+        sortBy = memoRepository.getMemoSortCacheInSearch()
+        query = memoRepository.getMemoSearchQuery()
     }
 
-    @MainActor
-    func tapUrgentTag() {
+    @MainActor func tapUrgentTag() {
         animateTyping(text: "Urgent")
     }
 
-    @MainActor
-    func tapUncompleted() {
+    @MainActor func tapUncompleted() {
         animateTyping(text: "Uncompleted")
     }
 
+    @MainActor func delete(_ id: String) {
+        selectedMemoId = nil
+        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
+        memos.remove(at: index)
+    }
+
+    @MainActor func update(_ id: String) {
+        guard let updatedMemo = try? memoRepository.findById(id) else { return }
+        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
+        memos[index] = updatedMemo
+    }
+
     @MainActor
-    private func animateTyping(text: String) {
+    func pagination() throws {
+        let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100, sortBy: sortBy)
+        memos.append(contentsOf: result)
+    }
+
+    @MainActor private func animateTyping(text: String) {
         let currentQuery = query
 
         Task {
@@ -64,29 +74,29 @@ final class SearchMemoViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    func delete(_ id: String) {
-        selectedMemoId = nil
-        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
-        memos.remove(at: index)
-    }
-
-    @MainActor
-    func update(_ id: String) {
-        guard let updatedMemo = try? memoRepository.findById(id) else { return }
-        guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
-        memos[index] = updatedMemo
-    }
-
-    @MainActor
-    private func search(_ query: String) throws {
-        let result = try memoRepository.search(query: query, cursorId: nil, limit: 100)
+    @MainActor private func search(_ query: String, _ sortBy: MemoSort) throws {
+        let result = try memoRepository.search(query: query, cursorId: nil, limit: 100, sortBy: sortBy)
         memos = result
     }
 
-    @MainActor
-    func pagination() throws {
-        let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100)
-        memos.append(contentsOf: result)
+    func setSortByValue(_ sortBy: MemoSort) {
+        memoRepository.setMemoSortCacheInSearch(sortBy)
+    }
+
+    private func saveSearchQuery(_ query: String) {
+        memoRepository.setMemoSearchQuery(query)
+    }
+
+    private func bind() {
+        $query
+            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+            .combineLatest($sortBy)
+            .sink { [weak self] query, sortBy in
+                Task {
+                    self?.saveSearchQuery(query)
+                    try await self?.search(query, sortBy)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

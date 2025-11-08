@@ -43,8 +43,7 @@ class MemoDAOMock: MemoDAO {
 
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId })
-        {
+           let cursorIndex = allMemos.firstIndex(where: { $0.id == cursorId }) {
             let nextIndex = cursorIndex + 1
             if nextIndex < allMemos.count {
                 allMemos = Array(allMemos[nextIndex...])
@@ -80,7 +79,7 @@ class MemoDAOMock: MemoDAO {
         memos.removeValue(forKey: id)
     }
 
-    func search(query: String, cursorId: String?, limit: Int) throws -> [Memo] {
+    func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return []
         }
@@ -94,10 +93,21 @@ class MemoDAOMock: MemoDAO {
         // Sort by updatedAt in reverse order (newest first)
         filteredMemos.sort { $0.updatedAt > $1.updatedAt }
 
+        if sortBy == .due {
+            filteredMemos = filteredMemos.sorted { memo1, memo2 in
+                if let date1 = memo1.due, let date2 = memo2.due {
+                    return date1 < date2
+                } else if memo2.due != nil {
+                    return false
+                } else {
+                    return true
+                }
+            }
+        }
+
         // Apply cursor pagination
         if let cursorId = cursorId,
-           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId })
-        {
+           let cursorIndex = filteredMemos.firstIndex(where: { $0.id == cursorId }) {
             let nextIndex = cursorIndex + 1
             if nextIndex < filteredMemos.count {
                 filteredMemos = Array(filteredMemos[nextIndex...])
@@ -205,7 +215,7 @@ extension MemoDAOMock {
                 contents: "Quarterly review of investment accounts\n\n**Accounts to review:**\n- 401(k)\n- Roth IRA\n- Brokerage account\n- Emergency fund\n\n**Rebalancing needed:** Check asset allocation",
                 due: calendar.date(byAdding: .day, value: -14, to: now),
                 done: true
-            ),
+            )
         ]
         return MemoDAOMock(initialMemos: sampleMemos)
     }

@@ -5,12 +5,11 @@
 //  Created by Claude on 10/4/25.
 //
 
-import Testing
 import Foundation
+import Testing
 @testable import macmo
 
 struct MemoRepositoryTests {
-
     // MARK: - UserDefaults Caching Tests
 
     @Test("Get returns default sort")
@@ -145,7 +144,7 @@ struct MemoRepositoryTests {
         let mockDAO = MemoDAOMock()
         let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
-        for i in 1...5 {
+        for i in 1 ... 5 {
             let memo = Memo(title: "Memo \(i)")
             try mockDAO.save(memo)
         }
@@ -222,7 +221,7 @@ struct MemoRepositoryTests {
         try mockDAO.save(memo2)
         try mockDAO.save(memo3)
 
-        let results = try repository.search(query: "Swift", cursorId: nil, limit: 10)
+        let results = try repository.search(query: "Swift", cursorId: nil, limit: 10, sortBy: .updatedAt)
 
         #expect(results.count == 2)
         #expect(results.allSatisfy { $0.title.contains("Swift") || ($0.contents?.contains("Swift") ?? false) })
@@ -236,7 +235,7 @@ struct MemoRepositoryTests {
         let memo = Memo(title: "Test Memo")
         try mockDAO.save(memo)
 
-        let results = try repository.search(query: "   ", cursorId: nil, limit: 10)
+        let results = try repository.search(query: "   ", cursorId: nil, limit: 10, sortBy: .updatedAt)
 
         #expect(results.isEmpty)
     }
@@ -246,12 +245,12 @@ struct MemoRepositoryTests {
         let mockDAO = MemoDAOMock()
         let repository = MemoRepositoryImpl(memoDAO: mockDAO)
 
-        for i in 1...10 {
+        for i in 1 ... 10 {
             let memo = Memo(title: "Test Memo \(i)", contents: "Content")
             try mockDAO.save(memo)
         }
 
-        let results = try repository.search(query: "Test", cursorId: nil, limit: 5)
+        let results = try repository.search(query: "Test", cursorId: nil, limit: 5, sortBy: .updatedAt)
 
         #expect(results.count == 5)
     }

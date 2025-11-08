@@ -11,10 +11,14 @@ struct iOSSearchMemoView: View {
     @ObservedObject var model: SearchMemoViewModel
     @FocusState var focusSearchField
     @EnvironmentObject private var navigationManager: NavigationManager
-    
+
     var body: some View {
         VStack {
             searchField
+            SortingPicker(sortBy: $model.sortBy)
+                .onChange(of: model.sortBy) { _, newValue in
+                    model.setSortByValue(newValue)
+                }
             searchResults
         }
         .navigationTitle("Search Memos")
@@ -33,8 +37,11 @@ struct iOSSearchMemoView: View {
                 }
             }
         }
+        .task {
+            model.configureInitialSetUp()
+        }
     }
-    
+
     private var searchField: some View {
         SearchTextField(text: $model.query, focusState: $focusSearchField)
     }
@@ -96,9 +103,8 @@ struct iOSSearchMemoView: View {
 }
 
 private struct iOSSearchMemoViewPreview: View {
-    
     @StateObject var model = SearchMemoViewModel()
-    
+
     var body: some View {
         NavigationStack {
             iOSSearchMemoView(model: model)
@@ -109,5 +115,5 @@ private struct iOSSearchMemoViewPreview: View {
 
 #Preview {
     iOSSearchMemoViewPreview()
-    .preferredColorScheme(.dark)
+        .preferredColorScheme(.dark)
 }
