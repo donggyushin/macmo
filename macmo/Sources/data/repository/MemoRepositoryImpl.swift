@@ -13,6 +13,7 @@ public final class MemoRepositoryImpl: MemoRepository {
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
     @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
+    @UserDefault(key: "navigations", defaultValue: []) var navigations: [NavigationDomain]
 
     let memoDAO: MemoDAO
 
@@ -87,5 +88,13 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func getMemoSearchQuery() -> String {
         memoSearchQuery
+    }
+
+    public func setNavigationForCache(_ navigations: [NavigationDomain]) {
+        self.navigations = navigations
+    }
+
+    public func getNavigationForCache() -> [NavigationDomain] {
+        navigations
     }
 }

@@ -23,4 +23,6 @@ public protocol MemoRepository {
     func setMemoSortCacheInSearch(_ sort: MemoSort)
     func setMemoSearchQuery(_ query: String)
     func getMemoSearchQuery() -> String
+    func setNavigationForCache(_ navigations: [NavigationDomain])
+    func getNavigationForCache() -> [NavigationDomain]
 }
