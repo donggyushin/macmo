@@ -11,4 +11,15 @@ enum Navigation: Hashable {
     case detail(String?)
     case setting
     case search
+
+    init(_ domain: NavigationDomain) {
+        switch domain {
+        case let .detail(id):
+            self = .detail(id)
+        case .setting:
+            self = .setting
+        case .search:
+            self = .search
+        }
+    }
 }
