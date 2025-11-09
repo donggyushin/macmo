@@ -1,6 +1,6 @@
 import Foundation
 
-public enum NavigationDomain {
+public enum NavigationDomain: Codable {
     case detail(String?)
     case setting
     case search
