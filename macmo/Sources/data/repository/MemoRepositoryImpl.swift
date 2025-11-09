@@ -9,7 +9,6 @@ import Foundation
 
 public final class MemoRepositoryImpl: MemoRepository {
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
-    @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
     @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
     @UserDefault(key: "navigations", defaultValue: []) var navigations: [NavigationDomain]
 
@@ -17,14 +16,6 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public init(memoDAO: MemoDAO) {
         self.memoDAO = memoDAO
-    }
-
-    public func set(_ statisticsEnum: StatisticsEnum) {
-        self.statisticsEnum = statisticsEnum
-    }
-
-    public func get() -> StatisticsEnum {
-        statisticsEnum
     }
 
     public func save(_ memo: Memo) throws {

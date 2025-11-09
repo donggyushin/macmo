@@ -16,11 +16,12 @@ final class SettingViewModel: ObservableObject {
 
     @Injected(\.calendarService) var calendarService
     @Injected(\.memoRepository) var memoRepository
+    @Injected(\.userPreferenceRepository) var userPreferenceRepository
 
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        isCalendarSyncEnabled = calendarService.isCalendarSyncEnabled
+        self.isCalendarSyncEnabled = calendarService.isCalendarSyncEnabled
         bind()
     }
 
@@ -36,7 +37,7 @@ final class SettingViewModel: ObservableObject {
 
     @MainActor
     func fetchSelectedStatistics() {
-        selectedStatistics = memoRepository.get()
+        selectedStatistics = userPreferenceRepository.getStatistics()
     }
 
     @MainActor
@@ -63,7 +64,7 @@ final class SettingViewModel: ObservableObject {
             .removeDuplicates()
             .dropFirst()
             .sink { [weak self] statistics in
-                self?.memoRepository.set(statistics)
+                self?.userPreferenceRepository.setStatistics(statistics)
             }
             .store(in: &cancellables)
 
