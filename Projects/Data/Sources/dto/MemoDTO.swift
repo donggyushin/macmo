@@ -20,8 +20,9 @@ public class MemoDTO {
     public var createdAt: Date = Date()
     public var updatedAt: Date = Date()
     // ✅ 이미지 관계 추가 - cascade delete로 메모 삭제 시 이미지도 자동 삭제
+    // CloudKit requires all relationships to be optional
     @Relationship(deleteRule: .cascade, inverse: \ImageAttachmentDTO.memo)
-    public var images: [ImageAttachmentDTO] = []
+    public var images: [ImageAttachmentDTO]?
 
     public init(
         id: String = "",
@@ -32,7 +33,7 @@ public class MemoDTO {
         eventIdentifier: String? = nil,
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        images: [ImageAttachmentDTO] = []
+        images: [ImageAttachmentDTO]? = nil
     ) {
         self.id = id
         self.title = title
@@ -57,7 +58,7 @@ public extension MemoDTO {
             eventIdentifier: eventIdentifier,
             createdAt: createdAt,
             updatedAt: updatedAt,
-            images: images.map { $0.domain }
+            images: images?.map { $0.domain } ?? []
         )
     }
 
@@ -71,7 +72,7 @@ public extension MemoDTO {
             eventIdentifier: memo.eventIdentifier,
             createdAt: memo.createdAt,
             updatedAt: memo.updatedAt,
-            images: memo.images.map { .init(from: $0) }
+            images: memo.images.isEmpty ? nil : memo.images.map { .init(from: $0) }
         )
     }
 }

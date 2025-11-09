@@ -1,5 +1,20 @@
 import Foundation
 import SwiftData
+import MacmoData
+
+// Extension to convert MacmoData.MemoDTO to Widget's MemoData
+private extension MacmoData.MemoDTO {
+    func toWidgetMemoData() -> MemoData {
+        MemoData(
+            id: id,
+            title: title,
+            content: contents ?? "",
+            createdAt: createdAt,
+            isCompleted: done,
+            due: due
+        )
+    }
+}
 
 public final class MemoRepositoryImpl: MemoRepository {
     private let modelContext: ModelContext
@@ -10,9 +25,9 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func get() throws -> [MemoData] {
         let sortOrder: SortOrder = .reverse
-        let sortDescriptor: SortDescriptor<MemoDTO> = SortDescriptor(\.updatedAt, order: sortOrder)
+        let sortDescriptor: SortDescriptor<MacmoData.MemoDTO> = SortDescriptor(\.updatedAt, order: sortOrder)
 
-        var descriptor = FetchDescriptor<MemoDTO>(
+        var descriptor = FetchDescriptor<MacmoData.MemoDTO>(
             predicate: nil,
             sortBy: [sortDescriptor]
         )
@@ -22,7 +37,7 @@ public final class MemoRepositoryImpl: MemoRepository {
         let dtos = try modelContext.fetch(descriptor)
 
         return dtos
-            .map { $0.toDomainData() }
+            .map { $0.toWidgetMemoData() }
             .sorted { lhs, rhs in
                 // 1. isCompleted 비교: false가 먼저
                 if lhs.isCompleted != rhs.isCompleted {

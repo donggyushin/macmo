@@ -4,12 +4,14 @@ import SwiftData
 
 @Model
 public final class ImageAttachmentDTO {
-    @Attribute(.unique) public var id: String
+    // CloudKit does not support unique constraints
+    public var id: String = UUID().uuidString
 
     // External Storage를 사용하여 큰 이미지 파일을 효율적으로 저장
-    @Attribute(.externalStorage) public var imageData: Data
-    public var order: Int
-    public var createdAt: Date
+    // CloudKit requires default value or optional
+    @Attribute(.externalStorage) public var imageData: Data = Data()
+    public var order: Int = 0
+    public var createdAt: Date = Date()
 
     // MemoDTO와의 관계
     public var memo: MemoDTO?

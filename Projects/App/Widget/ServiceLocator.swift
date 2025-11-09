@@ -1,6 +1,7 @@
 
 import Foundation
 import SwiftData
+import MacmoData
 
 private var isPreview: Bool = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
 private var isTest: Bool = {
@@ -37,7 +38,7 @@ final class ServiceLocator {
             }
 
             let container = try ModelContainer(
-                for: MemoDTO.self,
+                for: MacmoData.MemoDTO.self, ImageAttachmentDTO.self,
                 configurations: configuration
             )
 
