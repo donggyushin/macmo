@@ -30,7 +30,9 @@ final class NavigationManager: ObservableObject {
     }
 
     @MainActor func configIntitialSetup() {
-        paths = memoRepository.getNavigationForCache().map { .init($0) }
+        if paths.isEmpty {
+            paths = memoRepository.getNavigationForCache().map { .init($0) }
+        }
     }
 
     private func bind() {
