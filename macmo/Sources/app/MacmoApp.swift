@@ -16,6 +16,9 @@ struct MacmoApp: App {
                 .onOpenURL { url in
                     iOSURLSchemeManager.execute(url, navigationManager)
                 }
+                .task {
+                    navigationManager.configIntitialSetup()
+                }
         }
         .commands {
             CommandMenu("Memo") {

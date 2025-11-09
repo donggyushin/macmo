@@ -22,4 +22,15 @@ enum Navigation: Hashable {
             self = .search
         }
     }
+
+    var domain: NavigationDomain {
+        switch self {
+        case let .detail(id):
+            .detail(id)
+        case .setting:
+            .setting
+        case .search:
+            .search
+        }
+    }
 }
