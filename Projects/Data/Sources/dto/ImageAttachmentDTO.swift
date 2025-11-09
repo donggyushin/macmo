@@ -1,11 +1,18 @@
 import Foundation
 import MacmoDomain
+import SwiftData
 
-public struct ImageAttachmentDTO: Codable {
-    public let id: String
-    public let imageData: Data
-    public let order: Int
-    public let createdAt: Date
+@Model
+public final class ImageAttachmentDTO {
+    @Attribute(.unique) public var id: String
+
+    // External Storage를 사용하여 큰 이미지 파일을 효율적으로 저장
+    @Attribute(.externalStorage) public var imageData: Data
+    public var order: Int
+    public var createdAt: Date
+
+    // MemoDTO와의 관계
+    public var memo: MemoDTO?
 
     public init(
         id: String = UUID().uuidString,
