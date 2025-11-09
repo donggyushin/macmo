@@ -8,8 +8,6 @@
 import Foundation
 
 public final class MemoRepositoryImpl: MemoRepository {
-    @UserDefault(key: "navigations", defaultValue: []) var navigations: [NavigationDomain]
-
     let memoDAO: MemoDAO
 
     public init(memoDAO: MemoDAO) {
@@ -42,13 +40,5 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func getMemoStatics() -> MemoStatistics {
         memoDAO.getMemoStatics()
-    }
-
-    public func setNavigationForCache(_ navigations: [NavigationDomain]) {
-        self.navigations = navigations
-    }
-
-    public func getNavigationForCache() -> [NavigationDomain] {
-        navigations
     }
 }

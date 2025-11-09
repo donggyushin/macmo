@@ -95,6 +95,13 @@ extension Container {
         }
         .singleton
     }
+
+    var navigationService: Factory<NavigationService> {
+        self {
+            NavigationServiceImpl()
+        }
+        .singleton
+    }
 }
 
 // MARK: - Register Domain layer instances

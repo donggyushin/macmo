@@ -13,6 +13,4 @@ public protocol MemoRepository {
     func delete(_ id: String) throws
     func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo]
     func getMemoStatics() -> MemoStatistics
-    func setNavigationForCache(_ navigations: [NavigationDomain])
-    func getNavigationForCache() -> [NavigationDomain]
 }

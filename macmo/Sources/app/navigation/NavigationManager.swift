@@ -11,7 +11,7 @@ import Foundation
 
 final class NavigationManager: ObservableObject {
     @Published var paths: [Navigation] = []
-    @Injected(\.memoRepository) private var memoRepository
+    @Injected(\.navigationService) private var navigationService
     private var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -31,7 +31,7 @@ final class NavigationManager: ObservableObject {
 
     @MainActor func configIntitialSetup() {
         if paths.isEmpty {
-            paths = memoRepository.getNavigationForCache().map { .init($0) }
+            paths = navigationService.getNavigationForCache().map { .init($0) }
         }
     }
 
@@ -39,7 +39,7 @@ final class NavigationManager: ObservableObject {
         $paths
             .removeDuplicates()
             .sink { paths in
-                self.memoRepository.setNavigationForCache(paths.map { $0.domain })
+                self.navigationService.setNavigationForCache(paths.map { $0.domain })
             }
             .store(in: &cancellables)
     }
