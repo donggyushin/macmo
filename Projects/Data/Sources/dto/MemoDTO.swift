@@ -19,6 +19,9 @@ public class MemoDTO {
     public var eventIdentifier: String?
     public var createdAt: Date = Date()
     public var updatedAt: Date = Date()
+    // ✅ 이미지 관계 추가 - cascade delete로 메모 삭제 시 이미지도 자동 삭제
+    @Relationship(deleteRule: .cascade, inverse: \ImageAttachmentDTO.memo)
+    public var images: [ImageAttachmentDTO] = []
 
     public init(
         id: String = "",
@@ -28,7 +31,8 @@ public class MemoDTO {
         done: Bool = false,
         eventIdentifier: String? = nil,
         createdAt: Date = Date(),
-        updatedAt: Date = Date()
+        updatedAt: Date = Date(),
+        images: [ImageAttachmentDTO] = []
     ) {
         self.id = id
         self.title = title
@@ -38,6 +42,7 @@ public class MemoDTO {
         self.eventIdentifier = eventIdentifier
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.images = images
     }
 }
 
@@ -51,7 +56,8 @@ public extension MemoDTO {
             done: done,
             eventIdentifier: eventIdentifier,
             createdAt: createdAt,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            images: images.map { $0.domain }
         )
     }
 
@@ -64,7 +70,8 @@ public extension MemoDTO {
             done: memo.done,
             eventIdentifier: memo.eventIdentifier,
             createdAt: memo.createdAt,
-            updatedAt: memo.updatedAt
+            updatedAt: memo.updatedAt,
+            images: memo.images.map { .init(from: $0) }
         )
     }
 }
