@@ -46,6 +46,9 @@ struct SearchMemoView: View {
                     .onDeleteAction {
                         model.delete(selectedMemoId)
                     }
+                    .onAppear {
+                        model.onAppearMemoDetailView(selectedMemoId)
+                    }
             } else {
                 VStack {
                     Image(systemName: "magnifyingglass")

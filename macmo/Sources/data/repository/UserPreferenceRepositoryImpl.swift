@@ -4,6 +4,7 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
     @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
+    @UserDefault(key: "selected-memo-id", defaultValue: "") var selectedMemoId
 
     public init() {}
 
@@ -45,5 +46,21 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
 
     public func getMemoSearchQuery() -> String {
         memoSearchQuery
+    }
+
+    public func getSelectedMemoId() -> String? {
+        if !selectedMemoId.isEmpty {
+            return selectedMemoId
+        } else {
+            return nil
+        }
+    }
+
+    public func setSelectedMemoId(_ id: String?) {
+        if let id {
+            selectedMemoId = id
+        } else {
+            selectedMemoId = ""
+        }
     }
 }

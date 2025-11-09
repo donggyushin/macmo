@@ -23,7 +23,12 @@ final class SearchMemoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
+        self.selectedMemoId = userPreferenceRepository.getSelectedMemoId()
         bind()
+    }
+
+    func onAppearMemoDetailView(_ id: String) {
+        userPreferenceRepository.setSelectedMemoId(id)
     }
 
     @MainActor func configureInitialSetUp() {
@@ -41,6 +46,7 @@ final class SearchMemoViewModel: ObservableObject {
 
     @MainActor func delete(_ id: String) {
         selectedMemoId = nil
+        userPreferenceRepository.setSelectedMemoId(nil)
         guard let index = memos.firstIndex(where: { $0.id == id }) else { return }
         memos.remove(at: index)
     }

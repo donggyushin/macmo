@@ -4,6 +4,7 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var statisticsEnum: StatisticsEnum = .chart
     private var memoSortCacheInSearch: MemoSort = .updatedAt
     private var memoSearchQuery = ""
+    private var selectedMemoId = ""
 
     public init() {}
 
@@ -45,5 +46,21 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
 
     public func getMemoSearchQuery() -> String {
         memoSearchQuery
+    }
+
+    public func getSelectedMemoId() -> String? {
+        if !selectedMemoId.isEmpty {
+            return selectedMemoId
+        } else {
+            return nil
+        }
+    }
+
+    public func setSelectedMemoId(_ id: String?) {
+        if let id {
+            selectedMemoId = id
+        } else {
+            selectedMemoId = ""
+        }
     }
 }
