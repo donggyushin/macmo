@@ -44,6 +44,7 @@ struct iOSMemoListView: View {
             }
         }
         .task {
+            model.configInitialSetup()
             _ = try? await Container.shared.calendarService().requestAccess()
             loadMemos()
         }

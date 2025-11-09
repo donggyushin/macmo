@@ -19,8 +19,7 @@ extension Container {
 
                 if let appGroupURL = FileManager.default
                     .containerURL(forSecurityApplicationGroupIdentifier: "group.dev.tuist.macmo")?
-                    .appendingPathComponent("default.store")
-                {
+                    .appendingPathComponent("default.store") {
                     configuration = ModelConfiguration(
                         url: appGroupURL,
                         cloudKitDatabase: .automatic
@@ -67,6 +66,19 @@ extension Container {
     var memoRepository: Factory<MemoRepository> {
         self {
             MemoRepositoryImpl(memoDAO: self.memoDAO())
+        }
+        .singleton
+    }
+
+    var userPreferenceRepository: Factory<UserPreferenceRepository> {
+        self {
+            UserPreferenceRepositoryImpl()
+        }
+        .onPreview {
+            UserPreferenceRepositoryMock()
+        }
+        .onTest {
+            UserPreferenceRepositoryMock()
         }
         .singleton
     }

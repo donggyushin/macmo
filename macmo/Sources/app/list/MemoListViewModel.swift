@@ -18,31 +18,26 @@ final class MemoListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        sortBy = memoRepository.get()
-        ascending = memoRepository.getAscending()
         bind()
     }
 
-    private func bind() {
-        $sortBy
-            .sink { sort in
-                self.memoRepository.set(sort)
-            }
-            .store(in: &cancellables)
-
-        $ascending
-            .sink { ascending in
-                self.memoRepository.setAscending(ascending)
-            }
-            .store(in: &cancellables)
-    }
-
     @Injected(\.memoRepository) private var memoRepository
+    @Injected(\.userPreferenceRepository) private var userPreferenceRepository
     @Injected(\.memoUseCase) private var memoUseCase
+
+    @MainActor func configInitialSetup() {
+        sortBy = userPreferenceRepository.getMemoSort()
+        ascending = memoRepository.getAscending()
+    }
 
     @MainActor
     func fetchMemos() throws {
-        let memos = try memoRepository.findAll(cursorId: memos.last?.id, limit: 100, sortBy: sortBy, ascending: ascending)
+        let memos = try memoRepository.findAll(
+            cursorId: memos.last?.id,
+            limit: 100,
+            sortBy: sortBy,
+            ascending: ascending
+        )
         self.memos.append(contentsOf: memos)
     }
 
@@ -75,5 +70,19 @@ final class MemoListViewModel: ObservableObject {
             memos.remove(at: index)
             selectedMemoId = memos.first?.id
         }
+    }
+
+    private func bind() {
+        $sortBy
+            .sink { sort in
+                self.userPreferenceRepository.setMemoSort(sort)
+            }
+            .store(in: &cancellables)
+
+        $ascending
+            .sink { ascending in
+                self.memoRepository.setAscending(ascending)
+            }
+            .store(in: &cancellables)
     }
 }

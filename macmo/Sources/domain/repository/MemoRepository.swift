@@ -12,8 +12,6 @@ public protocol MemoRepository {
     func update(_ memo: Memo) throws
     func delete(_ id: String) throws
     func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo]
-    func get() -> MemoSort
-    func set(_ sort: MemoSort)
     func getAscending() -> Bool
     func setAscending(_ ascending: Bool)
     func getMemoStatics() -> MemoStatistics

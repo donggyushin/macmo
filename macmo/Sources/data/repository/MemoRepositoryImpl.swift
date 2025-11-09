@@ -8,7 +8,6 @@
 import Foundation
 
 public final class MemoRepositoryImpl: MemoRepository {
-    @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
@@ -51,14 +50,6 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo] {
         try memoDAO.search(query: query, cursorId: cursorId, limit: limit, sortBy: sortBy)
-    }
-
-    public func get() -> MemoSort {
-        return memoSortCache
-    }
-
-    public func set(_ sort: MemoSort) {
-        memoSortCache = sort
     }
 
     public func getMemoSortCacheInSearch() -> MemoSort {
