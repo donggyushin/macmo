@@ -45,6 +45,12 @@ struct iOSSearchMemoView: View {
     private var searchField: some View {
         SearchTextField(text: $model.query, focusState: $focusSearchField)
             .setPreventAutoFocus(true)
+            .task {
+                try? await Task.sleep(for: .seconds(0.5))
+                if model.query.isEmpty {
+                    focusSearchField = true
+                }
+            }
     }
 
     private var searchResults: some View {
