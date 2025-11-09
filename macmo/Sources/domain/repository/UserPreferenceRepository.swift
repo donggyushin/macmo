@@ -5,4 +5,6 @@ public protocol UserPreferenceRepository {
     func setAscending(_ ascending: Bool)
     func setStatistics(_ statisticsEnum: StatisticsEnum)
     func getStatistics() -> StatisticsEnum
+    func getMemoSortCacheInSearch() -> MemoSort
+    func setMemoSortCacheInSearch(_ sort: MemoSort)
 }

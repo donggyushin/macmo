@@ -11,6 +11,7 @@ import Foundation
 
 final class SearchMemoViewModel: ObservableObject {
     @Injected(\.memoRepository) private var memoRepository
+    @Injected(\.userPreferenceRepository) private var userPreferenceRepository
 
     @Published var memos: [Memo] = []
     @Published var query = ""
@@ -26,7 +27,7 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     @MainActor func configureInitialSetUp() {
-        sortBy = memoRepository.getMemoSortCacheInSearch()
+        sortBy = userPreferenceRepository.getMemoSortCacheInSearch()
         query = memoRepository.getMemoSearchQuery()
     }
 
@@ -80,7 +81,7 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     func setSortByValue(_ sortBy: MemoSort) {
-        memoRepository.setMemoSortCacheInSearch(sortBy)
+        userPreferenceRepository.setMemoSortCacheInSearch(sortBy)
     }
 
     private func saveSearchQuery(_ query: String) {

@@ -2,6 +2,7 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
     @UserDefault(key: "memo-sort", defaultValue: MemoSort.createdAt) var memoSortCache
     @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
+    @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
 
     public init() {}
 
@@ -27,5 +28,13 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
 
     public func getStatistics() -> StatisticsEnum {
         statisticsEnum
+    }
+
+    public func getMemoSortCacheInSearch() -> MemoSort {
+        memoSortCacheInSearch
+    }
+
+    public func setMemoSortCacheInSearch(_ sort: MemoSort) {
+        memoSortCacheInSearch = sort
     }
 }

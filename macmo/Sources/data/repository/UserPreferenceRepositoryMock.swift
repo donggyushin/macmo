@@ -2,6 +2,7 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var memoSortCache: MemoSort = .updatedAt
     private var ascendingCache: Bool = false
     private var statisticsEnum: StatisticsEnum = .chart
+    private var memoSortCacheInSearch: MemoSort = .updatedAt
 
     public init() {}
 
@@ -27,5 +28,13 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
 
     public func getStatistics() -> StatisticsEnum {
         statisticsEnum
+    }
+
+    public func getMemoSortCacheInSearch() -> MemoSort {
+        memoSortCacheInSearch
+    }
+
+    public func setMemoSortCacheInSearch(_ sort: MemoSort) {
+        memoSortCacheInSearch = sort
     }
 }
