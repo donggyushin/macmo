@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftData
 import MacmoDomain
+import SwiftData
 
 @Model
 public class MemoDTO {
@@ -20,7 +20,16 @@ public class MemoDTO {
     public var createdAt: Date = Date()
     public var updatedAt: Date = Date()
 
-    public init(id: String = "", title: String = "", contents: String? = nil, due: Date? = nil, done: Bool = false, eventIdentifier: String? = nil, createdAt: Date = Date(), updatedAt: Date = Date()) {
+    public init(
+        id: String = "",
+        title: String = "",
+        contents: String? = nil,
+        due: Date? = nil,
+        done: Bool = false,
+        eventIdentifier: String? = nil,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date()
+    ) {
         self.id = id
         self.title = title
         self.contents = contents
@@ -32,8 +41,8 @@ public class MemoDTO {
     }
 }
 
-extension MemoDTO {
-    public func toDomain() -> Memo {
+public extension MemoDTO {
+    func toDomain() -> Memo {
         return Memo(
             id: id,
             title: title,
@@ -46,7 +55,7 @@ extension MemoDTO {
         )
     }
 
-    public static func fromDomain(_ memo: Memo) -> MemoDTO {
+    static func fromDomain(_ memo: Memo) -> MemoDTO {
         return MemoDTO(
             id: memo.id,
             title: memo.title,
@@ -59,3 +68,4 @@ extension MemoDTO {
         )
     }
 }
+
