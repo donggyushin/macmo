@@ -18,4 +18,5 @@ public protocol MemoDAO {
     func getMemoStatics() -> MemoStatistics
 
     func addImage(_ memo: Memo, image: ImageAttachment) throws
+    func deleteImage(memoId: String, imageId: String) throws
 }

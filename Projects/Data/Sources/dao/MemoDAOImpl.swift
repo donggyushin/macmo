@@ -279,4 +279,44 @@ public class MemoDAOImpl: MemoDAO {
         // 7. Save changes
         try modelContext.save()
     }
+
+    public func deleteImage(memoId: String, imageId: String) throws {
+        // 1. Find the MemoDTO
+        let memoPredicate = #Predicate<MemoDTO> { $0.id == memoId }
+        let memoDescriptor = FetchDescriptor<MemoDTO>(predicate: memoPredicate)
+        let memoDtos = try modelContext.fetch(memoDescriptor)
+
+        guard let memoDTO = memoDtos.first else {
+            throw AppError.notFound
+        }
+
+        // 2. Find the ImageAttachmentDTO
+        let imagePredicate = #Predicate<ImageAttachmentDTO> { $0.id == imageId }
+        let imageDescriptor = FetchDescriptor<ImageAttachmentDTO>(predicate: imagePredicate)
+        let imageDtos = try modelContext.fetch(imageDescriptor)
+
+        guard let imageDTO = imageDtos.first else {
+            throw AppError.notFound
+        }
+
+        // 3. Verify the image belongs to this memo
+        guard imageDTO.memo?.id == memoId else {
+            throw AppError.custom("Image does not belong to this memo")
+        }
+
+        // 4. Remove from memo's images array
+        if var images = memoDTO.images {
+            images.removeAll { $0.id == imageId }
+            memoDTO.images = images.isEmpty ? nil : images
+        }
+
+        // 5. Delete the ImageAttachmentDTO
+        modelContext.delete(imageDTO)
+
+        // 6. Update memo's updatedAt timestamp
+        memoDTO.updatedAt = Date()
+
+        // 7. Save changes
+        try modelContext.save()
+    }
 }

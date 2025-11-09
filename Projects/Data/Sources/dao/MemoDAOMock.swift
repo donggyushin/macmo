@@ -144,6 +144,36 @@ public class MemoDAOMock: MemoDAO {
 
         memos[memo.id] = updatedMemo
     }
+
+    public func deleteImage(memoId: String, imageId: String) throws {
+        guard var existingMemo = memos[memoId] else {
+            throw AppError.notFound
+        }
+
+        // Find the image in memo's images array
+        guard let imageIndex = existingMemo.images.firstIndex(where: { $0.id == imageId }) else {
+            throw AppError.notFound
+        }
+
+        // Remove the image from array
+        var updatedImages = existingMemo.images
+        updatedImages.remove(at: imageIndex)
+
+        // Create updated memo
+        let updatedMemo = Memo(
+            id: existingMemo.id,
+            title: existingMemo.title,
+            contents: existingMemo.contents,
+            due: existingMemo.due,
+            done: existingMemo.done,
+            eventIdentifier: existingMemo.eventIdentifier,
+            createdAt: existingMemo.createdAt,
+            updatedAt: Date(),
+            images: updatedImages
+        )
+
+        memos[memoId] = updatedMemo
+    }
 }
 
 extension MemoDAOMock {
