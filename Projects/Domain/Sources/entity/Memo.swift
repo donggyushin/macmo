@@ -17,6 +17,8 @@ public struct Memo: Equatable {
     public let createdAt: Date
     public let updatedAt: Date
 
+    public var images: [ImageAttachment] = []
+
     public var isUrgent: Bool {
         // Consider urgent if due within 3 days (259200 seconds) and not completed
         guard let due = due, !done else { return false }
@@ -36,7 +38,8 @@ public struct Memo: Equatable {
         done: Bool = false,
         eventIdentifier: String? = nil,
         createdAt: Date = Date(),
-        updatedAt: Date = Date()
+        updatedAt: Date = Date(),
+        images: [ImageAttachment] = []
     ) {
         self.id = id
         self.title = title
@@ -46,5 +49,6 @@ public struct Memo: Equatable {
         self.eventIdentifier = eventIdentifier
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.images = images
     }
 }
