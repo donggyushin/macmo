@@ -7,8 +7,8 @@
 
 import Factory
 import Foundation
-import MacmoDomain
 import MacmoData
+import MacmoDomain
 import SwiftData
 
 // MARK: - Register Data layer instances
@@ -33,7 +33,7 @@ extension Container {
                 }
 
                 let container = try ModelContainer(
-                    for: MemoDTO.self,
+                    for: MemoDTO.self, ImageAttachmentDTO.self,
                     configurations: configuration
                 )
 
