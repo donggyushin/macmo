@@ -16,4 +16,6 @@ public protocol MemoDAO {
     func delete(_ id: String) throws
     func search(query: String, cursorId: String?, limit: Int, sortBy: MemoSort) throws -> [Memo]
     func getMemoStatics() -> MemoStatistics
+
+    func addImage(_ memo: Memo, image: ImageAttachment) throws
 }

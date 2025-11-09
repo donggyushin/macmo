@@ -120,6 +120,30 @@ public class MemoDAOMock: MemoDAO {
         // Apply limit
         return Array(filteredMemos.prefix(limit))
     }
+
+    public func addImage(_ memo: Memo, image: ImageAttachment) throws {
+        guard var existingMemo = memos[memo.id] else {
+            throw AppError.notFound
+        }
+
+        // Create new memo with updated images array
+        var updatedImages = existingMemo.images
+        updatedImages.append(image)
+
+        let updatedMemo = Memo(
+            id: existingMemo.id,
+            title: existingMemo.title,
+            contents: existingMemo.contents,
+            due: existingMemo.due,
+            done: existingMemo.done,
+            eventIdentifier: existingMemo.eventIdentifier,
+            createdAt: existingMemo.createdAt,
+            updatedAt: Date(),
+            images: updatedImages
+        )
+
+        memos[memo.id] = updatedMemo
+    }
 }
 
 extension MemoDAOMock {

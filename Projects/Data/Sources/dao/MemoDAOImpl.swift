@@ -245,4 +245,38 @@ public class MemoDAOImpl: MemoDAO {
             urgentsCount: urgentsCount
         )
     }
+
+    public func addImage(_ memo: Memo, image: ImageAttachment) throws {
+        // 1. Find the MemoDTO
+        let memoId = memo.id
+        let predicate = #Predicate<MemoDTO> { $0.id == memoId }
+        let descriptor = FetchDescriptor<MemoDTO>(predicate: predicate)
+        let dtos = try modelContext.fetch(descriptor)
+
+        guard let memoDTO = dtos.first else {
+            throw AppError.notFound
+        }
+
+        // 2. Create ImageAttachmentDTO from domain
+        let imageDTO = ImageAttachmentDTO(from: image)
+
+        // 3. Insert the image into context
+        modelContext.insert(imageDTO)
+
+        // 4. Set up the relationship
+        imageDTO.memo = memoDTO
+
+        // 5. Add to memo's images array (handle optional)
+        if memoDTO.images == nil {
+            memoDTO.images = [imageDTO]
+        } else {
+            memoDTO.images?.append(imageDTO)
+        }
+
+        // 6. Update memo's updatedAt timestamp
+        memoDTO.updatedAt = Date()
+
+        // 7. Save changes
+        try modelContext.save()
+    }
 }

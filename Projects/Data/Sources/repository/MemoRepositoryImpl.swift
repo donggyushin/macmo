@@ -42,4 +42,8 @@ public final class MemoRepositoryImpl: MemoRepository {
     public func getMemoStatics() -> MemoStatistics {
         memoDAO.getMemoStatics()
     }
+
+    public func addImage(_ memo: Memo, image: ImageAttachment) throws {
+        try memoDAO.addImage(memo, image: image)
+    }
 }
