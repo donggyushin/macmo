@@ -28,7 +28,7 @@ final class SearchMemoViewModel: ObservableObject {
 
     @MainActor func configureInitialSetUp() {
         sortBy = userPreferenceRepository.getMemoSortCacheInSearch()
-        query = memoRepository.getMemoSearchQuery()
+        query = userPreferenceRepository.getMemoSearchQuery()
     }
 
     @MainActor func tapUrgentTag() {
@@ -85,7 +85,7 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     private func saveSearchQuery(_ query: String) {
-        memoRepository.setMemoSearchQuery(query)
+        userPreferenceRepository.setMemoSearchQuery(query)
     }
 
     private func bind() {

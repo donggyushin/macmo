@@ -3,6 +3,7 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var ascendingCache: Bool = false
     private var statisticsEnum: StatisticsEnum = .chart
     private var memoSortCacheInSearch: MemoSort = .updatedAt
+    private var memoSearchQuery = ""
 
     public init() {}
 
@@ -36,5 +37,13 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
 
     public func setMemoSortCacheInSearch(_ sort: MemoSort) {
         memoSortCacheInSearch = sort
+    }
+
+    public func setMemoSearchQuery(_ query: String) {
+        memoSearchQuery = query
+    }
+
+    public func getMemoSearchQuery() -> String {
+        memoSearchQuery
     }
 }

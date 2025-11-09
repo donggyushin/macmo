@@ -8,7 +8,6 @@
 import Foundation
 
 public final class MemoRepositoryImpl: MemoRepository {
-    @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
     @UserDefault(key: "navigations", defaultValue: []) var navigations: [NavigationDomain]
 
     let memoDAO: MemoDAO
@@ -43,15 +42,6 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func getMemoStatics() -> MemoStatistics {
         memoDAO.getMemoStatics()
-    }
-
-    public func setMemoSearchQuery(_ query: String) {
-        // TODO: - save query to userdefault
-        memoSearchQuery = query
-    }
-
-    public func getMemoSearchQuery() -> String {
-        memoSearchQuery
     }
 
     public func setNavigationForCache(_ navigations: [NavigationDomain]) {
