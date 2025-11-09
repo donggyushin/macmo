@@ -62,7 +62,7 @@ let project = Project(
             ]),
             sources: ["Sources/**"],
             resources: ["Resources/**"],
-            entitlements: .file(path: .relativeToRoot("macmo/macmo.entitlements")),
+            entitlements: "macmo.entitlements",
             dependencies: [
                 .project(target: "MacmoDomain", path: .relativeToRoot("Projects/Domain")),
                 .project(target: "MacmoData", path: .relativeToRoot("Projects/Data")),
@@ -90,7 +90,7 @@ let project = Project(
                 ]
             ]),
             sources: ["Widget/**"],
-            entitlements: .file(path: .relativeToRoot("macmo/macmo.entitlements")),
+            entitlements: "macmo.entitlements",
             dependencies: [
                 .project(target: "MacmoDomain", path: .relativeToRoot("Projects/Domain")),
                 .project(target: "MacmoData", path: .relativeToRoot("Projects/Data"))
