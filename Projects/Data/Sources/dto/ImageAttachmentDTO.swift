@@ -8,7 +8,7 @@ public struct ImageAttachmentDTO: Codable {
     public let createdAt: Date
 
     public init(
-        id: String,
+        id: String = UUID().uuidString,
         imageData: Data,
         order: Int,
         createdAt: Date
