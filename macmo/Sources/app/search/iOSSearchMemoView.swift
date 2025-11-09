@@ -44,6 +44,7 @@ struct iOSSearchMemoView: View {
 
     private var searchField: some View {
         SearchTextField(text: $model.query, focusState: $focusSearchField)
+            .setPreventAutoFocus(true)
     }
 
     private var searchResults: some View {

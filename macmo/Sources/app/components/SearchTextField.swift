@@ -12,6 +12,18 @@ struct SearchTextField: View {
     var focusState: FocusState<Bool>.Binding
     var placeholder: String = "Type urgent or uncompleted"
 
+    private var preventAutoFocus: Bool = false
+    func setPreventAutoFocus(_ value: Bool) -> Self {
+        var copy = self
+        copy.preventAutoFocus = value
+        return copy
+    }
+
+    init(text: Binding<String>, focusState: FocusState<Bool>.Binding) {
+        _text = text
+        self.focusState = focusState
+    }
+
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -21,7 +33,9 @@ struct SearchTextField: View {
                 .textFieldStyle(PlainTextFieldStyle())
                 .focused(focusState)
                 .onAppear {
-                    focusState.wrappedValue = true
+                    if !preventAutoFocus {
+                        focusState.wrappedValue = true
+                    }
                 }
         }
         .padding(8)
