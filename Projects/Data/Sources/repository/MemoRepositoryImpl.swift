@@ -46,4 +46,8 @@ public final class MemoRepositoryImpl: MemoRepository {
     public func addImage(_ memo: Memo, image: ImageAttachment) throws {
         try memoDAO.addImage(memo, image: image)
     }
+
+    public func deleteImage(memoId: String, imageId: String) throws {
+        try memoDAO.deleteImage(memoId: memoId, imageId: imageId)
+    }
 }
