@@ -27,7 +27,7 @@ final class MemoListViewModel: ObservableObject {
 
     @MainActor func configInitialSetup() {
         sortBy = userPreferenceRepository.getMemoSort()
-        ascending = memoRepository.getAscending()
+        ascending = userPreferenceRepository.getAscending()
     }
 
     @MainActor
@@ -81,7 +81,7 @@ final class MemoListViewModel: ObservableObject {
 
         $ascending
             .sink { ascending in
-                self.memoRepository.setAscending(ascending)
+                self.userPreferenceRepository.setAscending(ascending)
             }
             .store(in: &cancellables)
     }

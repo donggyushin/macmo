@@ -5,6 +5,7 @@
 //  Created by Claude on 10/4/25.
 //
 
+import Factory
 import Foundation
 import Testing
 @testable import macmo
@@ -14,28 +15,26 @@ struct MemoRepositoryTests {
 
     @Test("Get returns default sort")
     func getReturnsDefaultSort() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults for clean state
         UserDefaults.standard.removeObject(forKey: "memo-sort")
 
-        let sort: MemoSort = repository.get()
+        let sort: MemoSort = repository.getMemoSort()
 
         #expect(sort == .createdAt)
     }
 
     @Test("Set saves to UserDefaults")
     func setSavesToUserDefaults() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
 
-        repository.set(.updatedAt)
+        repository.setMemoSort(.updatedAt)
 
-        let retrievedSort: MemoSort = repository.get()
+        let retrievedSort: MemoSort = repository.getMemoSort()
         #expect(retrievedSort == .updatedAt)
 
         // Cleanup
@@ -44,17 +43,14 @@ struct MemoRepositoryTests {
 
     @Test("Set persists across instances")
     func setPersistsAcrossInstances() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
 
-        repository.set(.due)
+        repository.setMemoSort(.due)
 
-        let newRepository = MemoRepositoryImpl(memoDAO: mockDAO)
-
-        #expect(newRepository.get() == .due)
+        #expect(repository.getMemoSort() == .due)
 
         // Cleanup
         UserDefaults.standard.removeObject(forKey: "memo-sort")
@@ -62,8 +58,7 @@ struct MemoRepositoryTests {
 
     @Test("GetAscending returns default value")
     func getAscendingReturnsDefaultValue() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
@@ -75,8 +70,7 @@ struct MemoRepositoryTests {
 
     @Test("SetAscending saves to UserDefaults")
     func setAscendingSavesToUserDefaults() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
@@ -92,17 +86,14 @@ struct MemoRepositoryTests {
 
     @Test("SetAscending persists across instances")
     func setAscendingPersistsAcrossInstances() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "ascending")
 
         repository.setAscending(true)
 
-        let newRepository = MemoRepositoryImpl(memoDAO: mockDAO)
-
-        #expect(newRepository.getAscending() == true)
+        #expect(repository.getAscending() == true)
 
         // Cleanup
         UserDefaults.standard.removeObject(forKey: "ascending")
@@ -259,21 +250,19 @@ struct MemoRepositoryTests {
 
     @Test("Sort preference used in multiple calls")
     func sortPreferenceUsedInMultipleCalls() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
-
+        let repository = Container.shared.userPreferenceRepository()
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
         UserDefaults.standard.removeObject(forKey: "ascending")
 
-        repository.set(.updatedAt)
+        repository.setMemoSort(.updatedAt)
         repository.setAscending(true)
 
-        #expect(repository.get() == .updatedAt)
+        #expect(repository.getMemoSort() == .updatedAt)
         #expect(repository.getAscending() == true)
 
-        repository.set(.due)
-        #expect(repository.get() == .due)
+        repository.setMemoSort(.due)
+        #expect(repository.getMemoSort() == .due)
 
         // Cleanup
         UserDefaults.standard.removeObject(forKey: "memo-sort")
@@ -282,22 +271,21 @@ struct MemoRepositoryTests {
 
     @Test("Cache independence - sort and ascending")
     func cacheIndependenceSortAndAscending() {
-        let mockDAO = MemoDAOMock()
-        let repository = MemoRepositoryImpl(memoDAO: mockDAO)
+        let repository = Container.shared.userPreferenceRepository()
 
         // Clear UserDefaults
         UserDefaults.standard.removeObject(forKey: "memo-sort")
         UserDefaults.standard.removeObject(forKey: "ascending")
 
-        repository.set(.due)
+        repository.setMemoSort(.due)
         repository.setAscending(true)
 
-        #expect(repository.get() == .due)
+        #expect(repository.getMemoSort() == .due)
         #expect(repository.getAscending() == true)
 
-        repository.set(.createdAt)
+        repository.setMemoSort(.createdAt)
 
-        #expect(repository.get() == .createdAt)
+        #expect(repository.getMemoSort() == .createdAt)
         #expect(repository.getAscending() == true)
 
         // Cleanup

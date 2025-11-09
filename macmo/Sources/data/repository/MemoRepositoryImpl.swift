@@ -9,7 +9,6 @@ import Foundation
 
 public final class MemoRepositoryImpl: MemoRepository {
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
-    @UserDefault(key: "ascending", defaultValue: false) var ascendingCache
     @UserDefault(key: "statistics-enum", defaultValue: StatisticsEnum.chart) var statisticsEnum
     @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
     @UserDefault(key: "navigations", defaultValue: []) var navigations: [NavigationDomain]
@@ -58,14 +57,6 @@ public final class MemoRepositoryImpl: MemoRepository {
 
     public func setMemoSortCacheInSearch(_ sort: MemoSort) {
         memoSortCacheInSearch = sort
-    }
-
-    public func getAscending() -> Bool {
-        ascendingCache
-    }
-
-    public func setAscending(_ ascending: Bool) {
-        ascendingCache = ascending
     }
 
     public func getMemoStatics() -> MemoStatistics {
