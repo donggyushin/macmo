@@ -83,15 +83,15 @@ extension Container {
         .singleton
     }
 
-    var calendarService: Factory<CalendarServiceProtocol> {
+    var calendarService: Factory<CalendarService> {
         self {
-            CalendarService()
+            CalendarServiceImpl()
         }
         .onPreview {
-            MockCalendarService()
+            CalendarServiceMock()
         }
         .onTest {
-            MockCalendarService()
+            CalendarServiceMock()
         }
         .singleton
     }

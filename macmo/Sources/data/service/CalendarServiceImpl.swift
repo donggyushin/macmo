@@ -1,18 +1,18 @@
 //
-//  CalendarService.swift
+//  CalendarServiceImpl.swift
 //  macmo
 //
 //  Created by 신동규 on 9/30/25.
 //
 
-import Foundation
 import EventKit
+import Foundation
 
-final class CalendarService: CalendarServiceProtocol {
+final class CalendarServiceImpl: CalendarService {
     private let eventStore = EKEventStore()
-    
+
     @UserDefault(key: "isCalendarSyncEnabled", defaultValue: true) var isCalendarSyncEnabled
-    
+
     func requestAccess() async throws -> Bool {
         return try await eventStore.requestFullAccessToEvents()
     }

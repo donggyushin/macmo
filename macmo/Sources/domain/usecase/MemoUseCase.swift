@@ -10,9 +10,9 @@ import WidgetKit
 
 public final class MemoUseCase {
     let memoRepository: MemoRepository
-    let calendarService: CalendarServiceProtocol
+    let calendarService: CalendarService
 
-    public init(memoRepository: MemoRepository, calendarService: CalendarServiceProtocol) {
+    public init(memoRepository: MemoRepository, calendarService: CalendarService) {
         self.memoRepository = memoRepository
         self.calendarService = calendarService
     }

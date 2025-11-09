@@ -1,5 +1,5 @@
 //
-//  MockCalendarService.swift
+//  CalendarServiceMock.swift
 //  macmo
 //
 //  Created by 신동규 on 9/30/25.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-final class MockCalendarService: CalendarServiceProtocol {
-
+final class CalendarServiceMock: CalendarService {
     @UserDefault(key: "isCalendarSyncEnabled", defaultValue: true) var isCalendarSyncEnabled
 
     // MARK: - Test Tracking Properties
+
     var requestAccessCallCount = 0
     var saveToCalendarCallCount = 0
     var removeFromCalendarCallCount = 0
@@ -20,11 +20,13 @@ final class MockCalendarService: CalendarServiceProtocol {
     var lastRemovedEventIdentifier: String?
 
     // MARK: - Stub Return Values
+
     var stubAccessResult: Bool = true
     var stubEventIdentifier: String? = "mock-event-id"
     var shouldThrowError: CalendarServiceError?
 
     // MARK: - Protocol Implementation
+
     func requestAccess() async throws -> Bool {
         requestAccessCallCount += 1
 
@@ -56,6 +58,7 @@ final class MockCalendarService: CalendarServiceProtocol {
     }
 
     // MARK: - Test Helpers
+
     func reset() {
         requestAccessCallCount = 0
         saveToCalendarCallCount = 0

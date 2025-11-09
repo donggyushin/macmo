@@ -18,7 +18,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         mockCalendarService?.reset()
 
         let memo = Memo(
@@ -43,7 +43,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         mockCalendarService?.reset()
 
         let memo = Memo(
@@ -67,7 +67,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -94,7 +94,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -124,7 +124,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -161,7 +161,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -196,7 +196,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -232,7 +232,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -263,7 +263,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
@@ -292,7 +292,7 @@ struct MemoUseCaseTests {
         // Setup
         Container.shared.reset()
         let useCase = Container.shared.memoUseCase()
-        let mockCalendarService = Container.shared.calendarService() as? MockCalendarService
+        let mockCalendarService = Container.shared.calendarService() as? CalendarServiceMock
         let mockRepository = Container.shared.memoRepository()
         mockCalendarService?.reset()
 
