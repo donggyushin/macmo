@@ -22,11 +22,6 @@ final class SearchMemoViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
-        self.selectedMemoId = userPreferenceRepository.getSelectedMemoId()
-        bind()
-    }
-
     func onAppearMemoDetailView(_ id: String) {
         userPreferenceRepository.setSelectedMemoId(id)
     }
@@ -34,6 +29,8 @@ final class SearchMemoViewModel: ObservableObject {
     @MainActor func configureInitialSetUp() {
         sortBy = userPreferenceRepository.getMemoSortCacheInSearch()
         query = userPreferenceRepository.getMemoSearchQuery()
+        selectedMemoId = userPreferenceRepository.getSelectedMemoId()
+        bind()
     }
 
     @MainActor func tapUrgentTag() {
@@ -95,6 +92,7 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     private func bind() {
+        cancellables.removeAll()
         $query
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .combineLatest($sortBy)

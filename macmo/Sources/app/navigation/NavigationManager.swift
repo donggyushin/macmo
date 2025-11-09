@@ -14,10 +14,6 @@ final class NavigationManager: ObservableObject {
     @Injected(\.navigationService) private var navigationService
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
-        bind()
-    }
-
     @MainActor
     func push(_ path: Navigation) {
         paths.append(path)
@@ -33,9 +29,12 @@ final class NavigationManager: ObservableObject {
         if paths.isEmpty {
             paths = navigationService.getNavigationForCache().map { .init($0) }
         }
+
+        bind()
     }
 
     private func bind() {
+        cancellables.removeAll()
         $paths
             .removeDuplicates()
             .sink { paths in
