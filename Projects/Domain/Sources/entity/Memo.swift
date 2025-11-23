@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Memo: Equatable {
+public struct Memo: Equatable, Codable {
     public let id: String
     public var title: String
     public var contents: String?
