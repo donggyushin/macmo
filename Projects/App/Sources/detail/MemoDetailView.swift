@@ -241,35 +241,29 @@ struct MemoDetailView: View {
                 .font(.headline)
 
             VStack(alignment: .leading, spacing: 4) {
-                if let createdAt = model.memo?.createdAt {
-                    HStack {
-                        Text("Created:")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(createdAt, style: .date)
-                        Text(createdAt, style: .time)
-                    }
+                HStack {
+                    Text("Created:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(model.memo.createdAt, style: .date)
+                    Text(model.memo.createdAt, style: .time)
                 }
 
-                if let updatedAt = model.memo?.updatedAt {
-                    HStack {
-                        Text("Updated:")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(updatedAt, style: .date)
-                        Text(updatedAt, style: .time)
-                    }
+                HStack {
+                    Text("Updated:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(model.memo.updatedAt, style: .date)
+                    Text(model.memo.updatedAt, style: .time)
                 }
 
-                if let id = model.memo?.id {
-                    HStack {
-                        Text("ID:")
-                            .foregroundColor(.secondary)
-                        Spacer()
-                        Text(id)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
+                HStack {
+                    Text("ID:")
+                        .foregroundColor(.secondary)
+                    Spacer()
+                    Text(model.memo.id)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
             }
             .font(.caption)

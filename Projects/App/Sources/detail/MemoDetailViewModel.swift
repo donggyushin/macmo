@@ -16,7 +16,7 @@ final class MemoDetailViewModel: ObservableObject {
 
     let memoListViewModel: MemoListViewModel
 
-    @Published var memo: Memo?
+    @Published var memo: Memo
     @Published var isNewMemo = false
     @Published var isEditing = false
 
@@ -34,6 +34,8 @@ final class MemoDetailViewModel: ObservableObject {
 
     init(id: String?) {
         self.memoListViewModel = Container.shared.memoListViewModel()
+        let memoRepository = Container.shared.memoRepository()
+        let userPreferenceRepository = Container.shared.userPreferenceRepository()
         // Perform synchronous database fetch - SwiftData is fast for local operations
         if let memo = try? memoRepository.findById(id ?? "") {
             self.memo = memo
@@ -49,10 +51,8 @@ final class MemoDetailViewModel: ObservableObject {
     // Optimized initializer for existing memos to skip database lookup
     init(memo: Memo) {
         self.memoListViewModel = .init()
-        Task { @MainActor in
-            self.memo = memo
-            loadMemoData()
-        }
+        self.memo = memo
+        loadMemoData()
     }
 
     func startRepeatingTask() {
@@ -69,8 +69,6 @@ final class MemoDetailViewModel: ObservableObject {
     }
 
     private func loadMemoData() {
-        guard let memo = memo else { return }
-
         title = memo.title
         contents = memo.contents ?? ""
         isDone = memo.done
@@ -99,12 +97,12 @@ final class MemoDetailViewModel: ObservableObject {
         guard canSave else { return }
 
         let updatedMemo = Memo(
-            id: memo?.id ?? UUID().uuidString,
+            id: memo.id,
             title: title,
             contents: contents.isEmpty ? nil : contents,
             due: hasDueDate ? dueDate : nil,
             done: isDone,
-            createdAt: memo?.createdAt ?? Date(),
+            createdAt: memo.createdAt,
             updatedAt: Date()
         )
 
@@ -120,8 +118,7 @@ final class MemoDetailViewModel: ObservableObject {
 
     @MainActor
     func toggleComplete() async throws {
-        guard let currentMemo = memo else { return }
-
+        let currentMemo = memo
         let updatedMemo = Memo(
             id: currentMemo.id,
             title: currentMemo.title,
@@ -139,7 +136,7 @@ final class MemoDetailViewModel: ObservableObject {
 
     @MainActor
     func delete() async throws {
-        guard let currentMemo = memo else { return }
+        let currentMemo = memo
         try await memoListViewModel.delete(currentMemo.id)
     }
 
