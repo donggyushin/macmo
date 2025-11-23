@@ -5,9 +5,9 @@
 //  Created by 신동규 on 10/3/25.
 //
 
-import SwiftUI
-import MacmoDomain
 import MacmoData
+import MacmoDomain
+import SwiftUI
 
 struct iOSSearchMemoView: View {
     @ObservedObject var model: SearchMemoViewModel
@@ -25,6 +25,14 @@ struct iOSSearchMemoView: View {
         }
         .navigationTitle("Search Memos")
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    try? model.refresh()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                }
+            }
+
             ToolbarItem(placement: .primaryAction) {
                 Button("Urgent") {
                     model.tapUrgentTag()
