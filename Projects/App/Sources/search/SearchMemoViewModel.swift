@@ -58,7 +58,11 @@ final class SearchMemoViewModel: ObservableObject {
     @MainActor
     func pagination() throws {
         let result = try memoRepository.search(query: query, cursorId: memos.last?.id, limit: 100, sortBy: sortBy)
-        memos.append(contentsOf: result)
+
+        // Filter out duplicates before appending
+        let existingIds = Set(memos.map { $0.id })
+        let newMemos = result.filter { !existingIds.contains($0.id) }
+        memos.append(contentsOf: newMemos)
     }
 
     @MainActor private func animateTyping(text: String) {
@@ -81,7 +85,38 @@ final class SearchMemoViewModel: ObservableObject {
 
     @MainActor private func search(_ query: String, _ sortBy: MemoSort) throws {
         let result = try memoRepository.search(query: query, cursorId: nil, limit: 100, sortBy: sortBy)
-        memos = result
+
+        // Remove duplicates by ID, keeping the most recently updated memo
+        var uniqueMemos: [String: Memo] = [:]
+        for memo in result {
+            if let existing = uniqueMemos[memo.id] {
+                // Keep the memo with the most recent updatedAt
+                if memo.updatedAt > existing.updatedAt {
+                    uniqueMemos[memo.id] = memo
+                }
+            } else {
+                uniqueMemos[memo.id] = memo
+            }
+        }
+
+        // Convert back to array and sort according to the original sortBy
+        let deduplicated = Array(uniqueMemos.values)
+        memos = sortMemos(deduplicated, by: sortBy)
+    }
+
+    private func sortMemos(_ memos: [Memo], by sortBy: MemoSort) -> [Memo] {
+        switch sortBy {
+        case .createdAt:
+            return memos.sorted { $0.createdAt > $1.createdAt }
+        case .updatedAt:
+            return memos.sorted { $0.updatedAt > $1.updatedAt }
+        case .due:
+            return memos.sorted { memo1, memo2 in
+                guard let due1 = memo1.due else { return false }
+                guard let due2 = memo2.due else { return true }
+                return due1 < due2
+            }
+        }
     }
 
     func setSortByValue(_ sortBy: MemoSort) {
