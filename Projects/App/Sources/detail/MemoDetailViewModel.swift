@@ -114,6 +114,8 @@ final class MemoDetailViewModel: ObservableObject {
 
         memo = updatedMemo
         isEditing = false
+
+        userPreferenceRepository.setMemoDraft(.init(title: ""))
     }
 
     @MainActor
@@ -142,6 +144,15 @@ final class MemoDetailViewModel: ObservableObject {
 
     @objc private func updateMemoDrating() {
         guard isNewMemo else { return }
-        print("Function called every second...")
+        let updatedMemo = Memo(
+            id: memo.id,
+            title: title,
+            contents: contents.isEmpty ? nil : contents,
+            due: hasDueDate ? dueDate : nil,
+            done: isDone,
+            createdAt: memo.createdAt,
+            updatedAt: Date()
+        )
+        userPreferenceRepository.setMemoDraft(updatedMemo)
     }
 }
