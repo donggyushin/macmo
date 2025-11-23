@@ -5,6 +5,7 @@ public struct MemoData: Identifiable {
     public let title: String
     public let content: String
     public let createdAt: Date
+    public let updatedAt: Date
     public let isCompleted: Bool
     public let due: Date?
 
@@ -24,6 +25,7 @@ public struct MemoData: Identifiable {
         title: String,
         content: String,
         createdAt: Date,
+        updatedAt: Date,
         isCompleted: Bool,
         due: Date?
     ) {
@@ -31,6 +33,7 @@ public struct MemoData: Identifiable {
         self.title = title
         self.content = content
         self.createdAt = createdAt
+        self.updatedAt = updatedAt
         self.isCompleted = isCompleted
         self.due = due
     }
