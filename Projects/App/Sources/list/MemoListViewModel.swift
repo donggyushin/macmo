@@ -39,14 +39,34 @@ final class MemoListViewModel: ObservableObject {
             sortBy: sortBy,
             ascending: ascending
         )
-        self.memos.append(contentsOf: memos)
+
+        // Filter out duplicates before appending
+        let existingIds = Set(self.memos.map { $0.id })
+        let newMemos = memos.filter { !existingIds.contains($0.id) }
+        self.memos.append(contentsOf: newMemos)
     }
 
     @MainActor
     func refreshMemos() throws {
         let memos = try memoRepository.findAll(cursorId: nil, limit: 100, sortBy: sortBy, ascending: ascending)
-        self.memos = memos
-        selectedMemoId = memos.first?.id
+
+        // Remove duplicates by ID, keeping the most recently updated memo
+        var uniqueMemos: [String: Memo] = [:]
+        for memo in memos {
+            if let existing = uniqueMemos[memo.id] {
+                // Keep the memo with the most recent updatedAt
+                if memo.updatedAt > existing.updatedAt {
+                    uniqueMemos[memo.id] = memo
+                }
+            } else {
+                uniqueMemos[memo.id] = memo
+            }
+        }
+
+        // Convert back to array and sort according to sortBy and ascending
+        let deduplicated = Array(uniqueMemos.values)
+        self.memos = sortMemos(deduplicated, by: sortBy, ascending: ascending)
+        selectedMemoId = self.memos.first?.id
     }
 
     @MainActor
@@ -71,6 +91,23 @@ final class MemoListViewModel: ObservableObject {
             memos.remove(at: index)
             selectedMemoId = memos.first?.id
         }
+    }
+
+    private func sortMemos(_ memos: [Memo], by sortBy: MemoSort, ascending: Bool) -> [Memo] {
+        let sorted: [Memo]
+        switch sortBy {
+        case .createdAt:
+            sorted = memos.sorted { ascending ? $0.createdAt < $1.createdAt : $0.createdAt > $1.createdAt }
+        case .updatedAt:
+            sorted = memos.sorted { ascending ? $0.updatedAt < $1.updatedAt : $0.updatedAt > $1.updatedAt }
+        case .due:
+            sorted = memos.sorted { memo1, memo2 in
+                guard let due1 = memo1.due else { return false }
+                guard let due2 = memo2.due else { return true }
+                return ascending ? due1 < due2 : due1 > due2
+            }
+        }
+        return sorted
     }
 
     private func bind() {
