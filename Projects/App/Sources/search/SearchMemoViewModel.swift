@@ -27,6 +27,10 @@ final class SearchMemoViewModel: ObservableObject {
         userPreferenceRepository.setSelectedMemoId(id)
     }
 
+    @MainActor func refresh() throws {
+        try search(query, sortBy)
+    }
+
     @MainActor func configureInitialSetUp() {
         sortBy = userPreferenceRepository.getMemoSortCacheInSearch()
         query = userPreferenceRepository.getMemoSearchQuery()
