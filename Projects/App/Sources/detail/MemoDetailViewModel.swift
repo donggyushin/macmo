@@ -12,10 +12,11 @@ import MacmoDomain
 
 final class MemoDetailViewModel: ObservableObject {
     @Injected(\.memoRepository) private var memoRepository
+    @Injected(\.userPreferenceRepository) private var userPreferenceRepository
 
     let memoListViewModel: MemoListViewModel
 
-    @Published var memo: Memo?
+    @Published var memo: Memo
     @Published var isNewMemo = false
     @Published var isEditing = false
 
@@ -29,32 +30,45 @@ final class MemoDetailViewModel: ObservableObject {
         !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    var timer: Timer?
+
     init(id: String?) {
-        memoListViewModel = Container.shared.memoListViewModel()
+        self.memoListViewModel = Container.shared.memoListViewModel()
+        let memoRepository = Container.shared.memoRepository()
+        let userPreferenceRepository = Container.shared.userPreferenceRepository()
         // Perform synchronous database fetch - SwiftData is fast for local operations
         if let memo = try? memoRepository.findById(id ?? "") {
             self.memo = memo
             loadMemoData()
         } else {
-            memo = .init(title: "")
-            isNewMemo = true
-            isEditing = true
+            self.memo = userPreferenceRepository.getMemoDraft()
+            self.isNewMemo = true
+            self.isEditing = true
             loadMemoData()
         }
     }
 
     // Optimized initializer for existing memos to skip database lookup
     init(memo: Memo) {
-        memoListViewModel = .init()
-        Task { @MainActor in
-            self.memo = memo
-            loadMemoData()
+        self.memoListViewModel = .init()
+        self.memo = memo
+        loadMemoData()
+    }
+
+    func startRepeatingTask() {
+        // Schedule the function `updateCounting()` to run every 1 second, repeatedly
+        stopTask()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateMemoDrating()
         }
     }
 
-    private func loadMemoData() {
-        guard let memo = memo else { return }
+    func stopTask() {
+        timer?.invalidate() // Stops the timer from firing again
+        timer = nil
+    }
 
+    private func loadMemoData() {
         title = memo.title
         contents = memo.contents ?? ""
         isDone = memo.done
@@ -83,12 +97,12 @@ final class MemoDetailViewModel: ObservableObject {
         guard canSave else { return }
 
         let updatedMemo = Memo(
-            id: memo?.id ?? UUID().uuidString,
+            id: memo.id,
             title: title,
             contents: contents.isEmpty ? nil : contents,
             due: hasDueDate ? dueDate : nil,
             done: isDone,
-            createdAt: memo?.createdAt ?? Date(),
+            createdAt: memo.createdAt,
             updatedAt: Date()
         )
 
@@ -100,12 +114,13 @@ final class MemoDetailViewModel: ObservableObject {
 
         memo = updatedMemo
         isEditing = false
+
+        userPreferenceRepository.setMemoDraft(.init(title: ""))
     }
 
     @MainActor
     func toggleComplete() async throws {
-        guard let currentMemo = memo else { return }
-
+        let currentMemo = memo
         let updatedMemo = Memo(
             id: currentMemo.id,
             title: currentMemo.title,
@@ -123,7 +138,21 @@ final class MemoDetailViewModel: ObservableObject {
 
     @MainActor
     func delete() async throws {
-        guard let currentMemo = memo else { return }
+        let currentMemo = memo
         try await memoListViewModel.delete(currentMemo.id)
+    }
+
+    @objc private func updateMemoDrating() {
+        guard isNewMemo else { return }
+        let updatedMemo = Memo(
+            id: memo.id,
+            title: title,
+            contents: contents.isEmpty ? nil : contents,
+            due: hasDueDate ? dueDate : nil,
+            done: isDone,
+            createdAt: memo.createdAt,
+            updatedAt: Date()
+        )
+        userPreferenceRepository.setMemoDraft(updatedMemo)
     }
 }

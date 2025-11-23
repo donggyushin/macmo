@@ -8,8 +8,23 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
     @UserDefault(key: "memo-sort-in-search", defaultValue: MemoSort.due) var memoSortCacheInSearch
     @UserDefault(key: "memo-search-query", defaultValue: "") var memoSearchQuery
     @UserDefault(key: "selected-memo-id", defaultValue: "") var selectedMemoId
+    @UserDefault(
+        key: "memo-draft",
+        defaultValue: Memo(title: "")
+    ) var memoDraft
 
     public init() {}
+
+    public func getMemoDraft() -> Memo {
+        var memoDraft = memoDraft
+        memoDraft.createdAt = .init()
+        memoDraft.updatedAt = .init()
+        return memoDraft
+    }
+
+    public func setMemoDraft(_ memo: Memo) {
+        memoDraft = memo
+    }
 
     public func getMemoSort() -> MemoSort {
         return memoSortCache

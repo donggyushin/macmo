@@ -7,15 +7,15 @@
 
 import Foundation
 
-public struct Memo: Equatable {
+public struct Memo: Equatable, Codable {
     public let id: String
     public var title: String
     public var contents: String?
     public var due: Date?
     public var done: Bool
     public var eventIdentifier: String?
-    public let createdAt: Date
-    public let updatedAt: Date
+    public var createdAt: Date
+    public var updatedAt: Date
 
     public var images: [ImageAttachment] = []
 
