@@ -5,10 +5,10 @@
 //  Created by 신동규 on 9/27/25.
 //
 
+import MacmoData
+import MacmoDomain
 import MarkdownUI
 import SwiftUI
-import MacmoDomain
-import MacmoData
 
 struct MemoDetailView: View {
     @ObservedObject var model: MemoDetailViewModel
@@ -113,6 +113,12 @@ struct MemoDetailView: View {
             }
         } message: {
             Text("Are you sure you want to delete this memo? This action cannot be undone.")
+        }
+        .onAppear {
+            model.startRepeatingTask()
+        }
+        .onDisappear {
+            model.stopTask()
         }
     }
 
