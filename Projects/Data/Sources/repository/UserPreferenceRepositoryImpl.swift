@@ -10,17 +10,7 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
     @UserDefault(key: "selected-memo-id", defaultValue: "") var selectedMemoId
     @UserDefault(
         key: "memo-draft",
-        defaultValue: Memo(
-            id: UUID().uuidString,
-            title: "",
-            contents: nil,
-            due: nil,
-            done: false,
-            eventIdentifier: nil,
-            createdAt: Date(),
-            updatedAt: Date(),
-            images: []
-        )
+        defaultValue: Memo(title: "")
     ) var memoDraft
 
     public init() {}
