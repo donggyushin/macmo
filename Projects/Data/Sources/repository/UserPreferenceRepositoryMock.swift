@@ -8,8 +8,27 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var memoSortCacheInSearch: MemoSort = .updatedAt
     private var memoSearchQuery = ""
     private var selectedMemoId = ""
+    private var memoDraft: Memo = .init(
+        id: UUID().uuidString,
+        title: "",
+        contents: nil,
+        due: nil,
+        done: false,
+        eventIdentifier: nil,
+        createdAt: Date(),
+        updatedAt: Date(),
+        images: []
+    )
 
     public init() {}
+
+    public func getMemoDraft() -> Memo {
+        memoDraft
+    }
+
+    public func setMemoDraft(_ memo: Memo) {
+        memoDraft = memo
+    }
 
     public func getMemoSort() -> MemoSort {
         return memoSortCache
