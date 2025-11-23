@@ -28,7 +28,6 @@ final class SearchMemoViewModel: ObservableObject {
     }
 
     @MainActor func refresh() throws {
-        guard !query.isEmpty else { return }
         try search(query, sortBy)
     }
 
