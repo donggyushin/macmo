@@ -10,6 +10,7 @@ private extension MacmoData.MemoDTO {
             title: title,
             content: contents ?? "",
             createdAt: createdAt,
+            updatedAt: updatedAt,
             isCompleted: done,
             due: due
         )
@@ -36,8 +37,24 @@ public final class MemoRepositoryImpl: MemoRepository {
 
         let dtos = try modelContext.fetch(descriptor)
 
-        return dtos
-            .map { $0.toWidgetMemoData() }
+        // Convert to MemoData
+        let allMemos = dtos.map { $0.toWidgetMemoData() }
+
+        // Remove duplicates by ID, keeping the most recently updated memo
+        var uniqueMemos: [String: MemoData] = [:]
+        for memo in allMemos {
+            if let existing = uniqueMemos[memo.id] {
+                // Keep the memo with the most recent updatedAt
+                if memo.updatedAt > existing.updatedAt {
+                    uniqueMemos[memo.id] = memo
+                }
+            } else {
+                uniqueMemos[memo.id] = memo
+            }
+        }
+
+        // Convert back to array and sort
+        return Array(uniqueMemos.values)
             .sorted { lhs, rhs in
                 // 1. isCompleted 비교: false가 먼저
                 if lhs.isCompleted != rhs.isCompleted {
@@ -63,12 +80,14 @@ public final class MemoRepositoryImpl: MemoRepository {
     }
 
     public func getPlaceholder() throws -> [MemoData] {
+        let now = Date()
         return [
             MemoData(
                 id: "sample",
                 title: "Sample memo",
                 content: "Can check recent memo from widget",
-                createdAt: Date(),
+                createdAt: now,
+                updatedAt: now,
                 isCompleted: false,
                 due: nil
             ),

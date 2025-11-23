@@ -11,6 +11,7 @@ public final class MemoRepositoryMock: MemoRepository {
                 title: "샘플 메모 1",
                 content: "첫 번째 메모 내용",
                 createdAt: currentDate,
+                updatedAt: currentDate,
                 isCompleted: false,
                 due: Date()
             ),
@@ -19,6 +20,7 @@ public final class MemoRepositoryMock: MemoRepository {
                 title: "샘플 메모 2",
                 content: "두 번째 메모 내용",
                 createdAt: currentDate.addingTimeInterval(-3600),
+                updatedAt: currentDate.addingTimeInterval(-3600),
                 isCompleted: true,
                 due: Date()
             ),
@@ -26,12 +28,14 @@ public final class MemoRepositoryMock: MemoRepository {
     }
 
     public func getPlaceholder() throws -> [MemoData] {
+        let now = Date()
         return [
             MemoData(
                 id: "sample",
                 title: "샘플 메모",
                 content: "위젯에서 최근 메모를 확인할 수 있습니다",
-                createdAt: Date(),
+                createdAt: now,
+                updatedAt: now,
                 isCompleted: false,
                 due: Date()
             ),

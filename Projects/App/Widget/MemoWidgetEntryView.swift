@@ -149,6 +149,7 @@ struct MediumWidgetView: View {
                 title: "샘플 메모",
                 content: "위젯 미리보기",
                 createdAt: Date(),
+                updatedAt: Date(),
                 isCompleted: false,
                 due: Date()
             )
@@ -167,6 +168,7 @@ struct MediumWidgetView: View {
                 title: "메모 1",
                 content: "첫 번째 메모 내용",
                 createdAt: Date(),
+                updatedAt: Date(),
                 isCompleted: false,
                 due: Date()
             ),
@@ -175,6 +177,7 @@ struct MediumWidgetView: View {
                 title: "메모 2",
                 content: "두 번째 메모 내용",
                 createdAt: Date(),
+                updatedAt: Date(),
                 isCompleted: true,
                 due: Date()
             ),
@@ -183,6 +186,7 @@ struct MediumWidgetView: View {
                 title: "메모 3",
                 content: "세 번째 메모 내용",
                 createdAt: Date(),
+                updatedAt: Date(),
                 isCompleted: false,
                 due: Date()
             )

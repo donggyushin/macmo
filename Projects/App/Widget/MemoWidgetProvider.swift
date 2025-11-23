@@ -19,14 +19,16 @@ struct MemoWidgetProvider: TimelineProvider {
                 memos: memos
             )
         } else {
+            let now = Date()
             return MemoWidgetEntry(
-                date: Date(),
+                date: now,
                 memos: [
                     MemoData(
                         id: "sample",
                         title: "샘플 메모",
                         content: "위젯에서 최근 메모를 확인할 수 있습니다",
-                        createdAt: Date(),
+                        createdAt: now,
+                        updatedAt: now,
                         isCompleted: false,
                         due: nil
                     ),
