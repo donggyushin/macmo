@@ -26,14 +26,6 @@ struct iOSSearchMemoView: View {
         .navigationTitle("Search Memos")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    try? model.refresh()
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                }
-            }
-
-            ToolbarItem(placement: .primaryAction) {
                 Button("Urgent") {
                     model.tapUrgentTag()
                     focusSearchField = false
@@ -108,6 +100,9 @@ struct iOSSearchMemoView: View {
         .listStyle(PlainListStyle())
         .scrollDismissesKeyboard(.interactively)
         .scrollIndicators(.hidden)
+        .refreshable {
+            try? model.refresh()
+        }
     }
 
     private func loadMoreResults() {
