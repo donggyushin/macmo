@@ -11,4 +11,6 @@ public protocol UserPreferenceRepository {
     func setMemoSearchQuery(_ query: String)
     func getSelectedMemoId() -> String?
     func setSelectedMemoId(_ id: String?)
+    func getMemoDraft() -> Memo
+    func setMemoDraft(_ memo: Memo)
 }

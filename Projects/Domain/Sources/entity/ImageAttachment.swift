@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ImageAttachment: Equatable {
+public struct ImageAttachment: Equatable, Codable {
     public let id: String
     public let imageData: Data
     public let order: Int

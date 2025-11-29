@@ -27,6 +27,14 @@ struct SearchMemoView: View {
             .navigationTitle("Search Memos")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        try? model.refresh()
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+
+                ToolbarItem(placement: .primaryAction) {
                     Button("Urgent") {
                         model.tapUrgentTag()
                     }

@@ -5,9 +5,9 @@
 //  Created by 신동규 on 10/3/25.
 //
 
-import SwiftUI
-import MacmoDomain
 import MacmoData
+import MacmoDomain
+import SwiftUI
 
 struct iOSSearchMemoView: View {
     @ObservedObject var model: SearchMemoViewModel
@@ -100,6 +100,9 @@ struct iOSSearchMemoView: View {
         .listStyle(PlainListStyle())
         .scrollDismissesKeyboard(.interactively)
         .scrollIndicators(.hidden)
+        .refreshable {
+            try? model.refresh()
+        }
     }
 
     private func loadMoreResults() {
