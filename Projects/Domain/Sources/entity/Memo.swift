@@ -31,7 +31,7 @@ public struct Memo: Equatable, Codable {
     }
 
     public init(
-        id: String = UUID().uuidString,
+        id: String = UUID().uuidString + "\(Date().timeIntervalSinceNow)",
         title: String,
         contents: String? = nil,
         due: Date? = nil,
