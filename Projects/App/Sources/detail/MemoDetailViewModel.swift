@@ -96,6 +96,9 @@ final class MemoDetailViewModel: ObservableObject {
     func save() async throws {
         guard canSave else { return }
 
+        timer?.invalidate()
+        timer = nil
+
         let updatedMemo = Memo(
             id: memo.id,
             title: title,
@@ -114,7 +117,6 @@ final class MemoDetailViewModel: ObservableObject {
 
         memo = updatedMemo
         isEditing = false
-
         userPreferenceRepository.setMemoDraft(.init(title: ""))
     }
 
