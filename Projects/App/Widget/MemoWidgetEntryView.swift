@@ -1,6 +1,6 @@
-import SwiftUI
-import MacmoDomain
 import MacmoData
+import MacmoDomain
+import SwiftUI
 import WidgetKit
 
 struct MemoWidgetEntryView: View {
@@ -42,11 +42,8 @@ struct SmallWidgetView: View {
                                     .foregroundStyle(firstMemo.isOverDue ? .red : .orange)
                                     .font(.caption)
                             }
-                            Text(firstMemo.title)
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .lineLimit(2)
-                                .foregroundStyle(firstMemo.isUrgent ? .red : .primary)
+
+                            memoTitleText(memo: firstMemo)
                         }
 
                         Text(firstMemo.content)
@@ -64,6 +61,14 @@ struct SmallWidgetView: View {
             Spacer()
         }
         .padding()
+    }
+
+    private func memoTitleText(memo: MemoData) -> some View {
+        Text(memo.title)
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .lineLimit(2)
+            .foregroundStyle(memoForegroundColor(memo: memo))
     }
 }
 
@@ -103,15 +108,7 @@ struct MediumWidgetView: View {
                                         .font(.caption)
                                         .fontWeight(.medium)
                                         .lineLimit(1)
-                                        .foregroundStyle({
-                                            if memo.isOverDue {
-                                                return Color.red
-                                            } else if memo.isUrgent {
-                                                return .orange
-                                            } else {
-                                                return .primary
-                                            }
-                                        }())
+                                        .foregroundStyle(memoForegroundColor(memo: memo))
 
                                     if memo.isUrgent {
                                         Image(systemName: "exclamationmark.circle.fill")
@@ -135,6 +132,18 @@ struct MediumWidgetView: View {
             }
         }
         .padding()
+    }
+}
+
+private func memoForegroundColor(memo: MemoData) -> Color {
+    if memo.isCompleted {
+        return Color.primary
+    } else if memo.isOverDue {
+        return Color.red
+    } else if memo.isUrgent {
+        return Color.orange
+    } else {
+        return Color.primary
     }
 }
 
