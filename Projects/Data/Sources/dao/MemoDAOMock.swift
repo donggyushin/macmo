@@ -122,7 +122,7 @@ public class MemoDAOMock: MemoDAO {
     }
 
     public func addImage(_ memo: Memo, image: ImageAttachment) throws {
-        guard var existingMemo = memos[memo.id] else {
+        guard let existingMemo = memos[memo.id] else {
             throw AppError.notFound
         }
 
@@ -146,7 +146,7 @@ public class MemoDAOMock: MemoDAO {
     }
 
     public func deleteImage(memoId: String, imageId: String) throws {
-        guard var existingMemo = memos[memoId] else {
+        guard let existingMemo = memos[memoId] else {
             throw AppError.notFound
         }
 
@@ -176,8 +176,8 @@ public class MemoDAOMock: MemoDAO {
     }
 }
 
-extension MemoDAOMock {
-    public static func withSampleData() -> MemoDAOMock {
+public extension MemoDAOMock {
+    static func withSampleData() -> MemoDAOMock {
         let now = Date()
         let calendar = Calendar.current
 
@@ -275,7 +275,7 @@ extension MemoDAOMock {
         return MemoDAOMock(initialMemos: sampleMemos)
     }
 
-    public func getMemoStatics() -> MemoStatistics {
+    func getMemoStatics() -> MemoStatistics {
         let totalCount = memos.count
         let uncompletedCount = memos.count(where: { (_: String, value: Memo) in
             value.done == false
