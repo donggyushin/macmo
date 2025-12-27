@@ -1,6 +1,6 @@
-import SwiftUI
-import MacmoDomain
 import MacmoData
+import MacmoDomain
+import SwiftUI
 
 @main
 struct MacmoApp: App {
@@ -18,9 +18,9 @@ struct MacmoApp: App {
                 .onOpenURL { url in
                     iOSURLSchemeManager.execute(url, navigationManager)
                 }
-                .task {
-                    navigationManager.configIntitialSetup()
-                }
+            // .task {
+            //     navigationManager.configIntitialSetup()
+            // }
         }
         .commands {
             CommandMenu("Memo") {
