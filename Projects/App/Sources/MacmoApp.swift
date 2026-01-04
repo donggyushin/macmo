@@ -1,6 +1,7 @@
 import MacmoData
 import MacmoDomain
 import SwiftUI
+import WidgetKit
 
 @main
 struct MacmoApp: App {
@@ -17,6 +18,9 @@ struct MacmoApp: App {
                 .environmentObject(navigationManager)
                 .onOpenURL { url in
                     iOSURLSchemeManager.execute(url, navigationManager)
+                }
+                .task {
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
             // .task {
             //     navigationManager.configIntitialSetup()
