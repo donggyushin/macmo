@@ -38,7 +38,7 @@ public final class MemoUseCase {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    public func update(_ memo: Memo) async throws {
+    public func update(_ memo: Memo, now: Date = Date()) async throws {
         let oldMemo = try? memoRepository.findById(memo.id)
         var memo = memo
 
@@ -54,6 +54,8 @@ public final class MemoUseCase {
                 memo.eventIdentifier = identifier
             }
         }
+
+        try? await registerLocalPushNotificationIfNeeded(memo: memo, now: now)
 
         try memoRepository.update(memo)
         WidgetCenter.shared.reloadAllTimelines()
