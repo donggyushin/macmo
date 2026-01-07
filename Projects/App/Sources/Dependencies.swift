@@ -104,6 +104,13 @@ extension Container {
         }
         .singleton
     }
+
+    var pushNotificationService: Factory<PushNotificationService> {
+        self {
+            PushNotificationServiceImpl()
+        }
+        .singleton
+    }
 }
 
 // MARK: - Register Domain layer instances
@@ -111,7 +118,11 @@ extension Container {
 extension Container {
     var memoUseCase: Factory<MemoUseCase> {
         self {
-            MemoUseCase(memoRepository: self.memoRepository(), calendarService: self.calendarService())
+            MemoUseCase(
+                memoRepository: self.memoRepository(),
+                calendarService: self.calendarService(),
+                pushNotificationService: self.pushNotificationService()
+            )
         }
         .singleton
     }

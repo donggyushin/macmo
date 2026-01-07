@@ -11,10 +11,16 @@ import WidgetKit
 public final class MemoUseCase {
     let memoRepository: MemoRepository
     let calendarService: CalendarService
+    let pushNotificationService: PushNotificationService
 
-    public init(memoRepository: MemoRepository, calendarService: CalendarService) {
+    public init(
+        memoRepository: MemoRepository,
+        calendarService: CalendarService,
+        pushNotificationService: PushNotificationService
+    ) {
         self.memoRepository = memoRepository
         self.calendarService = calendarService
+        self.pushNotificationService = pushNotificationService
     }
 
     public func save(_ memo: Memo) async throws {
