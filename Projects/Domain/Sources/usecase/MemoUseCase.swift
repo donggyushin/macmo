@@ -70,8 +70,8 @@ public final class MemoUseCase {
 
     private func registerLocalPushNotificationIfNeeded(memo: Memo, now _: Date) async throws {
         let pushAuthorizedStatus = try await pushNotificationService.requestAuthorization()
-        try await pushNotificationService.removeNotification(identifier: memo.id)
         if pushAuthorizedStatus {
+            try await pushNotificationService.removeNotification(identifier: memo.id)
             guard let due = memo.due else { return }
             _ = try await pushNotificationService.scheduleNotification(
                 identifier: memo.id,
