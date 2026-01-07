@@ -65,7 +65,9 @@ public final class MemoUseCase {
             // 알림은 due보다 2시간 전에 발생
             let notificationDate = due.addingTimeInterval(-7200)
 
-            let userInfo: [AnyHashable: Any] = [:]
+            let userInfo: [AnyHashable: Any] = [
+                "urlScheme": "macmo://memo/\(memo.id)"
+            ]
 
             _ = try await pushNotificationService.scheduleNotification(
                 identifier: memo.id,
