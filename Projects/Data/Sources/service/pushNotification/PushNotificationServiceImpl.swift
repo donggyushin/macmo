@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MacmoDomain
 import UserNotifications
 
 public final class PushNotificationServiceImpl: PushNotificationService {
