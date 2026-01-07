@@ -2,14 +2,42 @@ import MacmoData
 import MacmoDomain
 import SwiftUI
 import WidgetKit
+import UserNotifications
+
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
 
 @main
 struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
     @Environment(\.openWindow) private var openWindow
 
+    private let notificationDelegate = NotificationDelegate()
+
     init() {
         try? migrateToAppGroup()
+        setupNotificationDelegate()
+    }
+
+    private func setupNotificationDelegate() {
+        UNUserNotificationCenter.current().delegate = notificationDelegate
+
+        notificationDelegate.onNotificationTapped = { [weak notificationDelegate] urlScheme in
+            // URL scheme을 URL로 변환하여 열기
+            guard let url = URL(string: urlScheme) else { return }
+
+            // MacOS에서는 NSWorkspace, iOS에서는 UIApplication 사용
+            #if os(iOS)
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+            #elseif os(macOS)
+            NSWorkspace.shared.open(url)
+            #endif
+        }
     }
 
     var body: some Scene {
