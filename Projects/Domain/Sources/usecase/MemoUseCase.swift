@@ -52,8 +52,7 @@ public final class MemoUseCase {
 
     private func registerLocalPushNotificationIfNeeded(
         memo: Memo,
-        now: Date,
-        userInfo: [AnyHashable: Any] = [:]
+        now: Date
     ) async throws {
         let pushAuthorizedStatus = try await pushNotificationService.requestAuthorization()
         if pushAuthorizedStatus {
@@ -65,6 +64,8 @@ public final class MemoUseCase {
 
             // 알림은 due보다 2시간 전에 발생
             let notificationDate = due.addingTimeInterval(-7200)
+
+            let userInfo: [AnyHashable: Any] = [:]
 
             _ = try await pushNotificationService.scheduleNotification(
                 identifier: memo.id,
