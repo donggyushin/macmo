@@ -24,14 +24,7 @@ public final class MemoUseCase {
     }
 
     public func save(_ memo: Memo, now: Date = Date()) async throws {
-        var memo = memo
-        // Only save to calendar if memo has a due date and not completed
-        if memo.due != nil, !memo.done {
-            if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
-                memo.eventIdentifier = identifier
-            }
-        }
-
+        let memo = try await registerCalendarIfNeeded(memo: memo, oldMemo: nil)
         try? await registerLocalPushNotificationIfNeeded(memo: memo, now: now)
 
         try memoRepository.save(memo)
@@ -40,23 +33,8 @@ public final class MemoUseCase {
 
     public func update(_ memo: Memo, now: Date = Date()) async throws {
         let oldMemo = try? memoRepository.findById(memo.id)
-        var memo = memo
-
-        // Remove old calendar event if it exists
-        if let oldIdentifier = oldMemo?.eventIdentifier {
-            try? await calendarService.removeFromCalendar(eventIdentifier: oldIdentifier)
-            memo.eventIdentifier = nil
-        }
-
-        // Create new calendar event only if memo has due date and not completed
-        if memo.due != nil, !memo.done {
-            if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
-                memo.eventIdentifier = identifier
-            }
-        }
-
+        let memo = try await registerCalendarIfNeeded(memo: memo, oldMemo: oldMemo)
         try? await registerLocalPushNotificationIfNeeded(memo: memo, now: now)
-
         try memoRepository.update(memo)
         WidgetCenter.shared.reloadAllTimelines()
     }
@@ -83,5 +61,24 @@ public final class MemoUseCase {
                 dueDate: due
             )
         }
+    }
+
+    private func registerCalendarIfNeeded(memo: Memo, oldMemo: Memo?) async throws -> Memo {
+        var memo = memo
+
+        // Remove old calendar event if it exists
+        if let oldIdentifier = oldMemo?.eventIdentifier {
+            try? await calendarService.removeFromCalendar(eventIdentifier: oldIdentifier)
+            memo.eventIdentifier = nil
+        }
+
+        // Create new calendar event only if memo has due date and not completed
+        if memo.due != nil, !memo.done {
+            if let identifier = try? await calendarService.saveToCalendar(memo: memo) {
+                memo.eventIdentifier = identifier
+            }
+        }
+
+        return memo
     }
 }
