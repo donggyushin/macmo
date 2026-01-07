@@ -8,7 +8,7 @@
 import Foundation
 import UserNotifications
 
-public final class PushNotificationServiceImpl {
+public final class PushNotificationServiceImpl: PushNotificationService {
     private let notificationCenter = UNUserNotificationCenter.current()
 
     public init() {}
