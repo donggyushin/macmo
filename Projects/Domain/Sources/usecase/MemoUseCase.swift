@@ -50,7 +50,11 @@ public final class MemoUseCase {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    private func registerLocalPushNotificationIfNeeded(memo: Memo, now: Date) async throws {
+    private func registerLocalPushNotificationIfNeeded(
+        memo: Memo,
+        now: Date,
+        userInfo: [AnyHashable: Any] = [:]
+    ) async throws {
         let pushAuthorizedStatus = try await pushNotificationService.requestAuthorization()
         if pushAuthorizedStatus {
             try await pushNotificationService.removeNotification(identifier: memo.id)
@@ -67,7 +71,8 @@ public final class MemoUseCase {
                 title: memo.title,
                 body: memo.contents ?? "",
                 subtitle: nil,
-                dueDate: notificationDate
+                dueDate: notificationDate,
+                userInfo: userInfo
             )
         }
     }

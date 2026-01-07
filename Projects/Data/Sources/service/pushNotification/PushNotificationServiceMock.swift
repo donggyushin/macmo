@@ -25,7 +25,8 @@ public final class PushNotificationServiceMock: PushNotificationService {
         title _: String,
         body _: String,
         subtitle _: String?,
-        dueDate _: Date
+        dueDate _: Date,
+        userInfo _: [AnyHashable: Any] = [:]
     ) async throws -> String? { nil }
 
     /// Remove a scheduled notification
