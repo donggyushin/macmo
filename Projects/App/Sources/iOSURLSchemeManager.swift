@@ -4,22 +4,37 @@ import MacmoDomain
 final class iOSURLSchemeManager {
     private init() {}
 
-    /// TEST NEEDED
-    /// macmo://setting
-    /// macmo://search
-    /// macmo://memo/7379ACF6-D4CB-4AEB-A43A-62D72D035CF8
+    /// Handles URL scheme navigation
+    /// - Supported URLs:
+    ///   - macmo://setting
+    ///   - macmo://search
+    ///   - macmo://memo/7379ACF6-D4CB-4AEB-A43A-62D72D035CF8
     @MainActor
     static func execute(_ url: URL, _ navigationManager: NavigationManager) {
-        if url.absoluteString == "macmo://setting" {
+        guard let host = url.host() else { return }
+
+        switch host {
+        case "setting":
             navigationManager.push(.setting)
-        } else if url.absoluteString == "macmo://search" {
+
+        case "search":
             navigationManager.push(.search)
-        } else {
-            if url.host() == "memo" {
-                let pathString = url.path
-                let memoId = pathString.isEmpty ? nil : String(pathString.dropFirst())
-                navigationManager.push(.detail(memoId))
-            }
+
+        case "memo":
+            let memoId = extractMemoId(from: url)
+            navigationManager.push(.detail(memoId))
+
+        default:
+            break
         }
+    }
+
+    private static func extractMemoId(from url: URL) -> String? {
+        let pathString = url.path
+        guard !pathString.isEmpty else { return nil }
+
+        // Remove leading slash
+        let memoId = String(pathString.dropFirst())
+        return memoId.isEmpty ? nil : memoId
     }
 }
