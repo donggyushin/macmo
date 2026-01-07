@@ -109,6 +109,12 @@ extension Container {
         self {
             PushNotificationServiceImpl()
         }
+        .onPreview {
+            PushNotificationServiceMock()
+        }
+        .onTest {
+            PushNotificationServiceMock()
+        }
         .singleton
     }
 }
