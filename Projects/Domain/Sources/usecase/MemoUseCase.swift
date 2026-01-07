@@ -50,17 +50,24 @@ public final class MemoUseCase {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    private func registerLocalPushNotificationIfNeeded(memo: Memo, now _: Date) async throws {
+    private func registerLocalPushNotificationIfNeeded(memo: Memo, now: Date) async throws {
         let pushAuthorizedStatus = try await pushNotificationService.requestAuthorization()
         if pushAuthorizedStatus {
             try await pushNotificationService.removeNotification(identifier: memo.id)
             guard let due = memo.due else { return }
+
+            // due가 now보다 2시간 이상 이후인지 확인
+            guard due.timeIntervalSince(now) >= 7200 else { return } // 7200 seconds = 2 hours
+
+            // 알림은 due보다 2시간 전에 발생
+            let notificationDate = due.addingTimeInterval(-7200)
+
             _ = try await pushNotificationService.scheduleNotification(
                 identifier: memo.id,
                 title: memo.title,
                 body: memo.contents ?? "",
                 subtitle: nil,
-                dueDate: due
+                dueDate: notificationDate
             )
         }
     }
