@@ -23,7 +23,7 @@ public final class MemoUseCase {
         self.pushNotificationService = pushNotificationService
     }
 
-    public func save(_ memo: Memo) async throws {
+    public func save(_ memo: Memo, now: Date = Date()) async throws {
         var memo = memo
         // Only save to calendar if memo has a due date and not completed
         if memo.due != nil, !memo.done {
@@ -31,6 +31,8 @@ public final class MemoUseCase {
                 memo.eventIdentifier = identifier
             }
         }
+
+        try? await registerLocalPushNotificationIfNeeded(memo: memo, now: now)
 
         try memoRepository.save(memo)
         WidgetCenter.shared.reloadAllTimelines()
@@ -64,5 +66,20 @@ public final class MemoUseCase {
 
         try memoRepository.delete(id)
         WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func registerLocalPushNotificationIfNeeded(memo: Memo, now _: Date) async throws {
+        let pushAuthorizedStatus = try await pushNotificationService.requestAuthorization()
+        try await pushNotificationService.removeNotification(identifier: memo.id)
+        if pushAuthorizedStatus {
+            guard let due = memo.due else { return }
+            _ = try await pushNotificationService.scheduleNotification(
+                identifier: memo.id,
+                title: memo.title,
+                body: memo.contents ?? "",
+                subtitle: nil,
+                dueDate: due
+            )
+        }
     }
 }
