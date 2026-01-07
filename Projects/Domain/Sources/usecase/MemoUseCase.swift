@@ -44,6 +44,8 @@ public final class MemoUseCase {
             try? await calendarService.removeFromCalendar(eventIdentifier: identifier)
         }
 
+        try? await pushNotificationService.removeNotification(identifier: id)
+
         try memoRepository.delete(id)
         WidgetCenter.shared.reloadAllTimelines()
     }
