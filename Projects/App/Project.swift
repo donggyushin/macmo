@@ -13,8 +13,8 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.13.1",
-            "CURRENT_PROJECT_VERSION": "20",
+            "MARKETING_VERSION": "1.14.0",
+            "CURRENT_PROJECT_VERSION": "21",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
             "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
