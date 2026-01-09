@@ -16,7 +16,7 @@ struct CalendarView: View {
     var body: some View {
         VStack(spacing: 16) {
             // 년월 헤더
-            Text("\(String(model.year))년 \(String(model.month))월")
+            Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top)
@@ -35,7 +35,7 @@ struct CalendarView: View {
 
                 // 날짜 그리드
                 LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(Array(model.gridCells.enumerated()), id: \.offset) { _, cellData in
+                    ForEach(Array(model.calendarUtility.gridCells.enumerated()), id: \.offset) { _, cellData in
                         if let day = cellData {
                             // 날짜 셀
                             VStack(spacing: 4) {
