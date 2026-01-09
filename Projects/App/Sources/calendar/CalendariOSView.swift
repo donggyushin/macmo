@@ -11,7 +11,7 @@ struct CalendariOSView: View {
     @StateObject var model: CalendarViewModel
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
-    private let weekdays = ["일", "월", "화", "수", "목", "금", "토"]
+    private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
     var body: some View {
         VStack(spacing: 16) {
