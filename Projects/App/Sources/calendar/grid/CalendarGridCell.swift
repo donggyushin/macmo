@@ -8,16 +8,24 @@
 import SwiftUI
 
 struct CalendarGridCell: View {
-    let date: Date
     let today: Date
+    let calendarUtility: CalendarUtility
+
+    @State private var gridCells: [Int?] = []
 
     init(date: Date, today: Date = Date()) {
-        self.date = date
         self.today = today
+        self.calendarUtility = .init(date: date)
     }
 
     var body: some View {
-        Text("CalendarGridCell")
+        VStack {
+            Text("\(String(calendarUtility.month))월")
+            // 아주 작은 calendar 모양 grid cells
+        }
+        .onAppear {
+            gridCells = calendarUtility.gridCells
+        }
     }
 }
 
