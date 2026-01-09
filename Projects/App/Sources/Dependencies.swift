@@ -84,6 +84,13 @@ extension Container {
         .singleton
     }
 
+    var calendarRepository: Factory<CalendarRepository> {
+        self {
+            CalendarRepositoryImpl(dao: self.calendarDAO())
+        }
+        .singleton
+    }
+
     var userPreferenceRepository: Factory<UserPreferenceRepository> {
         self {
             UserPreferenceRepositoryImpl()
