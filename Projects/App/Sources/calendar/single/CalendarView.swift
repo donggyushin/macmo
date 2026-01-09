@@ -35,7 +35,7 @@ struct CalendarView: View {
 
                 // 날짜 그리드
                 LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(Array(model.calendarUtility.gridCells.enumerated()), id: \.offset) { _, cellData in
+                    ForEach(Array(model.gridCells.enumerated()), id: \.offset) { _, cellData in
                         if let day = cellData {
                             // 날짜 셀
                             VStack(spacing: 4) {
