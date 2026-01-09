@@ -75,11 +75,6 @@ public final class CalendarViewModel: ObservableObject {
         return cells
     }
 
-    /// 특정 날짜에 CalendarDay 이벤트가 있는지 확인
-    func hasEvent(on day: Int) -> Bool {
-        calendarDays.contains { $0.day == day }
-    }
-
     /// 특정 날짜의 이벤트 개수 반환
     func eventCount(on day: Int) -> Int {
         calendarDays.filter { $0.day == day }.count
