@@ -1,8 +1,8 @@
 import MacmoData
 import MacmoDomain
 import SwiftUI
-import WidgetKit
 import UserNotifications
+import WidgetKit
 
 #if os(iOS)
 import UIKit
@@ -25,7 +25,7 @@ struct MacmoApp: App {
     private func setupNotificationDelegate() {
         UNUserNotificationCenter.current().delegate = notificationDelegate
 
-        notificationDelegate.onNotificationTapped = { [weak notificationDelegate] urlScheme in
+        notificationDelegate.onNotificationTapped = { urlScheme in
             // URL scheme을 URL로 변환하여 열기
             guard let url = URL(string: urlScheme) else { return }
 
