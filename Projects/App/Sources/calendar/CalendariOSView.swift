@@ -16,7 +16,7 @@ struct CalendariOSView: View {
     var body: some View {
         VStack(spacing: 16) {
             // 년월 헤더
-            Text("\(model.year)년 \(model.month)월")
+            Text("\(String(model.year))년 \(String(model.month))월")
                 .font(.title2)
                 .fontWeight(.bold)
                 .padding(.top)
