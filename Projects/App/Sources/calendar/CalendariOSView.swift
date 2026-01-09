@@ -12,6 +12,9 @@ struct CalendariOSView: View {
 
     var body: some View {
         Text("CalendariOSView")
+            .onAppear {
+                try? model.fetchData()
+            }
     }
 }
 
