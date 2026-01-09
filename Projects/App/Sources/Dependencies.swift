@@ -52,6 +52,18 @@ extension Container {
         }
     }
 
+    private var calendarDAO: Factory<CalendarDAO> {
+        self {
+            CalendarDAOImpl(modelContext: self.modelContext())
+        }
+        .onPreview {
+            CalendarDAOMock()
+        }
+        .onTest {
+            CalendarDAOMock()
+        }
+    }
+
     private var memoDAO: Factory<MemoDAO> {
         self {
             MemoDAOImpl(modelContext: self.modelContext())
