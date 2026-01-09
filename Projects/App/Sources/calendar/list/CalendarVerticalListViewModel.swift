@@ -11,16 +11,46 @@ import Foundation
 final class CalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
 
+    private let monthsToLoad = 6 // 한 번에 로드할 개월 수
+
     init(dates: [Date] = []) {
         self.dates = dates
     }
 
-    @MainActor func fetchNextDates(date _: Date?) {
-        // date 를 인자로 받으면 해당 date 로부터 1달, 2달, 3달, 4달,..... 미래의 date 들을 구해서 self.dates 에 넣는다. 만약 date 가 nil 이라면 Date()
-        // 값으로 한다
+    @MainActor func fetchNextDates(date: Date?) {
+        let baseDate = date ?? Date()
+        let calendar = Calendar.current
+
+        var newDates: [Date] = []
+
+        // baseDate로부터 1개월, 2개월, 3개월... 미래 날짜 생성
+        for i in 1...monthsToLoad {
+            if let futureDate = calendar.date(byAdding: .month, value: i, to: baseDate) {
+                newDates.append(futureDate)
+            }
+        }
+
+        // 기존 dates에 추가 (뒤에 append)
+        dates.append(contentsOf: newDates)
     }
 
-    @MainActor func fetchPrevDates(date _: Date?) {
-        // fetchNextDates 와 비슷하게 동작하는데 이제 과거의 date 값들을 구하는 함수
+    @MainActor func fetchPrevDates(date: Date?) {
+        let baseDate = date ?? Date()
+        let calendar = Calendar.current
+
+        var newDates: [Date] = []
+
+        // baseDate로부터 1개월, 2개월, 3개월... 과거 날짜 생성
+        for i in 1...monthsToLoad {
+            if let pastDate = calendar.date(byAdding: .month, value: -i, to: baseDate) {
+                newDates.append(pastDate)
+            }
+        }
+
+        // 최근 날짜가 앞에 오도록 역순으로 정렬
+        newDates.reverse()
+
+        // 기존 dates의 앞에 추가 (insert)
+        dates.insert(contentsOf: newDates, at: 0)
     }
 }
