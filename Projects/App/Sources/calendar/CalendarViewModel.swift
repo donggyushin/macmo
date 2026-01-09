@@ -29,6 +29,56 @@ public final class CalendarViewModel: ObservableObject {
         calendarDays = try calendarRepository.find(year: year, month: month)
     }
 
+    // MARK: - Calendar Grid Helpers
+
+    /// 해당 월의 총 일수
+    var daysInMonth: Int {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        guard let date = calendar.date(from: components),
+              let range = calendar.range(of: .day, in: .month, for: date) else {
+            return 0
+        }
+        return range.count
+    }
+
+    /// 해당 월 1일의 요일 (1=일요일, 2=월요일, ..., 7=토요일)
+    var firstWeekday: Int {
+        let calendar = Calendar.current
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = 1
+        guard let firstDay = calendar.date(from: components) else {
+            return 1
+        }
+        return calendar.component(.weekday, from: firstDay)
+    }
+
+    /// 그리드에 표시할 셀 데이터 (nil = 빈 셀, Int = 날짜)
+    var gridCells: [Int?] {
+        var cells: [Int?] = []
+
+        // 월의 첫날 이전 빈 셀 추가
+        for _ in 1..<firstWeekday {
+            cells.append(nil)
+        }
+
+        // 실제 날짜 셀 추가
+        for day in 1...daysInMonth {
+            cells.append(day)
+        }
+
+        return cells
+    }
+
+    /// 특정 날짜에 CalendarDay 이벤트가 있는지 확인
+    func hasEvent(on day: Int) -> Bool {
+        calendarDays.contains { $0.day == day }
+    }
+
     private func getYearAndMonth(from date: Date) -> (Int, Int) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: date)
