@@ -23,7 +23,8 @@ public protocol PushNotificationService {
         title: String,
         body: String,
         subtitle: String?,
-        dueDate: Date
+        dueDate: Date,
+        userInfo: [AnyHashable: Any]
     ) async throws -> String?
 
     /// Remove a scheduled notification

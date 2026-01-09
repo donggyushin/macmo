@@ -38,7 +38,8 @@ public final class PushNotificationServiceImpl: PushNotificationService {
         title: String,
         body: String,
         subtitle: String? = nil,
-        dueDate: Date
+        dueDate: Date,
+        userInfo: [AnyHashable: Any] = [:]
     ) async throws -> String? {
         // Don't schedule for past dates
         guard dueDate > Date() else {
@@ -50,6 +51,7 @@ public final class PushNotificationServiceImpl: PushNotificationService {
         content.title = title
         content.body = body
         content.sound = .default
+        content.userInfo = userInfo
 
         if let subtitle = subtitle {
             content.subtitle = subtitle
