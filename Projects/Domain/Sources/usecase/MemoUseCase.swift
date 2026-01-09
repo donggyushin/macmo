@@ -60,10 +60,11 @@ public final class MemoUseCase {
             guard let due = memo.due else { return }
 
             // due가 now보다 2시간 이상 이후인지 확인
-            guard due.timeIntervalSince(now) >= 7200 else { return } // 7200 seconds = 2 hours
+            let oneHour: TimeInterval = 3600
+            guard due.timeIntervalSince(now) >= (3 * oneHour) else { return } // 7200 seconds = 2 hours
 
             // 알림은 due보다 2시간 전에 발생
-            let notificationDate = due.addingTimeInterval(-7200)
+            let notificationDate = due.addingTimeInterval(-2 * oneHour)
 
             let userInfo: [AnyHashable: Any] = [
                 "urlScheme": "macmo://memo/\(memo.id)"
