@@ -11,7 +11,11 @@ import MacmoDomain
 
 public final class CalendarViewModel: ObservableObject {
     private let date: Date
+
+    @Published var year: Int = 0
+    @Published var month: Int = 0
     @Published var calendarDays: [CalendarDay] = []
+
     @Injected(\.calendarRepository) private var calendarRepository
 
     public init(_ date: Date) {
@@ -20,6 +24,8 @@ public final class CalendarViewModel: ObservableObject {
 
     @MainActor func fetchData() throws {
         let (year, month) = getYearAndMonth(from: date)
+        self.year = year
+        self.month = month
         calendarDays = try calendarRepository.find(year: year, month: month)
     }
 
