@@ -19,12 +19,15 @@ final class CalendarVerticalListViewModel: ObservableObject {
 
     @MainActor func fetchNextDates(date: Date?) {
         let baseDate = date ?? Date()
+        if dates.isEmpty {
+            dates = [baseDate]
+        }
         let calendar = Calendar.current
 
         var newDates: [Date] = []
 
         // baseDate로부터 1개월, 2개월, 3개월... 미래 날짜 생성
-        for i in 1...monthsToLoad {
+        for i in 1 ... monthsToLoad {
             if let futureDate = calendar.date(byAdding: .month, value: i, to: baseDate) {
                 newDates.append(futureDate)
             }
@@ -36,12 +39,15 @@ final class CalendarVerticalListViewModel: ObservableObject {
 
     @MainActor func fetchPrevDates(date: Date?) {
         let baseDate = date ?? Date()
+        if dates.isEmpty {
+            dates = [baseDate]
+        }
         let calendar = Calendar.current
 
         var newDates: [Date] = []
 
         // baseDate로부터 1개월, 2개월, 3개월... 과거 날짜 생성
-        for i in 1...monthsToLoad {
+        for i in 1 ... monthsToLoad {
             if let pastDate = calendar.date(byAdding: .month, value: -i, to: baseDate) {
                 newDates.append(pastDate)
             }
