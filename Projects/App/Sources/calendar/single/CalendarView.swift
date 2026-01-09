@@ -24,7 +24,7 @@ struct CalendarView: View {
             VStack(spacing: 12) {
                 // 요일 헤더
                 LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(weekdays, id: \.self) { weekday in
+                    ForEach(Array(weekdays.enumerated()), id: \.offset) { _, weekday in
                         Text(weekday)
                             .font(.caption)
                             .fontWeight(.semibold)
@@ -50,7 +50,7 @@ struct CalendarView: View {
                                     HStack(spacing: 2) {
                                         if count <= 3 {
                                             // 점을 개수만큼 표시 (최대 3개)
-                                            ForEach(0..<count, id: \.self) { _ in
+                                            ForEach(0 ..< count, id: \.self) { _ in
                                                 Circle()
                                                     .fill(.blue)
                                                     .frame(width: 4, height: 4)
