@@ -65,8 +65,6 @@ struct CalendariOSView: View {
                 }
             }
             .padding(.horizontal)
-
-            Spacer()
         }
         .onAppear {
             try? model.fetchData()
