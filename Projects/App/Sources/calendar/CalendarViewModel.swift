@@ -38,7 +38,8 @@ public final class CalendarViewModel: ObservableObject {
         components.year = year
         components.month = month
         guard let date = calendar.date(from: components),
-              let range = calendar.range(of: .day, in: .month, for: date) else {
+              let range = calendar.range(of: .day, in: .month, for: date)
+        else {
             return 0
         }
         return range.count
@@ -62,12 +63,12 @@ public final class CalendarViewModel: ObservableObject {
         var cells: [Int?] = []
 
         // 월의 첫날 이전 빈 셀 추가
-        for _ in 1..<firstWeekday {
+        for _ in 1 ..< firstWeekday {
             cells.append(nil)
         }
 
         // 실제 날짜 셀 추가
-        for day in 1...daysInMonth {
+        for day in 1 ... daysInMonth {
             cells.append(day)
         }
 

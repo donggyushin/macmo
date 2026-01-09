@@ -57,10 +57,10 @@ extension Container {
             CalendarDAOImpl(modelContext: self.modelContext())
         }
         .onPreview {
-            CalendarDAOMock()
+            CalendarDAOMock.withSampleData()
         }
         .onTest {
-            CalendarDAOMock()
+            CalendarDAOMock.withSampleData()
         }
     }
 
