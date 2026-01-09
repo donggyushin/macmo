@@ -1,5 +1,5 @@
 //
-//  CalendariOSView.swift
+//  CalendarView.swift
 //  macmo
 //
 //  Created by ratel on 1/9/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CalendariOSView: View {
+struct CalendarView: View {
     @StateObject var model: CalendarViewModel
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
@@ -91,13 +91,13 @@ struct CalendariOSView: View {
     }
 }
 
-private struct CalendariOSViewPreview: View {
+private struct CalendarViewPreview: View {
     var body: some View {
-        CalendariOSView(model: .init(Date()))
+        CalendarView(model: .init(Date()))
     }
 }
 
 #Preview {
-    CalendariOSViewPreview()
+    CalendarViewPreview()
         .preferredColorScheme(.dark)
 }
