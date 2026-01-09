@@ -44,16 +44,35 @@ struct CalendariOSView: View {
                                     .frame(maxWidth: .infinity)
                                     .frame(height: 40)
 
-                                // 이벤트 점 표시 (데이터 있을 때)
-                                if model.hasEvent(on: day) {
-                                    Circle()
-                                        .fill(.blue)
-                                        .frame(width: 4, height: 4)
+                                // 이벤트 점 표시 (개수에 따라)
+                                let count = model.eventCount(on: day)
+                                if count > 0 {
+                                    HStack(spacing: 2) {
+                                        if count <= 3 {
+                                            // 점을 개수만큼 표시 (최대 3개)
+                                            ForEach(0..<count, id: \.self) { _ in
+                                                Circle()
+                                                    .fill(.blue)
+                                                    .frame(width: 4, height: 4)
+                                            }
+                                        } else {
+                                            // 점 2개 + "+숫자" 표시
+                                            Circle()
+                                                .fill(.blue)
+                                                .frame(width: 4, height: 4)
+                                            Circle()
+                                                .fill(.blue)
+                                                .frame(width: 4, height: 4)
+                                            Text("+\(count - 2)")
+                                                .font(.system(size: 8))
+                                                .foregroundStyle(.blue)
+                                        }
+                                    }
+                                    .frame(height: 8)
                                 } else {
-                                    // 정렬을 위한 투명한 원
-                                    Circle()
-                                        .fill(.clear)
-                                        .frame(width: 4, height: 4)
+                                    // 정렬을 위한 투명 공간
+                                    Color.clear
+                                        .frame(height: 8)
                                 }
                             }
                         } else {

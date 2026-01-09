@@ -80,6 +80,11 @@ public final class CalendarViewModel: ObservableObject {
         calendarDays.contains { $0.day == day }
     }
 
+    /// 특정 날짜의 이벤트 개수 반환
+    func eventCount(on day: Int) -> Int {
+        calendarDays.filter { $0.day == day }.count
+    }
+
     private func getYearAndMonth(from date: Date) -> (Int, Int) {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: date)
