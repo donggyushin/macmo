@@ -23,7 +23,7 @@ struct CalendarGridCell: View {
     var body: some View {
         VStack(spacing: 2) {
             // 월 헤더
-            Text("\(String(calendarUtility.month))월")
+            Text("\(String(calendarUtility.month))")
                 .font(.system(size: 12, weight: .semibold))
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 1)
