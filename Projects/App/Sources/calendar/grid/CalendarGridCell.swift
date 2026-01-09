@@ -14,7 +14,6 @@ struct CalendarGridCell: View {
     @State private var gridCells: [Int?] = []
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
-    private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
     init(date: Date, today: Date = Date()) {
         self.today = today
@@ -49,7 +48,6 @@ struct CalendarGridCell: View {
                     } else {
                         Color.clear
                             .frame(width: 14, height: 14)
-                            
                     }
                 }
             }
@@ -65,8 +63,8 @@ struct CalendarGridCell: View {
         let todayComponents = calendar.dateComponents([.year, .month, .day], from: today)
 
         return todayComponents.year == calendarUtility.year &&
-               todayComponents.month == calendarUtility.month &&
-               todayComponents.day == day
+            todayComponents.month == calendarUtility.month &&
+            todayComponents.day == day
     }
 }
 
