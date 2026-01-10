@@ -32,10 +32,6 @@ public struct ContentView: View {
                     case let .calendarVerticalList(date):
                         CalendarVerticalListView(model: .init(date: date))
                             .navigationTransition(.zoom(sourceID: date, in: namespace))
-                            .onAppear {
-                                print("appeared date is \(date)")
-                                print("namespace2 is \(namespace)")
-                            }
                     }
                 }
                 .scrollIndicators(.hidden)
