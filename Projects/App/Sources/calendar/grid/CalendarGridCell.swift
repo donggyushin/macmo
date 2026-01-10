@@ -53,6 +53,8 @@ struct CalendarGridCell: View {
                     }
                 }
             }
+
+            Spacer()
         }
         .padding(4)
         .onAppear {

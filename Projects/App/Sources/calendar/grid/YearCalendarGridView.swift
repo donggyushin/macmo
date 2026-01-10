@@ -11,7 +11,18 @@ struct YearCalendarGridView: View {
     @StateObject var model: YearCalendarGridViewModel
 
     var body: some View {
-        Text("YearCalendarGridView")
+        VStack(spacing: 12) {
+            Text("\(String(model.year))")
+                .font(.title)
+                .fontWeight(.bold)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
+                ForEach(model.monthDates, id: \.self) { date in
+                    CalendarGridCell(date: date, today: model.today)
+                }
+            }
+        }
+        .padding()
     }
 }
 
