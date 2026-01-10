@@ -11,6 +11,13 @@ import SwiftUI
 struct YearCalendarGridView: View {
     @StateObject var model: YearCalendarGridViewModel
 
+    var tapCalendar: ((Date) -> Void)?
+    func tapCalendar(_ action: ((Date) -> Void)?) -> Self {
+        var copy = self
+        copy.tapCalendar = action
+        return copy
+    }
+
     var body: some View {
         VStack(spacing: 26) {
             HStack {
@@ -22,7 +29,12 @@ struct YearCalendarGridView: View {
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
                 ForEach(model.monthDates, id: \.self) { date in
-                    CalendarGridCell(date: date, today: model.today)
+                    Button {
+                        tapCalendar?(date)
+                    } label: {
+                        CalendarGridCell(date: date, today: model.today)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         }
