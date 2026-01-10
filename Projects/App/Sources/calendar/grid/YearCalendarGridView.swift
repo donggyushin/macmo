@@ -9,7 +9,6 @@ import SwiftUI
 
 // This is for iOS
 struct YearCalendarGridView: View {
-    @EnvironmentObject private var navigationManager: NavigationManager
     @StateObject var model: YearCalendarGridViewModel
 
     var tapCalendar: ((Date) -> Void)?
@@ -31,8 +30,7 @@ struct YearCalendarGridView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
                 ForEach(model.monthDates, id: \.self) { date in
                     Button {
-                        navigationManager.push(.calendarVerticalList(date))
-                        // tapCalendar?(date)
+                        tapCalendar?(date)
                     } label: {
                         CalendarGridCell(date: date, today: model.today)
                     }

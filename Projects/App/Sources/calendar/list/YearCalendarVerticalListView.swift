@@ -26,7 +26,11 @@ struct YearCalendarVerticalListView: View {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
                         YearCalendarGridView(model: .init(date: date))
-                            .tapCalendar(tapCalendar)
+                            .tapCalendar { date in
+                                withAnimation {
+                                    navigationManager.push(.calendarVerticalList(date))
+                                }
+                            }
                             .id(date)
                     }
                 }
