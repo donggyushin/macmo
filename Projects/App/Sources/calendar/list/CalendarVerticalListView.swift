@@ -15,7 +15,7 @@ struct CalendarVerticalListView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
                         CalendarView(model: .init(date))
                             .id(date)
@@ -23,6 +23,7 @@ struct CalendarVerticalListView: View {
                 }
             }
             .onAppear {
+                guard model.dates.isEmpty || model.dates.count == 1 else { return }
                 model.fetchNextDates(date: model.dates.last)
                 model.fetchPrevDates(date: model.dates.first)
                 let totalCount = model.dates.count

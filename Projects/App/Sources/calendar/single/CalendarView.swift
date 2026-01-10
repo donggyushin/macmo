@@ -14,13 +14,17 @@ struct CalendarView: View {
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 26) {
             // 년월 헤더
-            Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top)
-
+            HStack {
+                Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading)
+                
+                Spacer()
+            }
+            
             VStack(spacing: 12) {
                 // 요일 헤더
                 LazyVGrid(columns: columns, spacing: 8) {
@@ -39,10 +43,21 @@ struct CalendarView: View {
                         if let day = cellData {
                             // 날짜 셀
                             VStack(spacing: 4) {
-                                Text("\(day)")
-                                    .font(.body)
-                                    .frame(maxWidth: .infinity)
-                                    .frame(height: 40)
+                                ZStack {
+                                    // 오늘인 경우 원형 배경
+                                    if isToday(day: day) {
+                                        Circle()
+                                            .fill(.blue)
+                                            .frame(width: 32, height: 32)
+                                    }
+
+                                    Text("\(day)")
+                                        .font(.body)
+                                        .fontWeight(isToday(day: day) ? .bold : .regular)
+                                        .foregroundStyle(isToday(day: day) ? .white : .primary)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 40)
 
                                 // 이벤트 점 표시 (개수에 따라)
                                 let count = model.eventCount(on: day)
@@ -88,6 +103,15 @@ struct CalendarView: View {
         .onAppear {
             try? model.fetchData()
         }
+    }
+
+    private func isToday(day: Int) -> Bool {
+        let calendar = Calendar.current
+        let todayComponents = calendar.dateComponents([.year, .month, .day], from: model.today)
+
+        return todayComponents.year == model.calendarUtility.year &&
+            todayComponents.month == model.calendarUtility.month &&
+            todayComponents.day == day
     }
 }
 

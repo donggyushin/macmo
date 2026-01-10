@@ -11,14 +11,16 @@ import MacmoDomain
 
 public final class CalendarViewModel: ObservableObject {
     let calendarUtility: CalendarUtility
+    let today: Date
 
     @Published var calendarDays: [CalendarDay] = []
     @Published var gridCells: [Int?] = []
 
     @Injected(\.calendarRepository) private var calendarRepository
 
-    public init(_ date: Date) {
+    public init(_ date: Date, today: Date = Date()) {
         self.calendarUtility = .init(date: date)
+        self.today = today
     }
 
     @MainActor func fetchData() throws {

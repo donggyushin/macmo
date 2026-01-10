@@ -1,22 +1,20 @@
 //
-//  CalendarVerticalListViewModel.swift
+//  YearCalendarVerticalListViewModel.swift
 //  macmo
 //
-//  Created by ratel on 1/9/26.
+//  Created by 신동규 on 1/10/26.
 //
 
 import Combine
 import Foundation
 
-final class CalendarVerticalListViewModel: ObservableObject {
+final class YearCalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
 
-    private let monthsToLoad = 6 // 한 번에 로드할 개월 수
+    private let yearsToLoad = 6 // 한 번에 로드할 연 수
 
-    init(date: Date? = nil) {
-        if let date {
-            self.dates = [date]
-        }
+    init(dates: [Date] = []) {
+        self.dates = dates
     }
 
     @MainActor func fetchNextDates(date: Date?) {
@@ -28,9 +26,9 @@ final class CalendarVerticalListViewModel: ObservableObject {
 
         var newDates: [Date] = []
 
-        // baseDate로부터 1개월, 2개월, 3개월... 미래 날짜 생성
-        for i in 1 ... monthsToLoad {
-            if let futureDate = calendar.date(byAdding: .month, value: i, to: baseDate) {
+        // baseDate로부터 1년, 2년, 3년... 미래 날짜 생성
+        for i in 1 ... yearsToLoad {
+            if let futureDate = calendar.date(byAdding: .year, value: i, to: baseDate) {
                 newDates.append(futureDate)
             }
         }
@@ -48,9 +46,9 @@ final class CalendarVerticalListViewModel: ObservableObject {
 
         var newDates: [Date] = []
 
-        // baseDate로부터 1개월, 2개월, 3개월... 과거 날짜 생성
-        for i in 1 ... monthsToLoad {
-            if let pastDate = calendar.date(byAdding: .month, value: -i, to: baseDate) {
+        // baseDate로부터 1년, 2년, 3년... 과거 날짜 생성
+        for i in 1 ... yearsToLoad {
+            if let pastDate = calendar.date(byAdding: .year, value: -i, to: baseDate) {
                 newDates.append(pastDate)
             }
         }

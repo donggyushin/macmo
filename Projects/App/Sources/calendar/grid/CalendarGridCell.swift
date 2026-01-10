@@ -11,8 +11,6 @@ struct CalendarGridCell: View {
     let today: Date
     let calendarUtility: CalendarUtility
 
-    @State private var gridCells: [Int?] = []
-
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
 
     init(date: Date, today: Date = Date()) {
@@ -32,7 +30,7 @@ struct CalendarGridCell: View {
 
             // 날짜 그리드
             LazyVGrid(columns: columns, spacing: 1) {
-                ForEach(Array(gridCells.enumerated()), id: \.offset) { _, cellData in
+                ForEach(Array(calendarUtility.gridCells.enumerated()), id: \.offset) { _, cellData in
                     if let day = cellData {
                         ZStack {
                             // 오늘인 경우 원형 배경
@@ -57,11 +55,6 @@ struct CalendarGridCell: View {
             Spacer()
         }
         .padding(4)
-        .onAppear {
-            if gridCells.isEmpty {
-                gridCells = calendarUtility.gridCells
-            }
-        }
     }
 
     private func isToday(day: Int) -> Bool {
