@@ -1,23 +1,24 @@
-import SwiftUI
-import MacmoDomain
 import MacmoData
+import MacmoDomain
+import SwiftUI
 
 public struct ContentView: View {
     public init() {}
-    
+
     @EnvironmentObject private var navigationManager: NavigationManager
     // note: Fancy detail point! Search query exists
     @StateObject var searchModelViewModel = SearchMemoViewModel()
-    
+
     public var body: some View {
         #if os(macOS)
         MemoListView()
         #else
         NavigationStack(path: $navigationManager.paths) {
-            iOSMemoListView()
+            // iOSMemoListView()
+            YearCalendarVerticalListView(model: .init())
                 .navigationDestination(for: Navigation.self) { navigation in
                     switch navigation {
-                    case .detail(let id):
+                    case let .detail(id):
                         MemoDetailView(model: .init(id: id))
                     case .setting:
                         SettingView(model: .init())
@@ -30,7 +31,6 @@ public struct ContentView: View {
         #endif
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
