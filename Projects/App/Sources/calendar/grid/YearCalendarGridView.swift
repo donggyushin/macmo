@@ -10,6 +10,12 @@ import SwiftUI
 // This is for iOS
 struct YearCalendarGridView: View {
     @StateObject var model: YearCalendarGridViewModel
+    let namespace: Namespace.ID?
+
+    init(model: YearCalendarGridViewModel, namespace: Namespace.ID? = nil) {
+        _model = .init(wrappedValue: model)
+        self.namespace = namespace
+    }
 
     var tapCalendar: ((Date) -> Void)?
     func tapCalendar(_ action: ((Date) -> Void)?) -> Self {
@@ -32,7 +38,12 @@ struct YearCalendarGridView: View {
                     Button {
                         tapCalendar?(date)
                     } label: {
-                        CalendarGridCell(date: date, today: model.today)
+                        if let namespace {
+                            CalendarGridCell(date: date, today: model.today)
+                                .matchedTransitionSource(id: date, in: namespace)
+                        } else {
+                            CalendarGridCell(date: date, today: model.today)
+                        }
                     }
                     .buttonStyle(.plain)
                 }

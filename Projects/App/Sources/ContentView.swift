@@ -15,7 +15,7 @@ public struct ContentView: View {
         MemoListView()
         #else
         NavigationStack(path: $navigationManager.paths) {
-            YearCalendarVerticalListView(model: .init())
+            YearCalendarVerticalListView(model: .init(), namespace: namespace)
                 .navigationDestination(for: Navigation.self) { navigation in
                     switch navigation {
                     case .list:
