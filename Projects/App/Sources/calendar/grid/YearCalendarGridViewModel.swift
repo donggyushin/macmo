@@ -10,6 +10,7 @@ import Foundation
 
 final class YearCalendarGridViewModel: ObservableObject {
     let date: Date
+    let today: Date
     var year: Int {
         Calendar.current.component(.year, from: date)
     }
@@ -26,7 +27,8 @@ final class YearCalendarGridViewModel: ObservableObject {
         }
     }
 
-    init(date: Date) {
+    init(date: Date, today: Date = Date()) {
         self.date = date
+        self.today = today
     }
 }
