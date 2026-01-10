@@ -25,6 +25,8 @@ public struct ContentView: View {
                         SettingView(model: .init())
                     case .search:
                         iOSSearchMemoView(model: searchModelViewModel)
+                    case .calendarVerticalList:
+                        CalendarVerticalListView(model: .init())
                     }
                 }
                 .scrollIndicators(.hidden)
