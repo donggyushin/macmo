@@ -24,6 +24,7 @@ struct YearCalendarVerticalListView: View {
             }
             .scrollIndicators(.never)
             .onAppear {
+                guard model.dates.isEmpty else { return }
                 model.fetchNextDates(date: model.dates.last)
                 model.fetchPrevDates(date: model.dates.first)
                 let totalCount = model.dates.count
