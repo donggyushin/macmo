@@ -12,12 +12,20 @@ struct YearCalendarVerticalListView: View {
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
 
+    var tapCalendar: ((Date) -> Void)?
+    func tapCalendar(_ action: ((Date) -> Void)?) -> Self {
+        var copy = self
+        copy.tapCalendar = action
+        return copy
+    }
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(model.dates, id: \.self) { date in
                         YearCalendarGridView(model: .init(date: date))
+                            .tapCalendar(tapCalendar)
                             .id(date)
                     }
                 }
