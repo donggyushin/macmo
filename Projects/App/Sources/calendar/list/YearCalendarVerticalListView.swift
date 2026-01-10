@@ -32,13 +32,16 @@ struct YearCalendarVerticalListView: View {
             }
             .scrollIndicators(.never)
             .onAppear {
-                guard model.dates.isEmpty else { return }
-                model.fetchNextDates(date: model.dates.last)
-                model.fetchPrevDates(date: model.dates.first)
-                let totalCount = model.dates.count
-                let targetIndex = totalCount / 2
-                let targetDate = model.dates[targetIndex]
-                scrollTo(targetDate)
+                Task {
+                    guard model.dates.isEmpty else { return }
+                    model.fetchNextDates(date: model.dates.last)
+                    model.fetchPrevDates(date: model.dates.first)
+                    let totalCount = model.dates.count
+                    let targetIndex = totalCount / 2
+                    let targetDate = model.dates[targetIndex]
+                    try await Task.sleep(for: .seconds(0.1))
+                    scrollTo(targetDate)
+                }
             }
             .onChange(of: scrollTarget) { _, newTarget in
                 if let target = newTarget {
