@@ -33,9 +33,7 @@ struct YearCalendarVerticalListView: View {
                     ForEach(model.dates, id: \.self) { date in
                         YearCalendarGridView(model: .init(date: date), namespace: namespace)
                             .tapCalendar { date in
-                                withAnimation {
-                                    navigationManager.push(.calendarVerticalList(date))
-                                }
+                                navigationManager.push(.calendarVerticalList(date))
                             }
                             .id(date)
                     }
