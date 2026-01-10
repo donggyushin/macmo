@@ -14,13 +14,17 @@ struct CalendarView: View {
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 26) {
             // 년월 헤더
-            Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
-                .font(.title2)
-                .fontWeight(.bold)
-                .padding(.top)
-
+            HStack {
+                Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.leading)
+                
+                Spacer()
+            }
+            
             VStack(spacing: 12) {
                 // 요일 헤더
                 LazyVGrid(columns: columns, spacing: 8) {
