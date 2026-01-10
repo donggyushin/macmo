@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// This is for iOS
 struct YearCalendarGridView: View {
     @StateObject var model: YearCalendarGridViewModel
 
