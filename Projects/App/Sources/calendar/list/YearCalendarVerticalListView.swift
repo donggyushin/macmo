@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct YearCalendarVerticalListView: View {
+    @EnvironmentObject private var navigationManager: NavigationManager
     @StateObject var model: YearCalendarVerticalListViewModel
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
@@ -69,8 +70,10 @@ struct YearCalendarVerticalListView: View {
 }
 
 private struct YearCalendarVerticalListViewPreview: View {
+    @StateObject var navigationManager = NavigationManager()
     var body: some View {
         YearCalendarVerticalListView(model: .init())
+            .environmentObject(navigationManager)
     }
 }
 

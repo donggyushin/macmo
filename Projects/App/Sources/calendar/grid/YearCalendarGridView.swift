@@ -9,6 +9,7 @@ import SwiftUI
 
 // This is for iOS
 struct YearCalendarGridView: View {
+    @EnvironmentObject private var navigationManager: NavigationManager
     @StateObject var model: YearCalendarGridViewModel
 
     var tapCalendar: ((Date) -> Void)?
