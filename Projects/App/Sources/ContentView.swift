@@ -8,6 +8,7 @@ public struct ContentView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     // note: Fancy detail point! Search query exists
     @StateObject var searchModelViewModel = SearchMemoViewModel()
+    @Namespace var namespace
 
     public var body: some View {
         #if os(macOS)
@@ -27,6 +28,7 @@ public struct ContentView: View {
                         iOSSearchMemoView(model: searchModelViewModel)
                     case let .calendarVerticalList(date):
                         CalendarVerticalListView(model: .init(date: date))
+                            .navigationTransition(.zoom(sourceID: date, in: namespace))
                     }
                 }
                 .scrollIndicators(.hidden)
