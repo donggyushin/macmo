@@ -13,8 +13,10 @@ final class CalendarVerticalListViewModel: ObservableObject {
 
     private let monthsToLoad = 6 // 한 번에 로드할 개월 수
 
-    init(date: Date = Date()) {
-        self.dates = [date]
+    init(date: Date? = nil) {
+        if let date {
+            self.dates = [date]
+        }
     }
 
     @MainActor func fetchNextDates(date: Date?) {

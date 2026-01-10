@@ -13,7 +13,7 @@ enum Navigation: Hashable {
     case detail(String?)
     case setting
     case search
-    case calendarVerticalList
+    case calendarVerticalList(Date?)
 
     init(_ domain: NavigationDomain) {
         switch domain {
@@ -25,8 +25,8 @@ enum Navigation: Hashable {
             self = .search
         case .list:
             self = .list
-        case .calendarVerticalList:
-            self = .calendarVerticalList
+        case let .calendarVerticalList(date):
+            self = .calendarVerticalList(date)
         }
     }
 
@@ -40,8 +40,8 @@ enum Navigation: Hashable {
             .setting
         case .search:
             .search
-        case .calendarVerticalList:
-            .calendarVerticalList
+        case let .calendarVerticalList(date):
+            .calendarVerticalList(date)
         }
     }
 }
