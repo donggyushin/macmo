@@ -14,10 +14,11 @@ public struct ContentView: View {
         MemoListView()
         #else
         NavigationStack(path: $navigationManager.paths) {
-            // iOSMemoListView()
             YearCalendarVerticalListView(model: .init())
                 .navigationDestination(for: Navigation.self) { navigation in
                     switch navigation {
+                    case .list:
+                        iOSMemoListView()
                     case let .detail(id):
                         MemoDetailView(model: .init(id: id))
                     case .setting:

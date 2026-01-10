@@ -9,6 +9,7 @@ import Foundation
 import MacmoDomain
 
 enum Navigation: Hashable {
+    case list
     case detail(String?)
     case setting
     case search
@@ -21,11 +22,15 @@ enum Navigation: Hashable {
             self = .setting
         case .search:
             self = .search
+        case .list:
+            self = .list
         }
     }
 
     var domain: NavigationDomain {
         switch self {
+        case .list:
+            .list
         case let .detail(id):
             .detail(id)
         case .setting:
