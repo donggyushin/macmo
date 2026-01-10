@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct YearCalendarVerticalListView: View {
-    @EnvironmentObject private var navigationManager: NavigationManager
     @StateObject var model: YearCalendarVerticalListViewModel
     let namespace: Namespace.ID?
     @State private var scrollTarget: Date?
@@ -32,9 +31,7 @@ struct YearCalendarVerticalListView: View {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
                         YearCalendarGridView(model: .init(date: date), namespace: namespace)
-                            .tapCalendar { date in
-                                navigationManager.push(.calendarVerticalList(date))
-                            }
+                            .tapCalendar(tapCalendar)
                             .id(date)
                     }
                 }
