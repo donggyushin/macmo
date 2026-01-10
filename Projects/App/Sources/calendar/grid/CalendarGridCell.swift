@@ -54,7 +54,9 @@ struct CalendarGridCell: View {
         }
         .padding(4)
         .onAppear {
-            gridCells = calendarUtility.gridCells
+            if gridCells.isEmpty {
+                gridCells = calendarUtility.gridCells
+            }
         }
     }
 
