@@ -26,10 +26,26 @@ struct SpecificDayMemoListView: View {
         .task {
             try? model.fetchMemos()
         }
+        .presentationDetents([.medium, .large])
+    }
+}
+
+private struct SpecificDayMemoListViewPreview: View {
+    @State private var present = false
+    var body: some View {
+        Button("Toggle") {
+            present.toggle()
+        }
+        .onAppear {
+            present = true
+        }
+        .sheet(isPresented: $present) {
+            SpecificDayMemoListView(model: .init(date: Date()), present: $present)
+        }
     }
 }
 
 #Preview {
-    SpecificDayMemoListView(model: .init(date: Date()), present: .constant(true))
+    SpecificDayMemoListViewPreview()
         .preferredColorScheme(.dark)
 }
