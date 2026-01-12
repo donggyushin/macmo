@@ -12,7 +12,7 @@ final class CalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
     @Published var selectedDate: Date?
 
-    private let monthsToLoad = 6 // 한 번에 로드할 개월 수
+    private let monthsToLoad = 20 // 한 번에 로드할 개월 수
 
     init(date: Date? = nil) {
         if let date {

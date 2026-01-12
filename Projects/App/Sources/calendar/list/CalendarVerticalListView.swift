@@ -11,6 +11,7 @@ struct CalendarVerticalListView: View {
     @StateObject var model: CalendarVerticalListViewModel
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
+    @State private var ignoreScrollFetchAction = true
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -21,17 +22,41 @@ struct CalendarVerticalListView: View {
                             .tapDate(model.tapDate)
                             .setSelectedDate(model.selectedDate)
                             .id(date)
+                            .onAppear {
+                                Task {
+                                    if date == model.dates.first {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchPrevDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        scrollTo(date)
+                                        try await Task.sleep(for: .seconds(0.3))
+                                        ignoreScrollFetchAction = false
+                                    } else if date == model.dates.last {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchNextDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.3))
+                                        ignoreScrollFetchAction = false
+                                    }
+                                }
+                            }
                     }
                 }
             }
             .onAppear {
-                guard model.dates.isEmpty || model.dates.count == 1 else { return }
-                model.fetchNextDates(date: model.dates.last)
-                model.fetchPrevDates(date: model.dates.first)
-                let totalCount = model.dates.count
-                let targetIndex = totalCount / 2
-                let targetDate = model.dates[targetIndex]
-                scrollTo(targetDate)
+                Task {
+                    guard model.dates.isEmpty || model.dates.count == 1 else { return }
+                    model.fetchNextDates(date: model.dates.last)
+                    model.fetchPrevDates(date: model.dates.first)
+                    let totalCount = model.dates.count
+                    let targetIndex = totalCount / 2
+                    let targetDate = model.dates[targetIndex]
+                    try await Task.sleep(for: .seconds(0.1))
+                    scrollTo(targetDate)
+                    try await Task.sleep(for: .seconds(0.3))
+                    ignoreScrollFetchAction = false
+                }
             }
             .onChange(of: scrollTarget) { _, newTarget in
                 if let target = newTarget {

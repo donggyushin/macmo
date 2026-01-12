@@ -39,7 +39,7 @@ struct iOSMemoListView: View {
 
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    navigationManager.push(.detail(nil))
+                    navigationManager.push(.detail(nil, nil))
                 } label: {
                     Image(systemName: "folder.badge.plus")
                 }
@@ -75,7 +75,7 @@ struct iOSMemoListView: View {
                         }
                     }
                     .onTapGesture {
-                        navigationManager.push(.detail(memo.id))
+                        navigationManager.push(.detail(memo.id, nil))
                     }
             }
             .onDelete(perform: deleteMemos)

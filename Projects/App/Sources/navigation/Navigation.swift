@@ -10,15 +10,15 @@ import MacmoDomain
 
 enum Navigation: Hashable {
     case list
-    case detail(String?)
+    case detail(String?, Date?)
     case setting
     case search
     case calendarVerticalList(Date?)
 
     init(_ domain: NavigationDomain) {
         switch domain {
-        case let .detail(id):
-            self = .detail(id)
+        case let .detail(id, date):
+            self = .detail(id, date)
         case .setting:
             self = .setting
         case .search:
@@ -34,8 +34,8 @@ enum Navigation: Hashable {
         switch self {
         case .list:
             .list
-        case let .detail(id):
-            .detail(id)
+        case let .detail(id, date):
+            .detail(id, date)
         case .setting:
             .setting
         case .search:

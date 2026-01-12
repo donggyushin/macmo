@@ -12,13 +12,6 @@ struct SpecificDayMemoListView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     @Binding var present: Bool
 
-    var addMemoAction: ((Date) -> Void)?
-    func addMemoAction(_ action: ((Date) -> Void)?) -> Self {
-        var copy = self
-        copy.addMemoAction = action
-        return copy
-    }
-
     var body: some View {
         NavigationStack {
             Group {
@@ -39,7 +32,7 @@ struct SpecificDayMemoListView: View {
                                     Task {
                                         present = false
                                         try await Task.sleep(for: .seconds(0.7))
-                                        navigationManager.push(.detail(memo.id))
+                                        navigationManager.push(.detail(memo.id, nil))
                                     }
                                 }
                         }
@@ -53,8 +46,11 @@ struct SpecificDayMemoListView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        present = false
-                        addMemoAction?(model.date)
+                        Task {
+                            present = false
+                            try await Task.sleep(for: .seconds(0.7))
+                            navigationManager.push(.detail(nil, model.date))
+                        }
                     } label: {
                         Image(systemName: "plus")
                     }

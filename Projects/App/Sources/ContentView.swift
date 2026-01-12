@@ -54,8 +54,8 @@ public struct ContentView: View {
         switch navigation {
         case .list:
             iOSMemoListView()
-        case let .detail(id):
-            MemoDetailView(model: .init(id: id))
+        case let .detail(id, date):
+            MemoDetailView(model: .init(id: id, date: date))
         case .setting:
             SettingView(model: .init())
         case .search:
