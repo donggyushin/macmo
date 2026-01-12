@@ -10,12 +10,21 @@ public struct ContentView: View {
     @StateObject var searchModelViewModel = SearchMemoViewModel()
     @Namespace var namespace
 
+    #if !os(macOS)
+    @State private var selectedTab: Tab = .calendar
+
+    enum Tab {
+        case calendar
+        case list
+    }
+    #endif
+
     public var body: some View {
         #if os(macOS)
         MemoListView()
         #else
         NavigationStack(path: $navigationManager.paths) {
-            TabView {
+            TabView(selection: $selectedTab) {
                 YearCalendarVerticalListView(model: .init(), namespace: namespace)
                     .tapCalendar { date in
                         navigationManager.push(.calendarVerticalList(date))
@@ -24,11 +33,13 @@ public struct ContentView: View {
                     .tabItem {
                         Label("캘린더", systemImage: "calendar")
                     }
+                    .tag(Tab.calendar)
 
                 iOSMemoListView()
                     .tabItem {
                         Label("메모", systemImage: "list.bullet")
                     }
+                    .tag(Tab.list)
             }
             .navigationDestination(for: Navigation.self) { navigation in
                 destinationView(for: navigation)
