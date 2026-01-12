@@ -1,3 +1,4 @@
+import Factory
 import MacmoData
 import MacmoDomain
 import SwiftUI
@@ -9,15 +10,8 @@ public struct ContentView: View {
     // note: Fancy detail point! Search query exists
     @StateObject var searchModelViewModel = SearchMemoViewModel()
     @Namespace var namespace
-
-    #if !os(macOS)
-    @State private var selectedTab: Tab = .calendar
-
-    enum Tab {
-        case calendar
-        case list
-    }
-    #endif
+    @Injected(\.userPreferenceRepository) private var userPreferenceRepository
+    @State private var selectedTab: AppTabEnum = .calendar
 
     public var body: some View {
         #if os(macOS)
@@ -33,17 +27,23 @@ public struct ContentView: View {
                     .tabItem {
                         Label("캘린더", systemImage: "calendar")
                     }
-                    .tag(Tab.calendar)
+                    .tag(AppTabEnum.calendar)
 
                 iOSMemoListView()
                     .tabItem {
                         Label("메모", systemImage: "list.bullet")
                     }
-                    .tag(Tab.list)
+                    .tag(AppTabEnum.list)
             }
             .navigationDestination(for: Navigation.self) { navigation in
                 destinationView(for: navigation)
             }
+        }
+        .onAppear {
+            selectedTab = userPreferenceRepository.getAppTabEnum()
+        }
+        .onChange(of: selectedTab) {
+            userPreferenceRepository.setAppTabEnum(selectedTab)
         }
         #endif
     }
