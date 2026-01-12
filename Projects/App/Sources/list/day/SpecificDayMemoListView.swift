@@ -5,4 +5,29 @@
 //  Created by ratel on 1/12/26.
 //
 
-import Foundation
+import SwiftUI
+
+struct SpecificDayMemoListView: View {
+    @StateObject var model: SpecificDayMemoListViewModel
+    @EnvironmentObject private var navigationManager: NavigationManager
+
+    var body: some View {
+        List {
+            ForEach(model.memos, id: \.id) { memo in
+                MemoRowView(memo: memo)
+                    .tag(memo.id)
+                    .onTapGesture {
+                        navigationManager.push(.detail(memo.id))
+                    }
+            }
+        }
+        .task {
+            try? model.fetchMemos()
+        }
+    }
+}
+
+#Preview {
+    SpecificDayMemoListView(model: .init(date: Date()))
+        .preferredColorScheme(.dark)
+}
