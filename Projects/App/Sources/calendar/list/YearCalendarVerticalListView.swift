@@ -33,6 +33,14 @@ struct YearCalendarVerticalListView: View {
                         YearCalendarGridView(model: .init(date: date), namespace: namespace)
                             .tapCalendar(tapCalendar)
                             .id(date)
+                            .onAppear {
+                                if date == model.dates.first {
+                                    model.fetchPrevDates(date: model.dates.first)
+
+                                } else if date == model.dates.last {
+                                    model.fetchNextDates(date: model.dates.last)
+                                }
+                            }
                     }
                 }
             }

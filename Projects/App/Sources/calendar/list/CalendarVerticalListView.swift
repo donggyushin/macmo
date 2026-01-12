@@ -21,6 +21,13 @@ struct CalendarVerticalListView: View {
                             .tapDate(model.tapDate)
                             .setSelectedDate(model.selectedDate)
                             .id(date)
+                            .onAppear {
+                                if date == model.dates.first {
+                                    model.fetchPrevDates(date: model.dates.first)
+                                } else if date = model.dates.last {
+                                    model.fetchNextDates(date: model.dates.last)
+                                }
+                            }
                     }
                 }
             }
