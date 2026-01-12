@@ -13,4 +13,6 @@ public protocol UserPreferenceRepository {
     func setSelectedMemoId(_ id: String?)
     func getMemoDraft() -> Memo
     func setMemoDraft(_ memo: Memo)
+    func getAppTabEnum() -> AppTabEnum
+    func setAppTabEnum(_ tab: AppTabEnum)
 }

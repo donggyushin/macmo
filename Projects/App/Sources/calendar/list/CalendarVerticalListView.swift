@@ -18,6 +18,8 @@ struct CalendarVerticalListView: View {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
                         CalendarView(model: .init(date))
+                            .tapDate(model.tapDate)
+                            .setSelectedDate(model.selectedDate)
                             .id(date)
                     }
                 }
@@ -47,7 +49,24 @@ struct CalendarVerticalListView: View {
                     }
                 }
             }
+            .sheet(isPresented: specificDayMemoListViewPresent) {
+                SpecificDayMemoListView(
+                    model: .init(date: model.selectedDate ?? Date()),
+                    present: specificDayMemoListViewPresent
+                )
+            }
         }
+    }
+
+    var specificDayMemoListViewPresent: Binding<Bool> {
+        Binding(
+            get: { model.selectedDate != nil },
+            set: { newValue, _ in
+                if newValue == false {
+                    model.selectedDate = nil
+                }
+            }
+        )
     }
 
     private func scrollTo(_ date: Date, animated: Bool = false) {
