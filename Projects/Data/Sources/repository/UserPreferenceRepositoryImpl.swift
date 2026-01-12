@@ -12,8 +12,17 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
         key: "memo-draft",
         defaultValue: Memo(title: "")
     ) var memoDraft
+    @UserDefault(key: "appTabEnum", defaultValue: AppTabEnum.calendar) var appTabEnum
 
     public init() {}
+
+    public func getAppTabEnum() -> AppTabEnum {
+        appTabEnum
+    }
+
+    public func setAppTabEnum(_ tab: AppTabEnum) {
+        appTabEnum = tab
+    }
 
     public func getMemoDraft() -> Memo {
         var memoDraft = memoDraft
