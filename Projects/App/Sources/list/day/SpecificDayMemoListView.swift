@@ -11,6 +11,8 @@ struct SpecificDayMemoListView: View {
     @StateObject var model: SpecificDayMemoListViewModel
     @EnvironmentObject private var navigationManager: NavigationManager
 
+    @Binding var present: Bool
+
     var body: some View {
         List {
             ForEach(model.memos, id: \.id) { memo in
@@ -28,6 +30,6 @@ struct SpecificDayMemoListView: View {
 }
 
 #Preview {
-    SpecificDayMemoListView(model: .init(date: Date()))
+    SpecificDayMemoListView(model: .init(date: Date()), present: .constant(true))
         .preferredColorScheme(.dark)
 }
