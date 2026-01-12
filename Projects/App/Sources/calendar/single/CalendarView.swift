@@ -13,6 +13,13 @@ struct CalendarView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
+    var tapDate: (() -> Date)?
+    func tapDate(_ action: (() -> Date)?) -> Self {
+        var copy = self
+        copy.tapDate = action
+        return copy
+    }
+
     var body: some View {
         VStack(spacing: 26) {
             // 년월 헤더
