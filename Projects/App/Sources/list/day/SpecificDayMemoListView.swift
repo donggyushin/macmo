@@ -10,23 +10,41 @@ import SwiftUI
 struct SpecificDayMemoListView: View {
     @StateObject var model: SpecificDayMemoListViewModel
     @EnvironmentObject private var navigationManager: NavigationManager
-
     @Binding var present: Bool
 
+    var addMemoAction: (() -> Void)?
+    func addMemoAction(_ action: (() -> Void)?) -> Self {
+        var copy = self
+        copy.addMemoAction = action
+        return copy
+    }
+
     var body: some View {
-        List {
-            ForEach(model.memos, id: \.id) { memo in
-                MemoRowView(memo: memo)
-                    .tag(memo.id)
-                    .onTapGesture {
-                        navigationManager.push(.detail(memo.id))
+        NavigationStack {
+            List {
+                ForEach(model.memos, id: \.id) { memo in
+                    MemoRowView(memo: memo)
+                        .tag(memo.id)
+                        .onTapGesture {
+                            navigationManager.push(.detail(memo.id))
+                        }
+                }
+            }
+            .task {
+                try? model.fetchMemos()
+            }
+            .presentationDetents([.medium, .large])
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        present = false
+                        addMemoAction?()
+                    } label: {
+                        Image(systemName: "plus")
                     }
+                }
             }
         }
-        .task {
-            try? model.fetchMemos()
-        }
-        .presentationDetents([.medium, .large])
     }
 }
 
