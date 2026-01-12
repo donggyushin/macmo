@@ -36,7 +36,11 @@ struct SpecificDayMemoListView: View {
                             MemoRowView(memo: memo)
                                 .tag(memo.id)
                                 .onTapGesture {
-                                    navigationManager.push(.detail(memo.id))
+                                    Task {
+                                        present = false
+                                        try await Task.sleep(for: .seconds(0.7))
+                                        navigationManager.push(.detail(memo.id))
+                                    }
                                 }
                         }
                     }
