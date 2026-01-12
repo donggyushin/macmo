@@ -12,6 +12,7 @@ struct YearCalendarVerticalListView: View {
     let namespace: Namespace.ID?
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
+    @State private var ignoreScrollFetchAction = true
 
     init(model: YearCalendarVerticalListViewModel, namespace: Namespace.ID? = nil) {
         _model = .init(wrappedValue: model)
@@ -34,9 +35,9 @@ struct YearCalendarVerticalListView: View {
                             .tapCalendar(tapCalendar)
                             .id(date)
                             .onAppear {
+                                guard !ignoreScrollFetchAction else { return }
                                 if date == model.dates.first {
                                     model.fetchPrevDates(date: model.dates.first)
-
                                 } else if date == model.dates.last {
                                     model.fetchNextDates(date: model.dates.last)
                                 }
@@ -55,6 +56,7 @@ struct YearCalendarVerticalListView: View {
                     let targetDate = model.dates[targetIndex]
                     try await Task.sleep(for: .seconds(0.1))
                     scrollTo(targetDate)
+                    ignoreScrollFetchAction = false
                 }
             }
             .onChange(of: scrollTarget) { _, newTarget in

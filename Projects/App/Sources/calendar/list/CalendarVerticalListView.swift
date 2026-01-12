@@ -11,6 +11,7 @@ struct CalendarVerticalListView: View {
     @StateObject var model: CalendarVerticalListViewModel
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
+    @State private var ignoreScrollFetchAction = true
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -22,6 +23,7 @@ struct CalendarVerticalListView: View {
                             .setSelectedDate(model.selectedDate)
                             .id(date)
                             .onAppear {
+                                guard !ignoreScrollFetchAction else { return }
                                 if date == model.dates.first {
                                     model.fetchPrevDates(date: model.dates.first)
                                 } else if date == model.dates.last {
@@ -39,6 +41,7 @@ struct CalendarVerticalListView: View {
                 let targetIndex = totalCount / 2
                 let targetDate = model.dates[targetIndex]
                 scrollTo(targetDate)
+                ignoreScrollFetchAction = false
             }
             .onChange(of: scrollTarget) { _, newTarget in
                 if let target = newTarget {
