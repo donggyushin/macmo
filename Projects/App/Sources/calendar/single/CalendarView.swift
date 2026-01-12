@@ -21,10 +21,10 @@ struct CalendarView: View {
                     .font(.title2)
                     .fontWeight(.bold)
                     .padding(.leading)
-                
+
                 Spacer()
             }
-            
+
             VStack(spacing: 12) {
                 // 요일 헤더
                 LazyVGrid(columns: columns, spacing: 8) {

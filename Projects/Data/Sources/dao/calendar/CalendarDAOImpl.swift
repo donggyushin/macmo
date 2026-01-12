@@ -32,22 +32,21 @@ public final class CalendarDAOImpl: CalendarDAO {
             return []
         }
 
-        // 2. due 날짜가 해당 월에 포함되는 메모들을 찾는 Predicate
-        let predicate = #Predicate<MemoDTO> { memo in
-            memo.due != nil && memo.due! >= startDate && memo.due! < endDate
-        }
-
-        // 3. FetchDescriptor 생성 및 쿼리 실행
+        // 2. due가 nil이 아닌 모든 메모를 가져옴
+        // SwiftData Predicate의 optional 처리 제약으로 인해 Predicate 없이 fetch
         let descriptor = FetchDescriptor<MemoDTO>(
-            predicate: predicate,
             sortBy: [SortDescriptor(\.due, order: .forward)]
         )
 
-        let dtos = try modelContext.fetch(descriptor)
+        let allDtos = try modelContext.fetch(descriptor)
 
-        // 4. DTO를 CalendarDay로 변환
-        let calendarDays = dtos.compactMap { dto -> CalendarDay? in
+        // 3. Swift 코드로 필터링 및 변환
+        let calendarDays = allDtos.compactMap { dto -> CalendarDay? in
             guard let due = dto.due else { return nil }
+
+            // 해당 월의 범위에 포함되는지 확인
+            guard due >= startDate && due < endDate else { return nil }
+
             let components = Calendar.current.dateComponents([.year, .month, .day], from: due)
             guard let day = components.day else { return nil }
 
