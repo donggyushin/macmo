@@ -52,6 +52,7 @@ struct CalendarVerticalListView: View {
                 let targetIndex = totalCount / 2
                 let targetDate = model.dates[targetIndex]
                 scrollTo(targetDate)
+                try await Task.sleep(for: .seconds(0.1))
                 ignoreScrollFetchAction = false
             }
             .onChange(of: scrollTarget) { _, newTarget in
