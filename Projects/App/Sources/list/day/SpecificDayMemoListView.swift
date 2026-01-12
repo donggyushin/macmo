@@ -21,13 +21,25 @@ struct SpecificDayMemoListView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(model.memos, id: \.id) { memo in
-                    MemoRowView(memo: memo)
-                        .tag(memo.id)
-                        .onTapGesture {
-                            navigationManager.push(.detail(memo.id))
+            Group {
+                if model.memos.isEmpty {
+                    // Empty State
+                    ContentUnavailableView {
+                        Label("No Memos", systemImage: "note.text")
+                    } description: {
+                        Text("No memos for this date.\nTap the + button to add one.")
+                    }
+                } else {
+                    // Memo List
+                    List {
+                        ForEach(model.memos, id: \.id) { memo in
+                            MemoRowView(memo: memo)
+                                .tag(memo.id)
+                                .onTapGesture {
+                                    navigationManager.push(.detail(memo.id))
+                                }
                         }
+                    }
                 }
             }
             .task {
