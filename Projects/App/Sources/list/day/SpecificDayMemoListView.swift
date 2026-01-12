@@ -49,7 +49,7 @@ struct SpecificDayMemoListView: View {
                         Task {
                             present = false
                             try await Task.sleep(for: .seconds(0.7))
-                            navigationManager.push(.detail(nil, nil))
+                            navigationManager.push(.detail(nil, model.date))
                         }
                     } label: {
                         Image(systemName: "plus")
