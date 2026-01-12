@@ -15,6 +15,10 @@ public final class MemoRepositoryImpl: MemoRepository {
         self.memoDAO = memoDAO
     }
 
+    public func findByDate(_ date: Date) throws -> [Memo] {
+        try memoDAO.findByDate(date)
+    }
+
     public func save(_ memo: Memo) throws {
         try memoDAO.save(memo)
     }
