@@ -18,6 +18,10 @@ struct CalendarVerticalListView: View {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
                         CalendarView(model: .init(date))
+                            .tapDate { date in
+                                model.selectedDate = date
+                            }
+                            .setSelectedDate(model.selectedDate)
                             .id(date)
                     }
                 }

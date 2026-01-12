@@ -20,6 +20,13 @@ struct CalendarView: View {
         return copy
     }
 
+    var selectedDate: Date?
+    func setSelectedDate(_ date: Date?) -> Self {
+        var copy = self
+        copy.selectedDate = date
+        return copy
+    }
+
     var body: some View {
         VStack(spacing: 26) {
             // 년월 헤더
@@ -51,8 +58,14 @@ struct CalendarView: View {
                             // 날짜 셀
                             VStack(spacing: 4) {
                                 ZStack {
-                                    // 오늘인 경우 원형 배경
-                                    if isToday(day: day) {
+                                    if isSelectedDay(day: day) {
+                                        // selectedDate 와 같은 날짜인 경우 원형 배경
+                                        Circle()
+                                            .fill(.blue)
+                                            .frame(width: 32, height: 32)
+
+                                    } else if isToday(day: day) {
+                                        // 오늘인 경우 원형 배경
                                         Circle()
                                             .fill(.red)
                                             .frame(width: 32, height: 32)
@@ -98,7 +111,11 @@ struct CalendarView: View {
                                 }
                             }
                             .onTapGesture {
-                                if let date = createDate(year: model.calendarUtility.year, month: model.calendarUtility.month, day: day) {
+                                if let date = createDate(
+                                    year: model.calendarUtility.year,
+                                    month: model.calendarUtility.month,
+                                    day: day
+                                ) {
                                     tapDate?(date)
                                 }
                             }
@@ -115,6 +132,16 @@ struct CalendarView: View {
         .onAppear {
             try? model.fetchData()
         }
+    }
+
+    private func isSelectedDay(day: Int) -> Bool {
+        guard let selectedDate else { return false }
+        let calendar = Calendar.current
+        let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+
+        return selectedComponents.year == model.calendarUtility.year &&
+            selectedComponents.month == model.calendarUtility.month &&
+            selectedComponents.day == day
     }
 
     private func isToday(day: Int) -> Bool {
