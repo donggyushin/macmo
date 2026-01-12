@@ -20,6 +20,14 @@ final class CalendarVerticalListViewModel: ObservableObject {
         }
     }
 
+    @MainActor func tapDate(_ date: Date) {
+        if selectedDate == date {
+            selectedDate = nil
+        } else {
+            selectedDate = date
+        }
+    }
+
     @MainActor func fetchNextDates(date: Date?) {
         let baseDate = date ?? Date()
         if dates.isEmpty {
