@@ -13,8 +13,8 @@ struct CalendarView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
     private let weekdays = ["S", "M", "T", "W", "T", "F", "S"]
 
-    var tapDate: (() -> Date)?
-    func tapDate(_ action: (() -> Date)?) -> Self {
+    var tapDate: ((Date) -> Void)?
+    func tapDate(_ action: ((Date) -> Void)?) -> Self {
         var copy = self
         copy.tapDate = action
         return copy
@@ -97,6 +97,11 @@ struct CalendarView: View {
                                         .frame(height: 8)
                                 }
                             }
+                            .onTapGesture {
+                                if let date = createDate(year: model.calendarUtility.year, month: model.calendarUtility.month, day: day) {
+                                    tapDate?(date)
+                                }
+                            }
                         } else {
                             // 빈 셀
                             Color.clear
@@ -119,6 +124,14 @@ struct CalendarView: View {
         return todayComponents.year == model.calendarUtility.year &&
             todayComponents.month == model.calendarUtility.month &&
             todayComponents.day == day
+    }
+
+    private func createDate(year: Int, month: Int, day: Int) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+        return Calendar.current.date(from: components)
     }
 }
 
