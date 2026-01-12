@@ -1,6 +1,6 @@
 import Foundation
-import SwiftData
 import MacmoData
+import SwiftData
 
 // Extension to convert MacmoData.MemoDTO to Widget's MemoData
 private extension MacmoData.MemoDTO {
@@ -90,7 +90,7 @@ public final class MemoRepositoryImpl: MemoRepository {
                 updatedAt: now,
                 isCompleted: false,
                 due: nil
-            ),
+            )
         ]
     }
 }
