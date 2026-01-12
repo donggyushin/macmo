@@ -22,7 +22,7 @@ final class iOSURLSchemeManager {
 
         case "memo":
             let memoId = extractMemoId(from: url)
-            navigationManager.push(.detail(memoId))
+            navigationManager.push(.detail(memoId, nil))
 
         default:
             break

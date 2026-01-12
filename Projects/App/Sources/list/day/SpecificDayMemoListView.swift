@@ -32,7 +32,7 @@ struct SpecificDayMemoListView: View {
                                     Task {
                                         present = false
                                         try await Task.sleep(for: .seconds(0.7))
-                                        navigationManager.push(.detail(memo.id))
+                                        navigationManager.push(.detail(memo.id, nil))
                                     }
                                 }
                         }
@@ -49,7 +49,7 @@ struct SpecificDayMemoListView: View {
                         Task {
                             present = false
                             try await Task.sleep(for: .seconds(0.7))
-                            navigationManager.push(.detail(nil))
+                            navigationManager.push(.detail(nil, nil))
                         }
                     } label: {
                         Image(systemName: "plus")
