@@ -47,7 +47,7 @@ struct CalendarView: View {
                                     // 오늘인 경우 원형 배경
                                     if isToday(day: day) {
                                         Circle()
-                                            .fill(.blue)
+                                            .fill(.red)
                                             .frame(width: 32, height: 32)
                                     }
 
