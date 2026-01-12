@@ -15,29 +15,46 @@ public struct ContentView: View {
         MemoListView()
         #else
         NavigationStack(path: $navigationManager.paths) {
-            YearCalendarVerticalListView(model: .init(), namespace: namespace)
-                .tapCalendar { date in
-                    navigationManager.push(.calendarVerticalList(date))
-                }
-                .navigationDestination(for: Navigation.self) { navigation in
-                    switch navigation {
-                    case .list:
-                        iOSMemoListView()
-                    case let .detail(id):
-                        MemoDetailView(model: .init(id: id))
-                    case .setting:
-                        SettingView(model: .init())
-                    case .search:
-                        iOSSearchMemoView(model: searchModelViewModel)
-                    case let .calendarVerticalList(date):
-                        CalendarVerticalListView(model: .init(date: date))
-                            .navigationTransition(.zoom(sourceID: date, in: namespace))
+            TabView {
+                YearCalendarVerticalListView(model: .init(), namespace: namespace)
+                    .tapCalendar { date in
+                        navigationManager.push(.calendarVerticalList(date))
                     }
-                }
-                .scrollIndicators(.hidden)
+                    .scrollIndicators(.hidden)
+                    .tabItem {
+                        Label("캘린더", systemImage: "calendar")
+                    }
+
+                iOSMemoListView()
+                    .tabItem {
+                        Label("메모", systemImage: "list.bullet")
+                    }
+            }
+            .navigationDestination(for: Navigation.self) { navigation in
+                destinationView(for: navigation)
+            }
         }
         #endif
     }
+
+    #if !os(macOS)
+    @ViewBuilder
+    private func destinationView(for navigation: Navigation) -> some View {
+        switch navigation {
+        case .list:
+            iOSMemoListView()
+        case let .detail(id):
+            MemoDetailView(model: .init(id: id))
+        case .setting:
+            SettingView(model: .init())
+        case .search:
+            iOSSearchMemoView(model: searchModelViewModel)
+        case let .calendarVerticalList(date):
+            CalendarVerticalListView(model: .init(date: date))
+            // .navigationTransition(.zoom(sourceID: date, in: namespace))
+        }
+    }
+    #endif
 }
 
 struct ContentView_Previews: PreviewProvider {
