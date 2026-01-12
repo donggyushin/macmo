@@ -42,13 +42,13 @@ struct YearCalendarVerticalListView: View {
                                         model.fetchPrevDates(date: date)
                                         try await Task.sleep(for: .seconds(0.1))
                                         scrollTo(date)
-                                        try await Task.sleep(for: .seconds(0.1))
+                                        try await Task.sleep(for: .seconds(0.3))
                                         ignoreScrollFetchAction = false
                                     } else if date == model.dates.last {
                                         guard !ignoreScrollFetchAction else { return }
                                         ignoreScrollFetchAction = true
                                         model.fetchNextDates(date: date)
-                                        try await Task.sleep(for: .seconds(0.1))
+                                        try await Task.sleep(for: .seconds(0.3))
                                         ignoreScrollFetchAction = false
                                     }
                                 }
@@ -67,7 +67,7 @@ struct YearCalendarVerticalListView: View {
                     let targetDate = model.dates[targetIndex]
                     try await Task.sleep(for: .seconds(0.1))
                     scrollTo(targetDate)
-                    try await Task.sleep(for: .seconds(0.1))
+                    try await Task.sleep(for: .seconds(0.3))
                     ignoreScrollFetchAction = false
                 }
             }
