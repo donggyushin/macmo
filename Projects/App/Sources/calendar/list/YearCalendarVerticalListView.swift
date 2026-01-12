@@ -34,6 +34,25 @@ struct YearCalendarVerticalListView: View {
                         YearCalendarGridView(model: .init(date: date), namespace: namespace)
                             .tapCalendar(tapCalendar)
                             .id(date)
+                            .onAppear {
+                                Task {
+                                    if date == model.dates.first {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchPrevDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        scrollTo(date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        ignoreScrollFetchAction = false
+                                    } else if date == model.dates.last {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchNextDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        ignoreScrollFetchAction = false
+                                    }
+                                }
+                            }
                     }
                 }
             }

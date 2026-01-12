@@ -23,18 +23,22 @@ struct CalendarVerticalListView: View {
                             .setSelectedDate(model.selectedDate)
                             .id(date)
                             .onAppear {
-                                guard !ignoreScrollFetchAction else { return }
-                                ignoreScrollFetchAction = true
                                 Task {
-                                    try await Task.sleep(for: .seconds(0.5))
-                                    ignoreScrollFetchAction = false
-                                }
-                                if date == model.dates.first {
-                                    model.fetchPrevDates(date: model.dates.first)
-                                    scrollTo(date)
-                                } else if date == model.dates.last {
-                                    model.fetchNextDates(date: model.dates.last)
-                                    scrollTo(date)
+                                    if date == model.dates.first {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchPrevDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        scrollTo(date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        ignoreScrollFetchAction = false
+                                    } else if date == model.dates.last {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchNextDates(date: date)
+                                        try await Task.sleep(for: .seconds(0.1))
+                                        ignoreScrollFetchAction = false
+                                    }
                                 }
                             }
                     }

@@ -11,7 +11,7 @@ import Foundation
 final class YearCalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
 
-    private let yearsToLoad = 6 // 한 번에 로드할 연 수
+    private let yearsToLoad = 20 // 한 번에 로드할 연 수
 
     init(dates: [Date] = []) {
         self.dates = dates
