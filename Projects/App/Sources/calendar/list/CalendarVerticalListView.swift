@@ -45,15 +45,17 @@ struct CalendarVerticalListView: View {
                 }
             }
             .onAppear {
-                guard model.dates.isEmpty || model.dates.count == 1 else { return }
-                model.fetchNextDates(date: model.dates.last)
-                model.fetchPrevDates(date: model.dates.first)
-                let totalCount = model.dates.count
-                let targetIndex = totalCount / 2
-                let targetDate = model.dates[targetIndex]
-                scrollTo(targetDate)
-                try await Task.sleep(for: .seconds(0.1))
-                ignoreScrollFetchAction = false
+                Task {
+                    guard model.dates.isEmpty || model.dates.count == 1 else { return }
+                    model.fetchNextDates(date: model.dates.last)
+                    model.fetchPrevDates(date: model.dates.first)
+                    let totalCount = model.dates.count
+                    let targetIndex = totalCount / 2
+                    let targetDate = model.dates[targetIndex]
+                    scrollTo(targetDate)
+                    try await Task.sleep(for: .seconds(0.1))
+                    ignoreScrollFetchAction = false
+                }
             }
             .onChange(of: scrollTarget) { _, newTarget in
                 if let target = newTarget {
