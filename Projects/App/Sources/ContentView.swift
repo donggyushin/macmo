@@ -25,13 +25,13 @@ public struct ContentView: View {
                     }
                     .scrollIndicators(.hidden)
                     .tabItem {
-                        Label("캘린더", systemImage: "calendar")
+                        Label("calendar", systemImage: "calendar")
                     }
                     .tag(AppTabEnum.calendar)
 
                 iOSMemoListView()
                     .tabItem {
-                        Label("메모", systemImage: "list.bullet")
+                        Label("memo", systemImage: "list.bullet")
                     }
                     .tag(AppTabEnum.list)
             }
