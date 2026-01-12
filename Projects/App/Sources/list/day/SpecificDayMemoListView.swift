@@ -12,8 +12,8 @@ struct SpecificDayMemoListView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
     @Binding var present: Bool
 
-    var addMemoAction: (() -> Void)?
-    func addMemoAction(_ action: (() -> Void)?) -> Self {
+    var addMemoAction: ((Date) -> Void)?
+    func addMemoAction(_ action: ((Date) -> Void)?) -> Self {
         var copy = self
         copy.addMemoAction = action
         return copy
@@ -50,7 +50,7 @@ struct SpecificDayMemoListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         present = false
-                        addMemoAction?()
+                        addMemoAction?(model.date)
                     } label: {
                         Image(systemName: "plus")
                     }
