@@ -14,7 +14,9 @@ public final class CalendarViewModel: ObservableObject {
     let today: Date
 
     @Published var calendarDays: [CalendarDay] = []
-    @Published var gridCells: [Int?] = []
+    var gridCells: [Int?] {
+        calendarUtility.gridCells
+    }
 
     @Injected(\.calendarRepository) private var calendarRepository
 
@@ -24,7 +26,6 @@ public final class CalendarViewModel: ObservableObject {
     }
 
     @MainActor func fetchData() throws {
-        gridCells = calendarUtility.gridCells
         let year = calendarUtility.year
         let month = calendarUtility.month
         calendarDays = try calendarRepository.find(year: year, month: month)
