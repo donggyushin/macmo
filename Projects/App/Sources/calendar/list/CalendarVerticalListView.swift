@@ -75,7 +75,7 @@ struct CalendarVerticalListView: View {
                 }
             }
             .sheet(isPresented: specificDayMemoListViewPresent) {
-                SpecificDayMemoListView(
+                SpecificDayMemoListContainer(
                     model: .init(date: model.selectedDate ?? Date()),
                     present: specificDayMemoListViewPresent
                 )

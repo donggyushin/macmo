@@ -42,20 +42,6 @@ struct SpecificDayMemoListView: View {
             .task {
                 try? model.fetchMemos()
             }
-            .presentationDetents([.medium, .large])
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        Task {
-                            present = false
-                            try await Task.sleep(for: .seconds(0.7))
-                            navigationManager.push(.detail(nil, model.date))
-                        }
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-            }
         }
     }
 }
