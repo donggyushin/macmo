@@ -31,7 +31,7 @@ struct YearCalendarVerticalListView: View {
             ScrollView {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
-                        YearCalendarGridView(model: .init(date: date), namespace: namespace)
+                        YearCalendarGridView(model: model.getGridViewModel(from: date), namespace: namespace)
                             .tapCalendar(tapCalendar)
                             .id(date)
                             .onAppear {
