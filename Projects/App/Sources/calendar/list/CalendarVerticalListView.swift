@@ -44,6 +44,7 @@ struct CalendarVerticalListView: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden)
             .onAppear {
                 Task {
                     guard model.dates.isEmpty || model.dates.count == 1 else { return }
