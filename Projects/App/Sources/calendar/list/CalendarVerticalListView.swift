@@ -31,6 +31,7 @@ struct CalendarVerticalListView: View {
                                         try await Task.sleep(for: .seconds(0.1))
                                         scrollTo(date)
                                         try await Task.sleep(for: .seconds(0.3))
+                                        scrollTo(date)
                                         ignoreScrollFetchAction = false
                                     } else if date == model.dates.last {
                                         guard !ignoreScrollFetchAction else { return }
