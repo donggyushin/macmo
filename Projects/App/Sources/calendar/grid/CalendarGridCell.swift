@@ -9,13 +9,13 @@ import SwiftUI
 
 struct CalendarGridCell: View {
     let today: Date
-    let calendarUtility: CalendarUtility
+    @StateObject var calendarUtility: CalendarUtility
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
 
     init(date: Date, today: Date = Date()) {
         self.today = today
-        self.calendarUtility = .init(date: date)
+        self._calendarUtility = .init(wrappedValue: .init(date: date))
     }
 
     var body: some View {

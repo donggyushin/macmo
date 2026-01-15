@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CalendarUtility {
+class CalendarUtility: ObservableObject {
     let date: Date
     let year: Int
     let month: Int
