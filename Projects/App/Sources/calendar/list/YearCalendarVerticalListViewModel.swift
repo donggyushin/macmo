@@ -10,7 +10,6 @@ import Foundation
 
 final class YearCalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
-
     private var gridViewModels: [Date: YearCalendarGridViewModel] = [:]
 
     private let yearsToLoad = 20 // 한 번에 로드할 연 수
@@ -19,7 +18,7 @@ final class YearCalendarVerticalListViewModel: ObservableObject {
         self.dates = dates
     }
 
-    func getGridViewModel(from date: Date) -> YearCalendarGridViewModel {
+    @MainActor func getGridViewModel(from date: Date) -> YearCalendarGridViewModel {
         if let cached = gridViewModels[date] {
             return cached
         } else {

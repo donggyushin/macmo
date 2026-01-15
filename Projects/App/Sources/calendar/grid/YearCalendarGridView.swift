@@ -13,7 +13,7 @@ struct YearCalendarGridView: View {
     let namespace: Namespace.ID?
 
     init(model: YearCalendarGridViewModel, namespace: Namespace.ID? = nil) {
-        _model = .init(wrappedValue: model)
+        self._model = .init(wrappedValue: model)
         self.namespace = namespace
     }
 
@@ -39,10 +39,10 @@ struct YearCalendarGridView: View {
                         tapCalendar?(date)
                     } label: {
                         if let namespace {
-                            CalendarGridCell(date: date, today: model.today)
+                            CalendarGridCell(calendarUtility: model.getCalendarUtility(from: date), today: model.today)
                                 .matchedTransitionSource(id: date, in: namespace)
                         } else {
-                            CalendarGridCell(date: date, today: model.today)
+                            CalendarGridCell(calendarUtility: model.getCalendarUtility(from: date), today: model.today)
                         }
                     }
                     .buttonStyle(.plain)

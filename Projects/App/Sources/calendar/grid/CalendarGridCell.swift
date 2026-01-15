@@ -13,9 +13,9 @@ struct CalendarGridCell: View {
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
 
-    init(date: Date, today: Date = Date()) {
+    init(calendarUtility: CalendarUtility, today: Date = Date()) {
         self.today = today
-        self._calendarUtility = .init(wrappedValue: .init(date: date))
+        self._calendarUtility = .init(wrappedValue: calendarUtility)
     }
 
     var body: some View {
@@ -69,7 +69,7 @@ struct CalendarGridCell: View {
 
 private struct CalendarGridCellPreview: View {
     var body: some View {
-        CalendarGridCell(date: Date())
+        CalendarGridCell(calendarUtility: .init(date: Date()))
             .frame(width: 130)
     }
 }

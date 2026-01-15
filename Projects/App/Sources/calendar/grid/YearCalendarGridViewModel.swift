@@ -35,8 +35,20 @@ final class YearCalendarGridViewModel: ObservableObject {
         return _monthDates
     }
 
+    private var calendarUtilities: [Date: CalendarUtility] = [:]
+
     init(date: Date, today: Date = Date()) {
         self.date = date
         self.today = today
+    }
+
+    func getCalendarUtility(from date: Date) -> CalendarUtility {
+        if let cached = calendarUtilities[date] {
+            return cached
+        } else {
+            let util = CalendarUtility(date: date)
+            calendarUtilities[date] = util
+            return util
+        }
     }
 }
