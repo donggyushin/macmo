@@ -14,15 +14,14 @@ public final class CalendarViewModel: ObservableObject {
     let today: Date
 
     @Published var calendarDays: [CalendarDay] = []
-    var gridCells: [Int?] {
-        calendarUtility.gridCells
-    }
+    let gridCells: [Int?]
 
     @Injected(\.calendarRepository) private var calendarRepository
 
     public init(_ date: Date, today: Date = Date()) {
         self.calendarUtility = .init(date: date)
         self.today = today
+        self.gridCells = calendarUtility.gridCells
     }
 
     @MainActor func fetchData() throws {

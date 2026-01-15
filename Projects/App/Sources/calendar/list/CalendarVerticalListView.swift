@@ -18,7 +18,7 @@ struct CalendarVerticalListView: View {
             ScrollView {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
-                        CalendarView(model: .init(date))
+                        CalendarView(model: model.getCalendarViewModel(from: date))
                             .tapDate(model.tapDate)
                             .setSelectedDate(model.selectedDate)
                             .id(date)

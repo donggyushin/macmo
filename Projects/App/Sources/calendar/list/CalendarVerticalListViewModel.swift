@@ -12,6 +12,17 @@ final class CalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
     @Published var selectedDate: Date?
 
+    private var calendarViewModels: [Date: CalendarViewModel] = [:]
+    func getCalendarViewModel(from date: Date) -> CalendarViewModel {
+        if let cached = calendarViewModels[date] {
+            return cached
+        } else {
+            let vm = CalendarViewModel(date)
+            calendarViewModels[date] = vm
+            return vm
+        }
+    }
+
     private let monthsToLoad = 120 // 한 번에 로드할 개월 수
 
     init(date: Date? = nil) {
