@@ -19,11 +19,11 @@ struct CalendarGridCell: View {
     }
 
     var body: some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 8) {
             // 월 헤더
             HStack {
                 Text("\(String(model.month))")
-                    .font(.system(size: 12, weight: .semibold))
+                    .font(.system(size: 20, weight: .black))
                     .padding(.bottom, 1)
                 Spacer()
             }
