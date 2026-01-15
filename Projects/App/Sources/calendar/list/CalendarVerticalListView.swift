@@ -82,6 +82,9 @@ struct CalendarVerticalListView: View {
                     model: .init(date: model.selectedDate ?? Date()),
                     present: specificDayMemoListViewPresent
                 )
+                .selectedDateChanged { date in
+                    model.selectedDate = date
+                }
             }
         }
     }
