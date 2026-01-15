@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CalendarUtility: ObservableObject {
+struct CalendarUtility {
     let date: Date
     let year: Int
     let month: Int
@@ -47,8 +47,7 @@ class CalendarUtility: ObservableObject {
     }
 
     /// 그리드에 표시할 셀 데이터 (nil = 빈 셀, Int = 날짜)
-    private var _gridCells: [Int?] = []
-    private func setGridCells() {
+    var gridCells: [Int?] {
         var cells: [Int?] = []
 
         // 월의 첫날 이전 빈 셀 추가
@@ -61,15 +60,7 @@ class CalendarUtility: ObservableObject {
             cells.append(day)
         }
 
-        _gridCells = cells
-    }
-
-    var gridCells: [Int?] {
-        if _gridCells.isEmpty {
-            setGridCells()
-        }
-
-        return _gridCells
+        return cells
     }
 
     private static func getYearAndMonth(from date: Date) -> (Int, Int) {

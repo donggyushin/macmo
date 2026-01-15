@@ -9,20 +9,20 @@ import SwiftUI
 
 struct CalendarGridCell: View {
     let today: Date
-    @StateObject var calendarUtility: CalendarUtility
+    @StateObject var model: CalendarGridCellModel
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 1), count: 7)
 
-    init(calendarUtility: CalendarUtility, today: Date = Date()) {
+    init(model: CalendarGridCellModel, today: Date = Date()) {
         self.today = today
-        self._calendarUtility = .init(wrappedValue: calendarUtility)
+        self._model = .init(wrappedValue: model)
     }
 
     var body: some View {
         VStack(spacing: 2) {
             // 월 헤더
             HStack {
-                Text("\(String(calendarUtility.month))")
+                Text("\(String(model.month))")
                     .font(.system(size: 12, weight: .semibold))
                     .padding(.bottom, 1)
                 Spacer()
@@ -30,7 +30,7 @@ struct CalendarGridCell: View {
 
             // 날짜 그리드
             LazyVGrid(columns: columns, spacing: 1) {
-                ForEach(Array(calendarUtility.gridCells.enumerated()), id: \.offset) { _, cellData in
+                ForEach(Array(model.gridCells.enumerated()), id: \.offset) { _, cellData in
                     if let day = cellData {
                         ZStack {
                             // 오늘인 경우 원형 배경
@@ -60,6 +60,7 @@ struct CalendarGridCell: View {
     private func isToday(day: Int) -> Bool {
         let calendar = Calendar.current
         let todayComponents = calendar.dateComponents([.year, .month, .day], from: today)
+        let calendarUtility = model.calendarUtility
 
         return todayComponents.year == calendarUtility.year &&
             todayComponents.month == calendarUtility.month &&
@@ -69,7 +70,7 @@ struct CalendarGridCell: View {
 
 private struct CalendarGridCellPreview: View {
     var body: some View {
-        CalendarGridCell(calendarUtility: .init(date: Date()))
+        CalendarGridCell(model: .init(date: Date()))
             .frame(width: 130)
     }
 }

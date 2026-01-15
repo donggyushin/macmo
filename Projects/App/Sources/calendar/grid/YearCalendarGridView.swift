@@ -39,10 +39,10 @@ struct YearCalendarGridView: View {
                         tapCalendar?(date)
                     } label: {
                         if let namespace {
-                            CalendarGridCell(calendarUtility: model.getCalendarUtility(from: date), today: model.today)
+                            CalendarGridCell(model: model.getCalendarGridCellModel(from: date), today: model.today)
                                 .matchedTransitionSource(id: date, in: namespace)
                         } else {
-                            CalendarGridCell(calendarUtility: model.getCalendarUtility(from: date), today: model.today)
+                            CalendarGridCell(model: model.getCalendarGridCellModel(from: date), today: model.today)
                         }
                     }
                     .buttonStyle(.plain)

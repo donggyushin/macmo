@@ -35,20 +35,20 @@ final class YearCalendarGridViewModel: ObservableObject {
         return _monthDates
     }
 
-    private var calendarUtilities: [Date: CalendarUtility] = [:]
+    private var calendarGridCellModels: [Date: CalendarGridCellModel] = [:]
 
     init(date: Date, today: Date = Date()) {
         self.date = date
         self.today = today
     }
 
-    func getCalendarUtility(from date: Date) -> CalendarUtility {
-        if let cached = calendarUtilities[date] {
+    func getCalendarGridCellModel(from date: Date) -> CalendarGridCellModel {
+        if let cached = calendarGridCellModels[date] {
             return cached
         } else {
-            let util = CalendarUtility(date: date)
-            calendarUtilities[date] = util
-            return util
+            let vm = CalendarGridCellModel(date: date)
+            calendarGridCellModels[date] = vm
+            return vm
         }
     }
 }
