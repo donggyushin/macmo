@@ -16,15 +16,23 @@ final class YearCalendarGridViewModel: ObservableObject {
     }
 
     // 각 달의 첫날을 담은 배열
-    var monthDates: [Date] {
+    private var _monthDates: [Date] = []
+    private func setMonthDates() {
         let calendar = Calendar.current
-        return (1 ... 12).compactMap { month in
+        _monthDates = (1 ... 12).compactMap { month in
             var components = DateComponents()
             components.year = year
             components.month = month
             components.day = 1
             return calendar.date(from: components)
         }
+    }
+
+    var monthDates: [Date] {
+        if _monthDates.isEmpty {
+            setMonthDates()
+        }
+        return _monthDates
     }
 
     init(date: Date, today: Date = Date()) {
