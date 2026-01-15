@@ -78,13 +78,23 @@ struct CalendarVerticalListView: View {
                 }
             }
             .sheet(isPresented: specificDayMemoListViewPresent) {
-                SpecificDayMemoListContainer(
-                    model: .init(date: model.selectedDate ?? Date()),
-                    present: specificDayMemoListViewPresent
-                )
-                .selectedDateChanged { date in
-                    model.selectedDate = date
-                }
+                specificDayMemoListContainer
+            }
+        }
+    }
+
+    var specificDayMemoListContainer: some View {
+        SpecificDayMemoListContainer(
+            model: .init(date: model.selectedDate ?? Date()),
+            present: specificDayMemoListViewPresent
+        )
+        .selectedDateChanged { date in
+            model.selectedDate = date
+
+            let calendar = Calendar.current
+            let components = calendar.dateComponents([.year, .month], from: date)
+            if let targetDate = calendar.date(from: components) {
+                scrollTo(targetDate, animated: true)
             }
         }
     }
