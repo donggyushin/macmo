@@ -27,6 +27,13 @@ struct CalendarView: View {
         return copy
     }
 
+    var allCalendarDotsVisible: Bool = true
+    func allCalendarDotsVisible(_ value: Bool) -> Self {
+        var copy = self
+        copy.allCalendarDotsVisible = value
+        return copy
+    }
+
     var body: some View {
         VStack(spacing: 26) {
             // 년월 헤더
@@ -80,7 +87,7 @@ struct CalendarView: View {
                                 .frame(height: 40)
 
                                 // 이벤트 점 표시 (개수에 따라)
-                                let count = model.eventCount(on: day)
+                                let count = model.eventCount(on: day, allCalendarDotsVisible: allCalendarDotsVisible)
                                 if count > 0 {
                                     HStack(spacing: 2) {
                                         if count <= 3 {

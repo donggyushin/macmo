@@ -27,6 +27,7 @@ struct CalendarVerticalListView: View {
                                     .fontWeight(.bold)
                             }
                             CalendarView(model: model.getCalendarViewModel(from: date))
+                                .allCalendarDotsVisible(model.allDotsVisible)
                                 .tapDate(model.tapDate)
                                 .setSelectedDate(model.selectedDate)
                                 .id(date)
