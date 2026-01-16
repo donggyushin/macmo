@@ -6,11 +6,15 @@
 //
 
 import Combine
+import Factory
 import Foundation
 
 final class CalendarVerticalListViewModel: ObservableObject {
     @Published var dates: [Date] = []
     @Published var selectedDate: Date?
+    @Published var allDotsVisible = true
+
+    @Injected(\.userPreferenceRepository) var userPreferenceRepository
 
     private var calendarViewModels: [Date: CalendarViewModel] = [:]
     func getCalendarViewModel(from date: Date) -> CalendarViewModel {
@@ -29,6 +33,10 @@ final class CalendarVerticalListViewModel: ObservableObject {
         if let date {
             self.dates = [date]
         }
+    }
+
+    @MainActor func configAllDotsVisible() {
+        allDotsVisible = userPreferenceRepository.getCalendarDotVisibleMode() == .all
     }
 
     @MainActor func tapDate(_ date: Date) {
