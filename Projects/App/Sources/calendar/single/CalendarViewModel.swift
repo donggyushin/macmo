@@ -31,7 +31,11 @@ public final class CalendarViewModel: ObservableObject {
     }
 
     /// 특정 날짜의 이벤트 개수 반환
-    func eventCount(on day: Int) -> Int {
-        calendarDays.filter { $0.day == day }.count
+    func eventCount(on day: Int, allCalendarDotsVisible: Bool = true) -> Int {
+        if allCalendarDotsVisible {
+            return calendarDays.filter { $0.day == day }.count
+        } else {
+            return calendarDays.filter { $0.day == day }.filter { !$0.memo.done }.count
+        }
     }
 }
