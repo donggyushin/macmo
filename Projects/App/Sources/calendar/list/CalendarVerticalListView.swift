@@ -18,29 +18,36 @@ struct CalendarVerticalListView: View {
             ScrollView {
                 LazyVStack(spacing: 20) {
                     ForEach(model.dates, id: \.self) { date in
-                        CalendarView(model: model.getCalendarViewModel(from: date))
-                            .tapDate(model.tapDate)
-                            .setSelectedDate(model.selectedDate)
-                            .id(date)
-                            .onAppear {
-                                Task {
-                                    if date == model.dates.first {
-                                        guard !ignoreScrollFetchAction else { return }
-                                        ignoreScrollFetchAction = true
-                                        model.fetchPrevDates(date: date)
-                                        try await Task.sleep(for: .seconds(0.2))
-                                        scrollTo(date)
-                                        try await Task.sleep(for: .seconds(0.3))
-                                        ignoreScrollFetchAction = false
-                                    } else if date == model.dates.last {
-                                        guard !ignoreScrollFetchAction else { return }
-                                        ignoreScrollFetchAction = true
-                                        model.fetchNextDates(date: date)
-                                        try await Task.sleep(for: .seconds(0.3))
-                                        ignoreScrollFetchAction = false
+                        VStack {
+                            if model.getCalendarViewModel(from: date).calendarUtility.month == 1 {
+                                Text(String(model.getCalendarViewModel(from: date).calendarUtility.year))
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                            }
+                            CalendarView(model: model.getCalendarViewModel(from: date))
+                                .tapDate(model.tapDate)
+                                .setSelectedDate(model.selectedDate)
+                                .id(date)
+                                .onAppear {
+                                    Task {
+                                        if date == model.dates.first {
+                                            guard !ignoreScrollFetchAction else { return }
+                                            ignoreScrollFetchAction = true
+                                            model.fetchPrevDates(date: date)
+                                            try await Task.sleep(for: .seconds(0.2))
+                                            scrollTo(date)
+                                            try await Task.sleep(for: .seconds(0.3))
+                                            ignoreScrollFetchAction = false
+                                        } else if date == model.dates.last {
+                                            guard !ignoreScrollFetchAction else { return }
+                                            ignoreScrollFetchAction = true
+                                            model.fetchNextDates(date: date)
+                                            try await Task.sleep(for: .seconds(0.3))
+                                            ignoreScrollFetchAction = false
+                                        }
                                     }
                                 }
-                            }
+                        }
                     }
                 }
             }
