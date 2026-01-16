@@ -31,8 +31,8 @@ struct CalendarView: View {
         VStack(spacing: 26) {
             // 년월 헤더
             HStack {
-                Text("\(String(model.calendarUtility.year))년 \(String(model.calendarUtility.month))월")
-                    .font(.title2)
+                Text("\(String(model.calendarUtility.month))")
+                    .font(.title)
                     .fontWeight(.bold)
                     .padding(.leading)
 
