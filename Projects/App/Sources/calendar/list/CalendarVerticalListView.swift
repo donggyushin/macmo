@@ -53,6 +53,7 @@ struct CalendarVerticalListView: View {
             }
             .scrollIndicators(.hidden)
             .onAppear {
+                model.configAllDotsVisible()
                 Task {
                     guard model.dates.isEmpty || model.dates.count == 1 else { return }
                     model.fetchNextDates(date: model.dates.last)
