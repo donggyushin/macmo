@@ -13,6 +13,8 @@ struct CalendarVerticalListView: View {
     @State private var scrollAnimation: Bool = false
     @State private var ignoreScrollFetchAction = true
 
+    @State private var allDotsVisibleHelperTextVisible = false
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
@@ -88,6 +90,37 @@ struct CalendarVerticalListView: View {
             }
             .sheet(isPresented: specificDayMemoListViewPresent) {
                 specificDayMemoListContainer
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            VStack(alignment: .trailing) {
+                Toggle("", isOn: $model.allDotsVisible)
+
+                if allDotsVisibleHelperTextVisible {
+                    Text(model
+                        .allDotsVisible ? "Presents all tasks on the calendar" :
+                        "Presents uncompleted tasks on the calendar")
+                        .font(.body)
+                        .italic()
+                        .opacity(0.5)
+                        .onAppear {
+                            Task {
+                                try await Task.sleep(for: .seconds(3))
+                                withAnimation {
+                                    allDotsVisibleHelperTextVisible = false
+                                }
+                            }
+                        }
+                }
+            }
+            .padding(.trailing)
+            .onChange(of: model.allDotsVisible) {
+                model.userPreferenceRepository
+                    .setCalendarDotVisibleMode(model.allDotsVisible ? .all : .onlyNotCompleted)
+
+                withAnimation {
+                    allDotsVisibleHelperTextVisible = true
+                }
             }
         }
     }
