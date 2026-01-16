@@ -10,9 +10,18 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var selectedMemoId = ""
     private var memoDraft: Memo = .init(title: "")
     private var appTabEnum: AppTabEnum = .calendar
+    private var calendarDotVisibleMode: CalendarDotVisibleMode = .all
 
     public init() {}
-    
+
+    public func getCalendarDotVisibleMode() -> CalendarDotVisibleMode {
+        calendarDotVisibleMode
+    }
+
+    public func setCalendarDotVisibleMode(_ mode: CalendarDotVisibleMode) {
+        calendarDotVisibleMode = mode
+    }
+
     public func getAppTabEnum() -> AppTabEnum {
         appTabEnum
     }

@@ -15,4 +15,6 @@ public protocol UserPreferenceRepository {
     func setMemoDraft(_ memo: Memo)
     func getAppTabEnum() -> AppTabEnum
     func setAppTabEnum(_ tab: AppTabEnum)
+    func getCalendarDotVisibleMode() -> CalendarDotVisibleMode
+    func setCalendarDotVisibleMode(_ mode: CalendarDotVisibleMode)
 }
