@@ -85,6 +85,19 @@ dgmemo의 iOS 버전은 현재 앱스토어에서 확인 가능합니다!
 ### App
 가장 최상단 레이어로 실제 유저와 맞닿아있고 어플리케이션 그 자체입니다. 유저와의 상호작용이나 앱 수준의 이벤트등을 위임받고 동작합니다. 
 
+### Dependencies Container
+- Container 내부에 각 타입별로 의존성을 등록해줍니다. 이때에, 앱이 실행되는 context에 맞추어서 다른 구현체들을 주입해줄 수 있습니다. ViewModel 에서는 Container 를 통해 등록된 구현체들을 사용하면 생성자를 더럽히지 않으면서도 context 에 맞게 Impl 구현체, Mock 구현체 등을 알아서 주입받을 수 있게 되어서 Preview, Test 작성 등에 유리합니다.
+- 의존성을 생성자를 통해서 직접 주입받지 않기 때문에 코드가 지저분해지고, 작은 변경 사항에도 code changes 가 많아지는 Dependency Drilling 을 방지해 줄 수 있습니다.
+- 기존 코드가 Service Locator Pattern 을 준수하고 있다고 해서 앞으로의 코드 작성에 항상 @Injected annotation을 사용할 필요는 없습니다. 상황에 따라 필요하다면 유동적으로 의존성을 직접 주입받게 만들어줍니다. 
+
+### NavigationManager
+NavigationStack의 path에 직접 접근하여 앱의 네비게이팅을 관리해줍니다. App에서 EnvironmentObject로 등록해주기 때문에 Depth 가 깊은 컴포넌트들에서도 바로 직접 접근이 가능합니다. 
+
+### iOSURLSchemeManager
+앱과 그 어떠한 의존성도 생기지 않고 pure 한 String 값 만으로 앱의 네비게이션을 조작할 수 있게 도와줍니다. Widget, Push Notification, DeepLink 등 활용성이 매우 범용적입니다. 
+
+
+
 
 
 
