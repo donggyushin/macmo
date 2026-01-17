@@ -127,7 +127,25 @@ NavigationStack의 path에 직접 접근하여 앱의 네비게이팅을 관리�
 | `day` | Int | 일 |
 | `memo` | Memo | 해당 날짜의 메모 |
 
+### Repository
 
+#### UserPreferenceRepository
+사용자 설정 및 앱 상태를 저장하고 불러오는 인터페이스입니다. UserDefaults를 통해 영속화됩니다.
+
+| 메서드 | 설명 |
+|--------|------|
+| `getMemoSort()` / `setMemoSort(_:)` | 메모 정렬 기준 (생성일/수정일/마감일) |
+| `getAscending()` / `setAscending(_:)` | 정렬 순서 (오름차순/내림차순) |
+| `getStatistics()` / `setStatistics(_:)` | 통계 뷰 타입 |
+| `getMemoSortCacheInSearch()` / `setMemoSortCacheInSearch(_:)` | 검색 화면 정렬 기준 캐시 |
+| `getMemoSearchQuery()` / `setMemoSearchQuery(_:)` | 검색어 캐시 |
+| `getSelectedMemoId()` / `setSelectedMemoId(_:)` | 선택된 메모 ID |
+| `getMemoDraft()` / `setMemoDraft(_:)` | 작성 중인 메모 임시 저장 |
+| `getAppTabEnum()` / `setAppTabEnum(_:)` | 현재 선택된 탭 |
+| `getCalendarDotVisibleMode()` / `setCalendarDotVisibleMode(_:)` | 캘린더 dot 표시 모드 |
+
+#### MemoRepository
+메모 데이터의 CRUD 및 조회를 담당하는 인터페이스입니다. SwiftData를 통해 영속화되며, iCloud를 통해 기기 간 동기화됩니다.
 
 
 ### Prerequisites
