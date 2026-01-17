@@ -1,0 +1,41 @@
+//
+//  CalendarViewModel.swift
+//  macmo
+//
+//  Created by ratel on 1/9/26.
+//
+
+import Factory
+import Foundation
+import MacmoDomain
+
+public final class CalendarViewModel: ObservableObject {
+    let calendarUtility: CalendarUtility
+    let today: Date
+
+    @Published var calendarDays: [CalendarDay] = []
+    let gridCells: [Int?]
+
+    @Injected(\.calendarRepository) private var calendarRepository
+
+    public init(_ date: Date, today: Date = Date()) {
+        self.calendarUtility = .init(date: date)
+        self.today = today
+        self.gridCells = calendarUtility.gridCells
+    }
+
+    @MainActor func fetchData() throws {
+        let year = calendarUtility.year
+        let month = calendarUtility.month
+        calendarDays = try calendarRepository.find(year: year, month: month)
+    }
+
+    /// 특정 날짜의 이벤트 개수 반환
+    func eventCount(on day: Int, allCalendarDotsVisible: Bool = true) -> Int {
+        if allCalendarDotsVisible {
+            return calendarDays.filter { $0.day == day }.count
+        } else {
+            return calendarDays.filter { $0.day == day }.filter { !$0.memo.done }.count
+        }
+    }
+}

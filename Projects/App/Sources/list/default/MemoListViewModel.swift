@@ -112,12 +112,14 @@ final class MemoListViewModel: ObservableObject {
 
     private func bind() {
         $sortBy
+            .dropFirst()
             .sink { sort in
                 self.userPreferenceRepository.setMemoSort(sort)
             }
             .store(in: &cancellables)
 
         $ascending
+            .dropFirst()
             .sink { ascending in
                 self.userPreferenceRepository.setAscending(ascending)
             }

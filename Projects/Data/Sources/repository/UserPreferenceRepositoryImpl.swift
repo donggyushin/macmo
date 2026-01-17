@@ -12,8 +12,26 @@ public final class UserPreferenceRepositoryImpl: UserPreferenceRepository {
         key: "memo-draft",
         defaultValue: Memo(title: "")
     ) var memoDraft
+    @UserDefault(key: "appTabEnum", defaultValue: AppTabEnum.calendar) var appTabEnum
+    @UserDefault(key: "calendarDotVisibleMode", defaultValue: CalendarDotVisibleMode.all) var calendarDotVisibleMode
 
     public init() {}
+
+    public func getCalendarDotVisibleMode() -> CalendarDotVisibleMode {
+        calendarDotVisibleMode
+    }
+
+    public func setCalendarDotVisibleMode(_ mode: CalendarDotVisibleMode) {
+        calendarDotVisibleMode = mode
+    }
+
+    public func getAppTabEnum() -> AppTabEnum {
+        appTabEnum
+    }
+
+    public func setAppTabEnum(_ tab: AppTabEnum) {
+        appTabEnum = tab
+    }
 
     public func getMemoDraft() -> Memo {
         var memoDraft = memoDraft

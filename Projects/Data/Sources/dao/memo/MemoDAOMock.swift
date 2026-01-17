@@ -21,6 +21,22 @@ public class MemoDAOMock: MemoDAO {
         memos[memo.id] = memo
     }
 
+    public func findByDate(_ date: Date) throws -> [Memo] {
+        let calendar = Calendar.current
+
+        // due date가 주어진 날짜와 같은 날인 메모만 필터링
+        let filteredMemos = memos.values.filter { memo in
+            guard let due = memo.due else { return false }
+            return calendar.isDate(due, inSameDayAs: date)
+        }
+
+        // due date 기준으로 오름차순 정렬
+        return filteredMemos.sorted { memo1, memo2 in
+            guard let due1 = memo1.due, let due2 = memo2.due else { return false }
+            return due1 < due2
+        }
+    }
+
     public func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {
         var allMemos = Array(memos.values)
 

@@ -22,6 +22,31 @@ public class MemoDAOImpl: MemoDAO {
         try modelContext.save()
     }
 
+    /// find all memos which due date is same day with given date
+    public func findByDate(_ date: Date) throws -> [Memo] {
+        // SwiftData Predicate의 optional 처리 제약으로 인해 모든 메모를 fetch한 후 필터링
+        let descriptor = FetchDescriptor<MemoDTO>(
+            sortBy: [SortDescriptor(\.due, order: .forward)]
+        )
+
+        let allDtos = try modelContext.fetch(descriptor)
+
+        // 주어진 날짜와 같은 날(년, 월, 일)의 due date를 가진 메모만 필터링
+        let filteredMemos = allDtos.compactMap { dto -> Memo? in
+            guard let due = dto.due else { return nil }
+
+            // Calendar를 사용하여 같은 날인지 확인
+            let calendar = Calendar.current
+            if calendar.isDate(due, inSameDayAs: date) {
+                return dto.toDomain()
+            }
+
+            return nil
+        }
+
+        return filteredMemos
+    }
+
     /// sortBy default value is createdAt,
     /// ascending default value is false
     public func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo] {

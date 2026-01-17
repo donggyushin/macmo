@@ -92,7 +92,7 @@ struct iOSSearchMemoView: View {
                             }
                         }
                         .onTapGesture {
-                            navigationManager.push(.detail(memo.id))
+                            navigationManager.push(.detail(memo.id, nil))
                         }
                 }
             }

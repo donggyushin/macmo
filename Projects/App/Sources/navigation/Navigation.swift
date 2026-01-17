@@ -9,29 +9,39 @@ import Foundation
 import MacmoDomain
 
 enum Navigation: Hashable {
-    case detail(String?)
+    case list
+    case detail(String?, Date?)
     case setting
     case search
+    case calendarVerticalList(Date?)
 
     init(_ domain: NavigationDomain) {
         switch domain {
-        case let .detail(id):
-            self = .detail(id)
+        case let .detail(id, date):
+            self = .detail(id, date)
         case .setting:
             self = .setting
         case .search:
             self = .search
+        case .list:
+            self = .list
+        case let .calendarVerticalList(date):
+            self = .calendarVerticalList(date)
         }
     }
 
     var domain: NavigationDomain {
         switch self {
-        case let .detail(id):
-            .detail(id)
+        case .list:
+            .list
+        case let .detail(id, date):
+            .detail(id, date)
         case .setting:
             .setting
         case .search:
             .search
+        case let .calendarVerticalList(date):
+            .calendarVerticalList(date)
         }
     }
 }

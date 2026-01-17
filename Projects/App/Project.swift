@@ -13,8 +13,8 @@ let project = Project(
             "IPHONEOS_DEPLOYMENT_TARGET": "18.0",
             "DEVELOPMENT_TEAM": "YV58Q28W8Z",
             "CODE_SIGN_STYLE": "Automatic",
-            "MARKETING_VERSION": "1.14.1",
-            "CURRENT_PROJECT_VERSION": "22",
+            "MARKETING_VERSION": "1.15.0",
+            "CURRENT_PROJECT_VERSION": "23",
             "INFOPLIST_KEY_LSApplicationCategoryType": "public.app-category.productivity",
             "PRODUCT_NAME": "dgmemo",
             "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
@@ -23,6 +23,7 @@ let project = Project(
             .debug(
                 name: .debug,
                 settings: [
+                    "PRODUCT_BUNDLE_IDENTIFIER": "dev.tuist.macmo.debug",
                     "PRODUCT_NAME": "dgmemo-debug",
                     "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo-debug"
                 ]
@@ -30,6 +31,7 @@ let project = Project(
             .release(
                 name: .release,
                 settings: [
+                    "PRODUCT_BUNDLE_IDENTIFIER": "dev.tuist.macmo",
                     "PRODUCT_NAME": "dgmemo",
                     "INFOPLIST_KEY_CFBundleDisplayName": "dgmemo"
                 ]
@@ -41,7 +43,7 @@ let project = Project(
             name: "macmo",
             destinations: [.mac, .iPhone, .iPad],
             product: .app,
-            bundleId: "dev.tuist.macmo",
+            bundleId: "$(PRODUCT_BUNDLE_IDENTIFIER)",
             infoPlist: .extendingDefault(with: [
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",
                 "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
@@ -80,7 +82,7 @@ let project = Project(
             name: "macmoWidgetExtension",
             destinations: [.iPhone, .iPad, .mac],
             product: .appExtension,
-            bundleId: "dev.tuist.macmo.widget",
+            bundleId: "$(PRODUCT_BUNDLE_IDENTIFIER).widget",
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": "dgmemo Widget",
                 "CFBundleShortVersionString": "$(MARKETING_VERSION)",

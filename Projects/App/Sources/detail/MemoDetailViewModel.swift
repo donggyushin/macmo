@@ -32,7 +32,7 @@ final class MemoDetailViewModel: ObservableObject {
 
     var timer: Timer?
 
-    init(id: String?) {
+    init(id: String?, date: Date? = nil) {
         self.memoListViewModel = Container.shared.memoListViewModel()
         let memoRepository = Container.shared.memoRepository()
         let userPreferenceRepository = Container.shared.userPreferenceRepository()
@@ -45,6 +45,11 @@ final class MemoDetailViewModel: ObservableObject {
             self.isNewMemo = true
             self.isEditing = true
             loadMemoData()
+        }
+
+        if let date {
+            self.hasDueDate = true
+            self.dueDate = date
         }
     }
 

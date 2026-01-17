@@ -5,6 +5,8 @@
 //  Created by 신동규 on 9/27/25.
 //
 
+import Foundation
+
 public protocol MemoRepository {
     func save(_ memo: Memo) throws
     func findAll(cursorId: String?, limit: Int, sortBy: MemoSort, ascending: Bool) throws -> [Memo]
@@ -16,4 +18,6 @@ public protocol MemoRepository {
 
     func addImage(_ memo: Memo, image: ImageAttachment) throws
     func deleteImage(memoId: String, imageId: String) throws
+
+    func findByDate(_ date: Date) throws -> [Memo]
 }

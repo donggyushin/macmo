@@ -19,4 +19,6 @@ public protocol MemoDAO {
 
     func addImage(_ memo: Memo, image: ImageAttachment) throws
     func deleteImage(memoId: String, imageId: String) throws
+
+    func findByDate(_ date: Date) throws -> [Memo]
 }

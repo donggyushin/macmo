@@ -15,41 +15,52 @@ struct iOSMemoListView: View {
     @EnvironmentObject private var navigationManager: NavigationManager
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
+            customHeader
             sortingPicker
             memoList
-        }
-        .navigationTitle("Memos")
-        .toolbar {
-            ToolbarItem(placement: .navigation) {
-                Button(action: {
-                    navigationManager.push(.search)
-                }) {
-                    Image(systemName: "magnifyingglass")
-                }
-            }
-
-            ToolbarItem(placement: .navigation) {
-                Button(action: {
-                    navigationManager.push(.setting)
-                }) {
-                    Image(systemName: "gear")
-                }
-            }
-
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    navigationManager.push(.detail(nil))
-                } label: {
-                    Image(systemName: "folder.badge.plus")
-                }
-            }
         }
         .task {
             model.configInitialSetup()
             _ = try? await Container.shared.calendarService().requestAccess()
             loadMemos()
         }
+    }
+
+    private var customHeader: some View {
+        HStack {
+            Text("Memos")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+
+            Spacer()
+
+            Button(action: {
+                navigationManager.push(.search)
+            }) {
+                Image(systemName: "magnifyingglass")
+                    .font(.title2)
+                    .foregroundColor(.primary)
+            }
+
+            Button(action: {
+                navigationManager.push(.setting)
+            }) {
+                Image(systemName: "gear")
+                    .font(.title2)
+                    .foregroundColor(.primary)
+            }
+
+            Button {
+                navigationManager.push(.detail(nil, nil))
+            } label: {
+                Image(systemName: "folder.badge.plus")
+                    .font(.title2)
+                    .foregroundColor(.accentColor)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
     }
 
     private var sortingPicker: some View {
@@ -75,7 +86,7 @@ struct iOSMemoListView: View {
                         }
                     }
                     .onTapGesture {
-                        navigationManager.push(.detail(memo.id))
+                        navigationManager.push(.detail(memo.id, nil))
                     }
             }
             .onDelete(perform: deleteMemos)

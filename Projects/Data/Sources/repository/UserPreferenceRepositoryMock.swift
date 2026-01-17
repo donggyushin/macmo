@@ -9,8 +9,26 @@ public final class UserPreferenceRepositoryMock: UserPreferenceRepository {
     private var memoSearchQuery = ""
     private var selectedMemoId = ""
     private var memoDraft: Memo = .init(title: "")
+    private var appTabEnum: AppTabEnum = .calendar
+    private var calendarDotVisibleMode: CalendarDotVisibleMode = .all
 
     public init() {}
+
+    public func getCalendarDotVisibleMode() -> CalendarDotVisibleMode {
+        calendarDotVisibleMode
+    }
+
+    public func setCalendarDotVisibleMode(_ mode: CalendarDotVisibleMode) {
+        calendarDotVisibleMode = mode
+    }
+
+    public func getAppTabEnum() -> AppTabEnum {
+        appTabEnum
+    }
+
+    public func setAppTabEnum(_ tab: AppTabEnum) {
+        appTabEnum = tab
+    }
 
     public func getMemoDraft() -> Memo {
         memoDraft
