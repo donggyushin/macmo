@@ -1,6 +1,6 @@
 # dgmemo
 
-A clean, simple memo application for macOS and iOS with iCloud sync.
+일정 기입은 맥으로, 확인은 아이폰으로 해보고 싶지 않으신가요? dgmemo에 일정, 생각나는 것, 업무 등 모든 것을 기록해보세요. 애플의 모든 디바이스와 연동됩니다. 
 
 ![macOS](https://img.shields.io/badge/macOS-15.0+-blue)
 ![iOS](https://img.shields.io/badge/iOS-18.0+-blue)
@@ -10,16 +10,9 @@ A clean, simple memo application for macOS and iOS with iCloud sync.
 
 ## Features
 
-✅ **Create, edit, and organize memos** - Simple and intuitive memo management<br />
-✅ **iCloud sync** - Access your memos across all Apple devices<br />
-✅ **Calendar integration** - Automatically sync memos with due dates to macOS Calendar<br />
-✅ **Smart sorting** - Sort by creation date, update date, or due date<br />
-✅ **Due date management** - Set due dates with overdue indicators<br />
-✅ **Task completion** - Mark memos as completed with visual feedback<br />
-✅ **Smart search** - Search with special filters: "urgent" for due-soon memos, "completed" for done tasks<br />
-✅ **Native macOS interface** - Clean design that follows macOS guidelines<br />
-✅ **Multi-window support** - Open new memos in separate windows<br />
-✅ **Context menus** - Right-click for quick actions<br />
+✅ **Create, edit, and organize memos** - 간단하고 직관적인 메모(태스크) 관리 프로그램<br />
+✅ **iCloud sync** - 모든 apple 디바이스에서 접근 가능한 설계<br />
+✅ **Calendar integration** - 애플 캘린더와의 자동 연동<br />
 
 ## Screenshots
 
@@ -35,56 +28,27 @@ A clean, simple memo application for macOS and iOS with iCloud sync.
 
 **[💻 Download on the Mac App Store](https://apps.apple.com/kr/app/macmo/id6753157832)**
 
-The macOS version of dgmemo is now available on the App Store! The Mac app includes:
+dgmemo의 macOS 버전은 현재 앱스토어에서 확인 가능합니다!
 
-- 💻 **Native macOS interface** - Clean design that follows macOS guidelines
-- 🔄 **Seamless iCloud sync** - Your memos automatically sync between Mac, iPhone, and iPad
-- 🪟 **Multi-window support** - Open new memos in separate windows
-- 📅 **Calendar integration** - Automatically sync memos with due dates to macOS Calendar
-- ⌨️ **Keyboard shortcuts** - Quick access with ⌘N for new memos
-- 🎯 **Context menus** - Right-click for quick actions
+- 💻 **Native macOS interface** - macOS 가이드라인을 준수하여 깔끔한 디자인을 추구합니다.
+- 🔄 **Seamless iCloud sync** - 당신의 모든 메모는 맥, 아이폰, 아이패드에서 데이터가 호환됩니다.
+- 📅 **Calendar integration** - 캘린더와 자동으로 연동되는 데이터
+
 
 ### iOS / iPadOS
 
 **[📱 Download on the App Store](https://apps.apple.com/kr/app/macmo/id6753157832)**
 
-The iOS version of dgmemo is now available! The iOS app includes:
+dgmemo의 iOS 버전은 현재 앱스토어에서 확인 가능합니다!
 
-- 📱 **Native iOS interface** - Designed specifically for iPhone and iPad
-- 🔄 **Seamless iCloud sync** - Your memos automatically sync between Mac, iPhone, and iPad
-- 🎨 **iOS-optimized UI** - Large navigation titles, pull-to-refresh, and native gestures
-- 🔍 **Smart search with animations** - Beautiful typing animations for quick filters
-- 📅 **Calendar integration** - Sync memos with due dates to iOS Calendar
-
-## Requirements
-
-- **macOS 15.0+** for Mac app
-- **iOS 18.0+** for iPhone/iPad app
-- **iCloud account** for sync across devices (optional but recommended)
-
-## Usage
-
-### Basic Operations
-- **Create memo**: Click the "Add" button or use ⌘N
-- **Edit memo**: Click on any memo to view/edit in the detail pane
-- **Delete memo**: Right-click on a memo and select "Delete"
-- **Sort memos**: Use the sorting picker to organize by date
-- **Search memos**: Use the search bar with special keywords:
-  - Type "urgent" to find memos due within 3 days (excluding completed ones)
-  - Type "completed" to find all finished memos
-  - Regular text search works for title and content
-
-### iCloud Sync
-- Sign into iCloud on your devices with the same Apple ID
-- Memos automatically sync across iPhone, iPad, and Mac
-- Works offline - syncs when internet is available
+- 📱 **Native iOS interface** - 맥 버전의 디자인을 재활용하지 않았습니다. iPhone에 최적화된 디자인으로 따로 개발하였습니다.
+- 🔄 **Seamless iCloud sync** - 당신의 모든 메모는 맥, 아이폰, 아이패드에서 데이터가 호환됩니다.
+- 📅 **Calendar integration** - 캘린더와 자동으로 연동되는 데이터
 
 ### Calendar Integration
-- **Automatic sync**: Memos with due dates are automatically added to your macOS Calendar
-- **Permission required**: On first launch, grant calendar access when prompted
-- **Smart updates**: Calendar events update automatically when you edit memo titles, contents, or due dates
-- **Auto cleanup**: Deleting a memo or removing its due date also removes the calendar event
-- **Event details**: Calendar events include memo title and contents with 1-hour duration
+- **Automatic sync**: Due date를 설정하면 자동으로 애플 캘린더에 기입됩니다
+- **Permission required**: 앱 첫 실행시 캘린더 접근에 동의해주세요
+- **Smart updates**: 메모의 제목, 컨텐츠, 일정 변경에 따라서 자동으로 캘린더 데이터도 업데이트 됩니다
 
 ### Keyboard Shortcuts
 - **⌘N** - New memo (opens in separate window)
@@ -103,7 +67,7 @@ The iOS version of dgmemo is now available! The iOS app includes:
 
 
 ### Prerequisites
-- Xcode 15.0+
+- Xcode 26.0+
 - Tuist 4.0+
 - macOS 15.0+
 
@@ -137,20 +101,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## Roadmap
-
-- [x] Markdown support
-- [x] Search and filtering
-- [x] Calendar integration
-- [ ] Tags and categories
-- [x] Rich text formatting
-- [x] iOS/iPadOS native application
-- [x] App Store release for iOS
-- [x] App Store release for macOS
-- [x] iPad-optimized layout
-- [x] Widget for iOS
-- [x] Widget for macOS
-- [ ] save image file
 
 ## Security & Privacy
 
