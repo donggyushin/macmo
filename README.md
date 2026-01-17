@@ -65,6 +65,9 @@ dgmemo의 iOS 버전은 현재 앱스토어에서 확인 가능합니다!
 - **Tuist** - Project generation and dependency management
 - **Fastlane** - Automated build and release pipeline
 
+### DataBase
+- CloudKit 데이터베이스를 사용해서 개발했습니다. Apple의 iCloud 기반으로 동작하기 때문에 보안적으로 취약하지 않고 애플 생태계의 모든 디바이스에서 자연스럽게 같은 데이터에 접근이 가능합니다. 또한 SwiftData를 이용해서 로컬 디비와의 자연스러운 호환효과 및 간단하게 구현할 수 있습니다.  
+
 
 ### Prerequisites
 - Xcode 26.0+
