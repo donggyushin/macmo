@@ -117,13 +117,6 @@ extension Container {
         .singleton
     }
 
-    var navigationService: Factory<NavigationService> {
-        self {
-            NavigationServiceImpl()
-        }
-        .singleton
-    }
-
     var pushNotificationService: Factory<PushNotificationService> {
         self {
             PushNotificationServiceImpl()
