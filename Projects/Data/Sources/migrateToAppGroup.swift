@@ -1,8 +1,14 @@
+//
+//  migrateToAppGroup.swift
+//  MacmoData
+//
+//  Created by 신동규 on 1/17/26.
+//
 
 import Foundation
 import MacmoDomain
 
-func migrateToAppGroup() throws {
+public func migrateToAppGroup() throws {
     let fileManager = FileManager.default
 
     // 기존 위치
@@ -20,3 +26,4 @@ func migrateToAppGroup() throws {
         try fileManager.copyItem(at: oldDB, to: newDB)
     }
 }
+
