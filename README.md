@@ -65,8 +65,27 @@ dgmemo의 iOS 버전은 현재 앱스토어에서 확인 가능합니다!
 - **Tuist** - Project generation and dependency management
 - **Fastlane** - Automated build and release pipeline
 
+
+<img width="2784" height="2144" alt="image" src="https://github.com/user-attachments/assets/1b4c9d2f-1d5a-4d92-a214-2734beafbbcb" />
+
+
 ### DataBase
-- CloudKit 데이터베이스를 사용해서 개발했습니다. Apple의 iCloud 기반으로 동작하기 때문에 보안적으로 취약하지 않고 애플 생태계의 모든 디바이스에서 자연스럽게 같은 데이터에 접근이 가능합니다. 또한 SwiftData를 이용해서 로컬 디비와의 자연스러운 호환효과 및 간단하게 구현할 수 있습니다.  
+- CloudKit 데이터베이스를 사용해서 개발했습니다. Apple의 iCloud 기반으로 동작하기 때문에 보안적으로 취약하지 않고 애플 생태계의 모든 디바이스에서 자연스럽게 같은 데이터에 접근이 가능합니다. 또한 SwiftData를 이용해서 로컬 디비와의 자연스러운 호환효과 및 간단하게 구현할 수 있습니다.
+
+### MacmoDomain
+의존성을 최대로 줄여 앱 외부의 변화로부터 영향을 받지 않게끔 설계합니다. 구현체는 모두 숨기고 행동만 정의하여 컨텍스트에 따라서 필요한 구현체들을 주입할 수 있게끔 전반적으로 앱을 설계합니다. 
+- **Entity** - App 내에서 필요한 객체들의 모델을 정의합니다.
+- **Repository** - 데이터에 접근합니다.
+- **Service** - 캘린더, 푸쉬노티피케이션 등 외부 서비스와의 통합을 위해 정의합니다.
+- **UseCase** - Repository와 Service들을 조합하여 하나의 완결된 비즈니스 로직을 수행합니다.
+
+### MacmoData
+실제 내부 데이터베이스 혹은 외부 서비스와 통합하여 데이터를 변경, 접근하는 행동에 대한 모든 구현을 담당합니다.
+
+### App
+가장 최상단 레이어로 실제 유저와 맞닿아있고 어플리케이션 그 자체입니다. 유저와의 상호작용이나 앱 수준의 이벤트등을 위임받고 동작합니다. 
+
+
 
 
 ### Prerequisites
