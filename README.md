@@ -94,9 +94,38 @@ dgmemo의 iOS 버전은 현재 앱스토어에서 확인 가능합니다!
 NavigationStack의 path에 직접 접근하여 앱의 네비게이팅을 관리해줍니다. App에서 EnvironmentObject로 등록해주기 때문에 Depth 가 깊은 컴포넌트들에서도 바로 직접 접근이 가능합니다. 
 
 ### iOSURLSchemeManager
-앱과 그 어떠한 의존성도 생기지 않고 pure 한 String 값 만으로 앱의 네비게이션을 조작할 수 있게 도와줍니다. Widget, Push Notification, DeepLink 등 활용성이 매우 범용적입니다. 
+앱과 그 어떠한 의존성도 생기지 않고 pure 한 String 값 만으로 앱의 네비게이션을 조작할 수 있게 도와줍니다. Widget, Push Notification, DeepLink 등 활용성이 매우 범용적입니다.
 
+### Entity
 
+#### Memo
+앱의 핵심 도메인 모델입니다. 사용자가 작성하는 메모(태스크)의 모든 정보를 담고 있습니다.
+
+| 프로퍼티 | 타입 | 설명 |
+|---------|------|------|
+| `id` | String | 고유 식별자 |
+| `title` | String | 메모 제목 |
+| `contents` | String? | 메모 내용 (마크다운 지원) |
+| `due` | Date? | 마감일 |
+| `done` | Bool | 완료 여부 |
+| `eventIdentifier` | String? | 연동된 캘린더 이벤트 ID |
+| `createdAt` | Date | 생성일 |
+| `updatedAt` | Date | 수정일 |
+| `images` | [ImageAttachment] | 첨부 이미지 목록 |
+
+**Computed Properties:**
+- `isUrgent` - 마감일이 3일 이내이고 미완료인 경우 `true`
+- `isOverDue` - 마감일이 지난 경우 `true`
+
+#### CalendarDay
+캘린더 뷰에서 특정 날짜에 메모를 매핑하기 위한 모델입니다.
+
+| 프로퍼티 | 타입 | 설명 |
+|---------|------|------|
+| `year` | Int | 연도 |
+| `month` | Int | 월 |
+| `day` | Int | 일 |
+| `memo` | Memo | 해당 날짜의 메모 |
 
 
 
