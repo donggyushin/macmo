@@ -20,6 +20,18 @@ public extension Date {
         return Calendar.current.component(.day, from: self)
     }
 
+    var hour: Int {
+        return Calendar.current.component(.hour, from: self)
+    }
+
+    var minute: Int {
+        return Calendar.current.component(.minute, from: self)
+    }
+
+    var second: Int {
+        return Calendar.current.component(.second, from: self)
+    }
+
     var monthName: String {
         let nameFormatter = DateFormatter()
         nameFormatter.dateFormat = "MMMM" // format January, February, March, ...
