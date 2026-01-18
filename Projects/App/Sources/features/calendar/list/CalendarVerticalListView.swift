@@ -36,15 +36,16 @@ struct CalendarVerticalListView: View {
                                         guard !ignoreScrollFetchAction else { return }
                                         ignoreScrollFetchAction = true
                                         model.fetchPrevDates(date: date)
+                                        scrollTo(date)
                                         try? await Task.sleep(for: .seconds(0.2))
                                         scrollTo(date)
-                                        try? await Task.sleep(for: .seconds(0.3))
+                                        try? await Task.sleep(for: .seconds(0.2))
                                         ignoreScrollFetchAction = false
                                     } else if date == model.dates.last {
                                         guard !ignoreScrollFetchAction else { return }
                                         ignoreScrollFetchAction = true
                                         model.fetchNextDates(date: date)
-                                        try? await Task.sleep(for: .seconds(0.3))
+                                        try? await Task.sleep(for: .seconds(0.2))
                                         ignoreScrollFetchAction = false
                                     }
                                 }
@@ -63,10 +64,11 @@ struct CalendarVerticalListView: View {
                 let targetDate = model.dates[targetIndex]
 
                 // 뷰가 완전히 레이아웃된 후 스크롤
+                scrollTo(targetDate)
                 try? await Task.sleep(for: .seconds(0.1))
                 scrollTo(targetDate)
 
-                try? await Task.sleep(for: .seconds(0.3))
+                try? await Task.sleep(for: .seconds(0.2))
                 ignoreScrollFetchAction = false
             }
             .onChange(of: scrollTarget) { _, newTarget in
