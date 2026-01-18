@@ -31,23 +31,21 @@ struct CalendarVerticalListView: View {
                                 .tapDate(model.tapDate)
                                 .setSelectedDate(model.selectedDate)
                                 .id(date)
-                                .onAppear {
-                                    Task {
-                                        if date == model.dates.first {
-                                            guard !ignoreScrollFetchAction else { return }
-                                            ignoreScrollFetchAction = true
-                                            model.fetchPrevDates(date: date)
-                                            try await Task.sleep(for: .seconds(0.2))
-                                            scrollTo(date)
-                                            try await Task.sleep(for: .seconds(0.3))
-                                            ignoreScrollFetchAction = false
-                                        } else if date == model.dates.last {
-                                            guard !ignoreScrollFetchAction else { return }
-                                            ignoreScrollFetchAction = true
-                                            model.fetchNextDates(date: date)
-                                            try await Task.sleep(for: .seconds(0.3))
-                                            ignoreScrollFetchAction = false
-                                        }
+                                .task {
+                                    if date == model.dates.first {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchPrevDates(date: date)
+                                        try? await Task.sleep(for: .seconds(0.2))
+                                        scrollTo(date)
+                                        try? await Task.sleep(for: .seconds(0.3))
+                                        ignoreScrollFetchAction = false
+                                    } else if date == model.dates.last {
+                                        guard !ignoreScrollFetchAction else { return }
+                                        ignoreScrollFetchAction = true
+                                        model.fetchNextDates(date: date)
+                                        try? await Task.sleep(for: .seconds(0.3))
+                                        ignoreScrollFetchAction = false
                                     }
                                 }
                         }
@@ -55,23 +53,21 @@ struct CalendarVerticalListView: View {
                 }
             }
             .scrollIndicators(.hidden)
-            .onAppear {
+            .task {
                 model.configAllDotsVisible()
-                Task {
-                    guard model.dates.isEmpty || model.dates.count == 1 else { return }
-                    model.fetchNextDates(date: model.dates.last)
-                    model.fetchPrevDates(date: model.dates.first)
-                    let totalCount = model.dates.count
-                    let targetIndex = totalCount / 2
-                    let targetDate = model.dates[targetIndex]
+                guard model.dates.isEmpty || model.dates.count == 1 else { return }
+                model.fetchNextDates(date: model.dates.last)
+                model.fetchPrevDates(date: model.dates.first)
+                let totalCount = model.dates.count
+                let targetIndex = totalCount / 2
+                let targetDate = model.dates[targetIndex]
 
-                    // 뷰가 완전히 레이아웃된 후 스크롤
-                    try await Task.sleep(for: .seconds(0.1))
-                    scrollTo(targetDate)
+                // 뷰가 완전히 레이아웃된 후 스크롤
+                try? await Task.sleep(for: .seconds(0.1))
+                scrollTo(targetDate)
 
-                    try await Task.sleep(for: .seconds(0.3))
-                    ignoreScrollFetchAction = false
-                }
+                try? await Task.sleep(for: .seconds(0.3))
+                ignoreScrollFetchAction = false
             }
             .onChange(of: scrollTarget) { _, newTarget in
                 if let target = newTarget {
