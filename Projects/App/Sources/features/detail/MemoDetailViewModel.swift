@@ -47,7 +47,20 @@ final class MemoDetailViewModel: ObservableObject {
             loadMemoData()
         }
 
-        if let date {
+        if var date {
+            let now = Date()
+
+            if let localizedDate = DateHelper.date(
+                year: date.year,
+                month: date.month,
+                day: date.day,
+                hour: now.hour,
+                minute: now.minute,
+                seconds: 0
+            ) {
+                date = localizedDate
+            }
+
             self.hasDueDate = true
             self.dueDate = date
         }
