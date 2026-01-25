@@ -145,19 +145,7 @@ struct CalendarVerticalListView: View {
                 Button {
                     goToToday()
                 } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "calendar")
-                        Text("Today")
-                            .fontWeight(.medium)
-                    }
-                    .font(.subheadline)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .overlay(
-                        Capsule()
-                            .strokeBorder(.secondary.opacity(0.3), lineWidth: 0.5)
-                    )
+                    CalendarTodayButton()
                 }
                 .buttonStyle(.plain)
                 .padding(.trailing, 20)
