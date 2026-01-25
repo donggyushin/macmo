@@ -14,6 +14,18 @@ struct CalendarVerticalListView: View {
     @State private var ignoreScrollFetchAction = true
 
     @State private var allDotsVisibleHelperTextVisible = false
+    @State private var visibleDates: Set<Date> = []
+
+    private var isTodayVisible: Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        let nowComponents = calendar.dateComponents([.year, .month], from: now)
+
+        return visibleDates.contains { date in
+            let dateComponents = calendar.dateComponents([.year, .month], from: date)
+            return dateComponents.year == nowComponents.year && dateComponents.month == nowComponents.month
+        }
+    }
 
     var body: some View {
         ScrollViewReader { proxy in
@@ -31,6 +43,12 @@ struct CalendarVerticalListView: View {
                                 .tapDate(model.tapDate)
                                 .setSelectedDate(model.selectedDate)
                                 .id(date)
+                                .onAppear {
+                                    visibleDates.insert(date)
+                                }
+                                .onDisappear {
+                                    visibleDates.remove(date)
+                                }
                                 .task {
                                     if date == model.dates.first {
                                         guard !ignoreScrollFetchAction else { return }
@@ -122,6 +140,20 @@ struct CalendarVerticalListView: View {
                 }
             }
         }
+        .overlay(alignment: .bottomTrailing) {
+            if !isTodayVisible {
+                Button {
+                    goToToday()
+                } label: {
+                    CalendarTodayButton()
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing, 20)
+                .padding(.bottom, 20)
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring(duration: 0.3), value: isTodayVisible)
     }
 
     var specificDayMemoListContainer: some View {
@@ -154,6 +186,18 @@ struct CalendarVerticalListView: View {
     private func scrollTo(_ date: Date, animated: Bool = false) {
         scrollAnimation = animated
         scrollTarget = date
+    }
+
+    private func goToToday(now: Date = Date()) {
+        let calendar = Calendar.current
+        let nowComponents = calendar.dateComponents([.year, .month], from: now)
+
+        if let targetDate = model.dates.first(where: { date in
+            let dateComponents = calendar.dateComponents([.year, .month], from: date)
+            return dateComponents.year == nowComponents.year && dateComponents.month == nowComponents.month
+        }) {
+            scrollTo(targetDate, animated: true)
+        }
     }
 }
 

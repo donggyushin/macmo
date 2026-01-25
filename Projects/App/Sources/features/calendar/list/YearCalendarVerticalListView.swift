@@ -13,6 +13,16 @@ struct YearCalendarVerticalListView: View {
     @State private var scrollTarget: Date?
     @State private var scrollAnimation: Bool = false
     @State private var ignoreScrollFetchAction = true
+    @State private var visibleDates: Set<Date> = []
+
+    private var isTodayVisible: Bool {
+        let calendar = Calendar.current
+        let nowYear = calendar.component(.year, from: Date())
+
+        return visibleDates.contains { date in
+            calendar.component(.year, from: date) == nowYear
+        }
+    }
 
     init(model: YearCalendarVerticalListViewModel, namespace: Namespace.ID? = nil) {
         _model = .init(wrappedValue: model)
@@ -34,6 +44,12 @@ struct YearCalendarVerticalListView: View {
                         YearCalendarGridView(model: model.getGridViewModel(from: date), namespace: namespace)
                             .tapCalendar(tapCalendar)
                             .id(date)
+                            .onAppear {
+                                visibleDates.insert(date)
+                            }
+                            .onDisappear {
+                                visibleDates.remove(date)
+                            }
                             .task {
                                 if date == model.dates.first {
                                     guard !ignoreScrollFetchAction else { return }
@@ -86,11 +102,36 @@ struct YearCalendarVerticalListView: View {
                 }
             }
         }
+        .overlay(alignment: .bottomTrailing) {
+            if !isTodayVisible {
+                Button {
+                    goToToday()
+                } label: {
+                    CalendarTodayButton()
+                }
+                .buttonStyle(.plain)
+                .padding(.trailing, 20)
+                .padding(.bottom, 20)
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .animation(.spring(duration: 0.3), value: isTodayVisible)
     }
 
     private func scrollTo(_ date: Date, animated: Bool = false) {
         scrollAnimation = animated
         scrollTarget = date
+    }
+
+    private func goToToday() {
+        let calendar = Calendar.current
+        let nowYear = calendar.component(.year, from: Date())
+
+        if let targetDate = model.dates.first(where: { date in
+            calendar.component(.year, from: date) == nowYear
+        }) {
+            scrollTo(targetDate, animated: true)
+        }
     }
 }
 
