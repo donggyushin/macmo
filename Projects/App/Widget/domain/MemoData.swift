@@ -12,7 +12,8 @@ public struct MemoData: Identifiable {
     public var isUrgent: Bool {
         // Consider urgent if due within 3 days (259200 seconds) and not completed
         guard let due = due, !isCompleted else { return false }
-        return due.timeIntervalSinceNow <= 259_200
+        let hour: TimeInterval = 3600
+        return due.timeIntervalSinceNow <= hour * 2
     }
 
     public var isOverDue: Bool {
