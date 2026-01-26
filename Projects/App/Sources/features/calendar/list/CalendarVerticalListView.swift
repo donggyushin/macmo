@@ -82,6 +82,7 @@ struct CalendarVerticalListView: View {
                 let targetDate = model.dates[targetIndex]
 
                 // 뷰가 완전히 레이아웃된 후 스크롤
+                scrollTo(targetDate)
                 try? await Task.sleep(for: .seconds(0.1))
                 scrollTo(targetDate)
 
