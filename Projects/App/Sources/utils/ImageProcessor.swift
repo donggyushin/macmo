@@ -1,3 +1,10 @@
+//
+//  ImageProcessor.swift
+//  macmo
+//
+//  Created by 신동규 on 1/17/26.
+//
+
 import Foundation
 import MacmoDomain
 
@@ -9,7 +16,7 @@ import AppKit
 import UIKit
 #endif
 
-public final class ImageProcessingServiceImpl: ImageProcessingService {
+public final class ImageProcessor {
 
     public init() {}
 
@@ -186,3 +193,4 @@ public final class ImageProcessingServiceImpl: ImageProcessingService {
     }
     #endif
 }
+

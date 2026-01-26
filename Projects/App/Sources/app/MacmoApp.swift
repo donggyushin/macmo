@@ -13,6 +13,7 @@ import AppKit
 @main
 struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
+    @State private var appReady = false
     @Environment(\.openWindow) private var openWindow
 
     private let notificationDelegate = NotificationDelegate()
@@ -45,10 +46,17 @@ struct MacmoApp: App {
             ContentView()
                 .environmentObject(navigationManager)
                 .onOpenURL { url in
-                    iOSURLSchemeManager.execute(url, navigationManager)
+                    Task { @MainActor in
+                        if appReady == false {
+                            try await Task.sleep(for: .seconds(1))
+                        }
+                        iOSURLSchemeManager.execute(url, navigationManager)
+                    }
                 }
                 .task {
                     WidgetCenter.shared.reloadAllTimelines()
+                    try? await Task.sleep(for: .seconds(3))
+                    appReady = true
                 }
             // .task {
             //     navigationManager.configIntitialSetup()

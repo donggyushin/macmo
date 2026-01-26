@@ -95,43 +95,59 @@ struct MediumWidgetView: View {
                     .foregroundStyle(.secondary)
                 Spacer()
             } else {
-                ForEach(entry.memos.prefix(3)) { memo in
-                    Link(destination: URL(string: "macmo://memo/\(memo.id)")!) {
-                        HStack(alignment: .top, spacing: 8) {
-                            Image(systemName: memo.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(memo.isCompleted ? .green : .secondary)
-                                .font(.caption)
+                HStack(alignment: .top, spacing: 12) {
+                    // 좌측 컬럼 (첫 3개)
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(Array(entry.memos.prefix(3))) { memo in
+                            memoRow(memo: memo)
+                        }
+                        Spacer()
+                    }
 
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 4) {
-                                    Text(memo.title)
-                                        .font(.caption)
-                                        .fontWeight(.medium)
-                                        .lineLimit(1)
-                                        .foregroundStyle(memoForegroundColor(memo: memo))
+                    // 우측 컬럼 (다음 3개)
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(Array(entry.memos.dropFirst(3).prefix(3))) { memo in
+                            memoRow(memo: memo)
+                        }
+                        Spacer()
+                    }
+                }
+            }
+        }
+        .padding()
+    }
 
-                                    if memo.isUrgent {
-                                        Image(systemName: "exclamationmark.circle.fill")
-                                            .foregroundStyle(.red)
-                                            .font(.caption2)
-                                    }
-                                }
+    private func memoRow(memo: MemoData) -> some View {
+        Link(destination: URL(string: "macmo://memo/\(memo.id)")!) {
+            HStack(alignment: .top, spacing: 6) {
+                Image(systemName: memo.isCompleted ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(memo.isCompleted ? .green : .secondary)
+                    .font(.caption)
 
-                                Text(memo.content)
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
-                            }
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(spacing: 4) {
+                        Text(memo.title)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .lineLimit(1)
+                            .foregroundStyle(memoForegroundColor(memo: memo))
 
-                            Spacer()
+                        if memo.isUrgent {
+                            Image(systemName: "exclamationmark.circle.fill")
+                                .foregroundStyle(.red)
+                                .font(.caption2)
                         }
                     }
+
+                    Text(memo.content)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
 
                 Spacer()
             }
         }
-        .padding()
     }
 }
 
