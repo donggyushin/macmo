@@ -5,6 +5,7 @@
 //  Created by ratel on 1/9/26.
 //
 
+#if os(iOS)
 import SwiftUI
 
 struct CalendarVerticalListView: View {
@@ -205,3 +206,4 @@ struct CalendarVerticalListView: View {
     CalendarVerticalListView(model: .init())
         .preferredColorScheme(.dark)
 }
+#endif

@@ -58,10 +58,11 @@ public final class MemoUseCase {
         if pushAuthorizedStatus {
             try await pushNotificationService.removeNotification(identifier: memo.id)
             guard let due = memo.due else { return }
+            guard !memo.done else { return }
 
             // due가 now보다 2시간 이상 이후인지 확인
             let oneHour: TimeInterval = 3600
-            guard due.timeIntervalSince(now) >= (3 * oneHour) else { return } // 7200 seconds = 2 hours
+            guard due.timeIntervalSince(now) >= (2 * oneHour) else { return } // 7200 seconds = 2 hours
 
             // 알림은 due보다 2시간 전에 발생
             let notificationDate = due.addingTimeInterval(-2 * oneHour)
