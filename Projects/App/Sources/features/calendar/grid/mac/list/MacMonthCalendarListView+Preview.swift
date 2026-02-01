@@ -5,6 +5,7 @@
 //  Created by 신동규 on 2/1/26.
 //
 
+#if os(mac)
 import SwiftUI
 
 struct MacMonthCalendarListViewPreview: View {
@@ -17,3 +18,4 @@ struct MacMonthCalendarListViewPreview: View {
     MacMonthCalendarListViewPreview()
         .preferredColorScheme(.dark)
 }
+#endif
