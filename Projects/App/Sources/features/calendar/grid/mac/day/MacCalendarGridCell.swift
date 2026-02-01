@@ -49,6 +49,15 @@ struct MacCalendarGridCell: View {
         max(0, sortedMemos.count - maxVisibleMemos)
     }
 
+    private var cellDate: Date? {
+        guard let year = data.year, let month = data.month, let day = data.day else { return nil }
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+        return Calendar.current.date(from: components)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             dayHeader
@@ -62,6 +71,12 @@ struct MacCalendarGridCell: View {
         .padding(6)
         .background(cellBackground)
         .clipShape(RoundedRectangle(cornerRadius: 4))
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if !data.isEmptyCell, let date = cellDate {
+                openWindow(id: "memo-detail-with-date", value: date)
+            }
+        }
         .overlay {
             if showAllMemos {
                 allMemosOverlay

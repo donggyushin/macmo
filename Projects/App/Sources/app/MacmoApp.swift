@@ -92,6 +92,12 @@ struct MacmoApp: App {
         }
         .defaultSize(width: 600, height: 700)
 
+        WindowGroup("New Memo With Date", id: "memo-detail-with-date", for: Date.self) { $date in
+            MemoDetailView(model: MemoDetailViewModel(id: nil, date: date))
+                .environmentObject(navigationManager)
+        }
+        .defaultSize(width: 600, height: 700)
+
         WindowGroup("Memo Detail", id: "memo-detail-with-id", for: String.self) { $memoId in
             if let memoId {
                 MemoDetailView(model: MemoDetailViewModel(id: memoId))
