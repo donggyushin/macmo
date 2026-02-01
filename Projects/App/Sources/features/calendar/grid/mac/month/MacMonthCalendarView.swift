@@ -48,7 +48,7 @@ struct MacMonthCalendarView: View {
 
     private var calendarGrid: some View {
         LazyVGrid(columns: columns, spacing: 1) {
-            ForEach(model.cells) { cell in
+            ForEach(Array(model.cells.enumerated()), id: \.offset) { _, cell in
                 MacCalendarGridCell(data: cell)
             }
         }
