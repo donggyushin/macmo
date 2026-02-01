@@ -14,6 +14,7 @@ final class MacMonthCalendarViewModel: ObservableObject {
     let util: CalendarUtility
 
     @Published var cells: [MacCalendarDayPresentation] = []
+    @Published var error: Error?
 
     @Injected(\.calendarRepository) private var calendarRepository
 
@@ -35,26 +36,31 @@ final class MacMonthCalendarViewModel: ObservableObject {
         self.cells = cells
     }
 
-    @MainActor func fetchDatas() throws {
+    @MainActor func fetchData() {
         let year = util.year
         let month = util.month
-        let days = try calendarRepository.find(year: year, month: month)
 
-        var cells = self.cells
+        let days: [CalendarDay]
+        do {
+            days = try calendarRepository.find(year: year, month: month)
+        } catch {
+            self.error = error
+            return
+        }
 
-        for calendarDay in days {
-            if let index = cells.firstIndex(where: { $0.day == calendarDay.day }) {
-                var updatedMemos = cells[index].memos
-                updatedMemos.append(calendarDay.memo)
-                cells[index] = .init(
-                    year: year,
-                    month: month,
-                    day: calendarDay.day,
-                    memos: updatedMemos
-                )
+        // O(n) lookup을 위한 dictionary 생성
+        var cellIndexByDay: [Int: Int] = [:]
+        for (index, cell) in cells.enumerated() {
+            if let day = cell.day {
+                cellIndexByDay[day] = index
             }
         }
 
-        self.cells = cells
+        // 메모 데이터 매핑
+        for calendarDay in days {
+            if let index = cellIndexByDay[calendarDay.day] {
+                cells[index].memos.append(calendarDay.memo)
+            }
+        }
     }
 }

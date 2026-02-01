@@ -15,25 +15,13 @@ struct MacMonthCalendarView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // monthHeader
             weekdayHeader
             calendarGrid
         }
         .onAppear {
             model.drawEmptyCells()
-            try? model.fetchDatas()
+            model.fetchData()
         }
-    }
-
-    private var monthHeader: some View {
-        HStack {
-            Text(verbatim: "\(model.util.year)년 \(model.util.month)월")
-                .font(.title2)
-                .fontWeight(.bold)
-            Spacer()
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
     }
 
     private var weekdayHeader: some View {
