@@ -27,11 +27,13 @@ struct MacMonthCalendarListView: View {
             navigationHeader
             Divider()
             calendarContent
+            Spacer()
         }
         .background(Color(nsColor: .windowBackgroundColor))
         .onAppear {
             initializeDateListIfNeeded()
         }
+        .frame(height: 800)
     }
 
     private var navigationHeader: some View {
