@@ -56,11 +56,20 @@ final class MacMonthCalendarViewModel: ObservableObject {
             }
         }
 
+        var cells = self.cells
+        cells = cells.map { cell in
+            var cell = cell
+            cell.memos = []
+            return cell
+        }
+
         // 메모 데이터 매핑
         for calendarDay in days {
             if let index = cellIndexByDay[calendarDay.day] {
                 cells[index].memos.append(calendarDay.memo)
             }
         }
+
+        self.cells = cells
     }
 }

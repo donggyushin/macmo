@@ -11,6 +11,9 @@ import SwiftUI
 struct MacCalendarGridCell: View {
     let data: MacCalendarDayPresentation
 
+    @Environment(\.openWindow) private var openWindow
+    @State private var showAllMemos = false
+
     private let maxVisibleMemos = 3
     private let cellHeight: CGFloat = 120
 
@@ -46,6 +49,15 @@ struct MacCalendarGridCell: View {
         max(0, sortedMemos.count - maxVisibleMemos)
     }
 
+    private var cellDate: Date? {
+        guard let year = data.year, let month = data.month, let day = data.day else { return nil }
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.day = day
+        return Calendar.current.date(from: components)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             dayHeader
@@ -59,6 +71,17 @@ struct MacCalendarGridCell: View {
         .padding(6)
         .background(cellBackground)
         .clipShape(RoundedRectangle(cornerRadius: 4))
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if !data.isEmptyCell, let date = cellDate {
+                openWindow(id: "memo-detail-with-date", value: date)
+            }
+        }
+        .overlay {
+            if showAllMemos {
+                allMemosOverlay
+            }
+        }
     }
 
     @ViewBuilder
@@ -87,16 +110,57 @@ struct MacCalendarGridCell: View {
         data.isEmptyCell ? Color.clear : Color.gray.opacity(0.1)
     }
 
+    private var allMemosOverlay: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                if let day = data.day {
+                    Text(verbatim: "\(day)일")
+                        .font(.system(size: 14, weight: .bold))
+                }
+                Spacer()
+                Button {
+                    showAllMemos = false
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(sortedMemos.enumerated()), id: \.offset) { _, memo in
+                        MemoRow(memo: memo)
+                            .onTapGesture {
+                                openWindow(id: "memo-detail-with-id", value: memo.id)
+                                showAllMemos = false
+                            }
+                    }
+                }
+            }
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 4))
+    }
+
     @ViewBuilder
     private var memoList: some View {
         VStack(alignment: .leading, spacing: 2) {
-            ForEach(visibleMemos, id: \.id) { memo in
+            ForEach(Array(visibleMemos.enumerated()), id: \.offset) { _, memo in
                 MemoRow(memo: memo)
+                    .onTapGesture {
+                        openWindow(id: "memo-detail-with-id", value: memo.id)
+                    }
             }
             if remainingCount > 0 {
                 Text("+\(remainingCount)")
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
+                    .onTapGesture {
+                        showAllMemos = true
+                    }
             }
         }
     }

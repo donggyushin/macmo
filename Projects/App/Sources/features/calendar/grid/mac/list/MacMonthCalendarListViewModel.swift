@@ -14,7 +14,7 @@ final class MacMonthCalendarListViewModel: ObservableObject {
     // 각 달별로 1개씩의 date 를 가짐
     @Published var dateList: [Date] = []
 
-    var viewModelCarts: [Date: MacMonthCalendarViewModel] = [:]
+    private var viewModelCache: [String: MacMonthCalendarViewModel] = [:]
 
     init(date: Date) {
         self.selectedDate = date
@@ -28,12 +28,20 @@ final class MacMonthCalendarListViewModel: ObservableObject {
     @MainActor func fetchRight() {}
 
     func getViewModel(_ date: Date) -> MacMonthCalendarViewModel {
-        if let viewModel = viewModelCarts[date] {
+        let key = cacheKey(for: date)
+        if let viewModel = viewModelCache[key] {
             return viewModel
         } else {
             let viewModel = MacMonthCalendarViewModel(date: date)
-            viewModelCarts[date] = viewModel
+            viewModelCache[key] = viewModel
             return viewModel
         }
+    }
+
+    private func cacheKey(for date: Date) -> String {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: date)
+        let month = calendar.component(.month, from: date)
+        return "\(year)-\(month)"
     }
 }

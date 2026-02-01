@@ -33,6 +33,14 @@ struct MemoListView: View {
 
                 ToolbarItem(placement: .navigation) {
                     Button(action: {
+                        openWindow(id: "calendar")
+                    }) {
+                        Image(systemName: "calendar")
+                    }
+                }
+
+                ToolbarItem(placement: .navigation) {
+                    Button(action: {
                         openWindow(id: "setting")
                     }) {
                         Image(systemName: "gear")

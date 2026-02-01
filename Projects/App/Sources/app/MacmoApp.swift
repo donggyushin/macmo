@@ -15,6 +15,7 @@ struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
     @State private var appReady = false
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) var dismissWindow
 
     private let notificationDelegate = NotificationDelegate()
 
@@ -74,6 +75,11 @@ struct MacmoApp: App {
                 }
                 .keyboardShortcut("f", modifiers: .command)
 
+                Button("Calendar") {
+                    openWindow(id: "calendar")
+                }
+                .keyboardShortcut("k", modifiers: .command)
+
                 Button("Setting") {
                     openWindow(id: "setting")
                 }
@@ -84,6 +90,30 @@ struct MacmoApp: App {
         WindowGroup("New Memo", id: "memo-detail") {
             MemoDetailView(model: MemoDetailViewModel(id: nil))
                 .environmentObject(navigationManager)
+        }
+        .defaultSize(width: 600, height: 700)
+
+        WindowGroup("New Memo With Date", id: "memo-detail-with-date", for: Date.self) { $date in
+            MemoDetailView(model: MemoDetailViewModel(id: nil, date: date))
+                .onDeleteAction {
+                    dismissWindow(id: "memo-detail-with-date")
+                }
+                .environmentObject(navigationManager)
+                .onDisappear {
+                    EventBus.shared.detailWindowDismissed.send()
+                }
+        }
+        .defaultSize(width: 600, height: 700)
+
+        WindowGroup("Memo Detail", id: "memo-detail-with-id", for: String.self) { $memoId in
+            MemoDetailView(model: MemoDetailViewModel(id: memoId))
+                .onDeleteAction {
+                    dismissWindow(id: "memo-detail-with-id")
+                }
+                .environmentObject(navigationManager)
+                .onDisappear {
+                    EventBus.shared.detailWindowDismissed.send()
+                }
         }
         .defaultSize(width: 600, height: 700)
 
@@ -100,5 +130,11 @@ struct MacmoApp: App {
             }
         }
         .defaultSize(width: 600, height: 700)
+
+        WindowGroup("Calendar", id: "calendar") {
+            MacMonthCalendarListView(model: .init(date: Date()))
+                .environmentObject(navigationManager)
+        }
+        .defaultSize(width: 1000, height: 900)
     }
 }

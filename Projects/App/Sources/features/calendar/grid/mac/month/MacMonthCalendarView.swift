@@ -22,6 +22,9 @@ struct MacMonthCalendarView: View {
             model.drawEmptyCells()
             model.fetchData()
         }
+        .onReceive(EventBus.shared.detailWindowDismissed) {
+            model.fetchData()
+        }
     }
 
     private var weekdayHeader: some View {
@@ -48,7 +51,7 @@ struct MacMonthCalendarView: View {
 
     private var calendarGrid: some View {
         LazyVGrid(columns: columns, spacing: 1) {
-            ForEach(model.cells) { cell in
+            ForEach(Array(model.cells.enumerated()), id: \.offset) { _, cell in
                 MacCalendarGridCell(data: cell)
             }
         }
