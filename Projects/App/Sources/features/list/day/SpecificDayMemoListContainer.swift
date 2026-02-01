@@ -5,6 +5,7 @@
 //  Created by ratel on 1/12/26.
 //
 
+#if os(iOS)
 import SwiftUI
 
 struct SpecificDayMemoListContainer: View {
@@ -99,3 +100,4 @@ private struct SpecificDayMemoListContainerPreview: View {
     SpecificDayMemoListContainerPreview()
         .preferredColorScheme(.dark)
 }
+#endif
