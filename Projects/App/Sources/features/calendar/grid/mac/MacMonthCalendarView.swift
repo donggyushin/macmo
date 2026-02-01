@@ -21,6 +21,7 @@ struct MacMonthCalendarView: View {
         }
         .onAppear {
             model.drawEmptyCells()
+            try? model.fetchDatas()
         }
     }
 
