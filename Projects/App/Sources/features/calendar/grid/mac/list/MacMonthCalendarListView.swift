@@ -17,9 +17,9 @@ struct MacMonthCalendarListView: View {
     }
 
     private var monthYearText: String {
-        let year = calendar.component(.year, from: model.selectedDate)
-        let month = calendar.component(.month, from: model.selectedDate)
-        return "\(year)년 \(month)월"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM yyyy"
+        return formatter.string(from: model.selectedDate)
     }
 
     var body: some View {
