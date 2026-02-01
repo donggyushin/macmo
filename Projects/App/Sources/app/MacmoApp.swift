@@ -15,6 +15,7 @@ struct MacmoApp: App {
     @StateObject var navigationManager = NavigationManager()
     @State private var appReady = false
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) var dismissWindow
 
     private let notificationDelegate = NotificationDelegate()
 
@@ -94,6 +95,9 @@ struct MacmoApp: App {
 
         WindowGroup("New Memo With Date", id: "memo-detail-with-date", for: Date.self) { $date in
             MemoDetailView(model: MemoDetailViewModel(id: nil, date: date))
+                .onDeleteAction {
+                    dismissWindow(id: "memo-detail-with-date")
+                }
                 .environmentObject(navigationManager)
         }
         .defaultSize(width: 600, height: 700)
