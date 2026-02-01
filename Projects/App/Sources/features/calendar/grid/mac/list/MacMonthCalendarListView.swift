@@ -4,7 +4,7 @@
 //
 //  Created by 신동규 on 2/1/26.
 //
-
+#if os(macOS)
 import SwiftUI
 
 struct MacMonthCalendarListView: View {
@@ -111,3 +111,4 @@ struct MacMonthCalendarListView: View {
         return components.month.map { abs($0) }
     }
 }
+#endif

@@ -24,7 +24,7 @@ struct MemoRepositoryTests {
 
         let sort: MemoSort = repository.getMemoSort()
 
-        #expect(sort == .createdAt)
+        #expect(sort == .updatedAt)
     }
 
     @Test("Set saves to UserDefaults")
