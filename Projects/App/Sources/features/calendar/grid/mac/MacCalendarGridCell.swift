@@ -37,6 +37,7 @@ private struct MacCalendarGridCellPreview: View {
             }
         }
         .padding()
+        .frame(width: 1000)
     }
 }
 
