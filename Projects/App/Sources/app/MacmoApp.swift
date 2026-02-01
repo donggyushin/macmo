@@ -74,6 +74,11 @@ struct MacmoApp: App {
                 }
                 .keyboardShortcut("f", modifiers: .command)
 
+                Button("Calendar") {
+                    openWindow(id: "calendar")
+                }
+                .keyboardShortcut("k", modifiers: .command)
+
                 Button("Setting") {
                     openWindow(id: "setting")
                 }
@@ -100,5 +105,11 @@ struct MacmoApp: App {
             }
         }
         .defaultSize(width: 600, height: 700)
+
+        WindowGroup("Calendar", id: "calendar") {
+            MacMonthCalendarListView(model: .init(date: Date()))
+                .environmentObject(navigationManager)
+        }
+        .defaultSize(width: 1000, height: 900)
     }
 }
