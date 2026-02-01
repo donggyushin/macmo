@@ -11,6 +11,8 @@ import SwiftUI
 struct MacCalendarGridCell: View {
     let data: MacCalendarDayPresentation
 
+    @Environment(\.openWindow) private var openWindow
+
     private let maxVisibleMemos = 3
     private let cellHeight: CGFloat = 120
 
@@ -92,6 +94,9 @@ struct MacCalendarGridCell: View {
         VStack(alignment: .leading, spacing: 2) {
             ForEach(visibleMemos, id: \.id) { memo in
                 MemoRow(memo: memo)
+                    .onTapGesture {
+                        openWindow(id: "memo-detail-with-id", value: memo.id)
+                    }
             }
             if remainingCount > 0 {
                 Text("+\(remainingCount)")

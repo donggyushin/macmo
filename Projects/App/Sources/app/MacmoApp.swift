@@ -92,6 +92,14 @@ struct MacmoApp: App {
         }
         .defaultSize(width: 600, height: 700)
 
+        WindowGroup("Memo Detail", id: "memo-detail-with-id", for: String.self) { $memoId in
+            if let memoId {
+                MemoDetailView(model: MemoDetailViewModel(id: memoId))
+                    .environmentObject(navigationManager)
+            }
+        }
+        .defaultSize(width: 600, height: 700)
+
         WindowGroup("Search Memos", id: "search-memo") {
             SearchMemoView(model: SearchMemoViewModel())
                 .environmentObject(navigationManager)
