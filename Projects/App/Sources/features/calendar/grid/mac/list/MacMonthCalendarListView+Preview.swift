@@ -5,7 +5,7 @@
 //  Created by 신동규 on 2/1/26.
 //
 
-#if os(mac)
+#if os(macOS)
 import SwiftUI
 
 struct MacMonthCalendarListViewPreview: View {

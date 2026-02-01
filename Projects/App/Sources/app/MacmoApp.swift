@@ -131,7 +131,7 @@ struct MacmoApp: App {
         }
         .defaultSize(width: 600, height: 700)
 
-        #if os(mac)
+        #if os(macOS)
         WindowGroup("Calendar", id: "calendar") {
             MacMonthCalendarListView(model: .init(date: Date()))
                 .environmentObject(navigationManager)
