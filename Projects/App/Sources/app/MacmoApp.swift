@@ -99,14 +99,21 @@ struct MacmoApp: App {
                     dismissWindow(id: "memo-detail-with-date")
                 }
                 .environmentObject(navigationManager)
+                .onDisappear {
+                    EventBus.shared.detailWindowDismissed.send()
+                }
         }
         .defaultSize(width: 600, height: 700)
 
         WindowGroup("Memo Detail", id: "memo-detail-with-id", for: String.self) { $memoId in
-            if let memoId {
-                MemoDetailView(model: MemoDetailViewModel(id: memoId))
-                    .environmentObject(navigationManager)
-            }
+            MemoDetailView(model: MemoDetailViewModel(id: memoId))
+                .onDeleteAction {
+                    dismissWindow(id: "memo-detail-with-date")
+                }
+                .environmentObject(navigationManager)
+                .onDisappear {
+                    EventBus.shared.detailWindowDismissed.send()
+                }
         }
         .defaultSize(width: 600, height: 700)
 

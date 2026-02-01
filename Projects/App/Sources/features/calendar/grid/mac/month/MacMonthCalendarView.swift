@@ -22,6 +22,9 @@ struct MacMonthCalendarView: View {
             model.drawEmptyCells()
             model.fetchData()
         }
+        .onReceive(EventBus.shared.detailWindowDismissed) {
+            model.fetchData()
+        }
     }
 
     private var weekdayHeader: some View {
