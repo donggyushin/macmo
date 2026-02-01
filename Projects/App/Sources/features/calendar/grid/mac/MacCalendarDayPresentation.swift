@@ -21,5 +21,5 @@ struct MacCalendarDayPresentation: Identifiable {
     let year: Int?
     let month: Int?
     let day: Int?
-    let memos: [Memo]
+    var memos: [Memo]
 }
