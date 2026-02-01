@@ -108,7 +108,7 @@ struct MacmoApp: App {
         WindowGroup("Memo Detail", id: "memo-detail-with-id", for: String.self) { $memoId in
             MemoDetailView(model: MemoDetailViewModel(id: memoId))
                 .onDeleteAction {
-                    dismissWindow(id: "memo-detail-with-date")
+                    dismissWindow(id: "memo-detail-with-id")
                 }
                 .environmentObject(navigationManager)
                 .onDisappear {
