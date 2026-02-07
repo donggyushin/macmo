@@ -100,7 +100,7 @@ struct MacmoApp: App {
                 }
                 .environmentObject(navigationManager)
                 .onDisappear {
-                    EventBus.shared.detailWindowDismissed.send()
+                    EventBus.shared.macCalendarViewUpdateNeeded.send()
                 }
         }
         .defaultSize(width: 600, height: 700)
@@ -112,7 +112,7 @@ struct MacmoApp: App {
                 }
                 .environmentObject(navigationManager)
                 .onDisappear {
-                    EventBus.shared.detailWindowDismissed.send()
+                    EventBus.shared.macCalendarViewUpdateNeeded.send()
                 }
         }
         .defaultSize(width: 600, height: 700)

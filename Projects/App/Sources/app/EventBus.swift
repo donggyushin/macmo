@@ -9,8 +9,8 @@ import Combine
 
 final class EventBus {
     static let shared = EventBus()
-    
-    let detailWindowDismissed = PassthroughSubject<Void, Never>()
-    
+
+    let macCalendarViewUpdateNeeded = PassthroughSubject<Void, Never>()
+
     private init() {}
 }

@@ -22,7 +22,7 @@ struct MacMonthCalendarView: View {
             model.drawEmptyCells()
             model.fetchData()
         }
-        .onReceive(EventBus.shared.detailWindowDismissed) {
+        .onReceive(EventBus.shared.macCalendarViewUpdateNeeded) {
             model.fetchData()
         }
     }
