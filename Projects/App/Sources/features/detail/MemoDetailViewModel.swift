@@ -136,6 +136,7 @@ final class MemoDetailViewModel: ObservableObject {
         memo = updatedMemo
         isEditing = false
         userPreferenceRepository.setMemoDraft(.init(title: ""))
+        EventBus.shared.macCalendarViewUpdateNeeded.send()
     }
 
     @MainActor
@@ -154,12 +155,14 @@ final class MemoDetailViewModel: ObservableObject {
         try await memoListViewModel.update(updatedMemo)
         memo = updatedMemo
         isDone = updatedMemo.done // Keep UI in sync
+        EventBus.shared.macCalendarViewUpdateNeeded.send()
     }
 
     @MainActor
     func delete() async throws {
         let currentMemo = memo
         try await memoListViewModel.delete(currentMemo.id)
+        EventBus.shared.macCalendarViewUpdateNeeded.send()
     }
 
     @objc private func updateMemoDrating() {
@@ -174,5 +177,6 @@ final class MemoDetailViewModel: ObservableObject {
             updatedAt: Date()
         )
         userPreferenceRepository.setMemoDraft(updatedMemo)
+        EventBus.shared.macCalendarViewUpdateNeeded.send()
     }
 }
