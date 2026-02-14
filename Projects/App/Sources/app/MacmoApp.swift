@@ -55,8 +55,8 @@ struct MacmoApp: App {
                     }
                 }
                 .task {
-                    WidgetCenter.shared.reloadAllTimelines()
                     try? await Task.sleep(for: .seconds(3))
+                    WidgetCenter.shared.reloadAllTimelines()
                     appReady = true
                 }
             // .task {
